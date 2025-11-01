@@ -122,8 +122,14 @@ return {
       vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
+      
+      -- ============================================================================
+      -- ENHANCED BUFFER PICKER
+      -- ============================================================================
+      -- Custom buffer picker with visual indicators
+      -- Filters out [No Name] buffers automatically
+      -- ============================================================================
       vim.keymap.set('n', '<leader><leader>', function()
-        local make_entry = require('telescope.make_entry')
         local entry_display = require('telescope.pickers.entry_display')
         
         -- Custom entry maker with indicators
@@ -142,11 +148,13 @@ return {
           
           local make_display = function(entry)
             local bufnr = entry.bufnr
-            local bufname = entry.filename
+            local display_name = entry.display_name
             
             -- Get buffer state
             local is_modified = vim.api.nvim_buf_get_option(bufnr, 'modified')
-            local is_loaded = vim.api.nvim_buf_is_loaded(bufnr)
+            local is_readonly = vim.api.nvim_buf_get_option(bufnr, 'readonly')
+            local buftype = vim.api.nvim_buf_get_option(bufnr, 'buftype')
+            local is_special = buftype ~= '' -- terminal, quickfix, help, etc.
             
             -- Get diagnostic counts for this buffer
             local diagnostics = vim.diagnostic.get(bufnr)
@@ -172,31 +180,45 @@ return {
               diag_indicator = { ' ', 'Normal' }
             end
             
-            -- Get file icon
-            local icon, icon_hl = require('nvim-web-devicons').get_icon(bufname, string.match(bufname, '%a+$'), { default = true })
-            icon = icon or ''
+            -- Get file icon and determine highlight based on buffer type
+            local icon, icon_hl
+            local name_hl = 'Normal'
+            
+            if is_special or is_readonly then
+              -- Special/readonly buffers (terminals, quickfix, etc) get yellow
+              icon = '󰈙'  -- Log/document icon
+              icon_hl = 'DiagnosticWarn'
+              name_hl = 'DiagnosticWarn'
+            else
+              icon, icon_hl = require('nvim-web-devicons').get_icon(display_name, string.match(display_name, '%a+$'), { default = true })
+              icon = icon or ''
+            end
             
             return displayer {
               modified_indicator,
               diag_indicator,
               { icon, icon_hl },
-              bufname,
+              { display_name, name_hl },
             }
           end
           
           return function(entry)
             local bufnr = entry.bufnr
             local bufname = vim.api.nvim_buf_get_name(bufnr)
+            
+            -- Filter out buffers with no name
             if bufname == '' then
-              bufname = '[No Name]'
-            else
-              bufname = vim.fn.fnamemodify(bufname, ':t')  -- Just filename, no path
+              return nil
             end
+            
+            -- Get display name (just the filename)
+            local display_name = vim.fn.fnamemodify(bufname, ':t')
             
             return {
               bufnr = bufnr,
               filename = bufname,
-              ordinal = bufname,
+              display_name = display_name,
+              ordinal = display_name,
               display = make_display,
               lnum = entry.lnum,
             }
@@ -308,7 +330,7 @@ return {
         { '<leader>/', desc = '󰱼 Fuzzy Search in Buffer' },
         { '<leader><leader>', desc = '󰈙 Find Buffers' },
         { '<leader>?', desc = '󰘳 Search Keymaps' },
-        { '<leader>.', desc = '� Scratch Buffer', mode = { 'n', 'v' } },
+        { '<leader>.', desc = '󰌵 Code Actions', mode = { 'n', 'v' } },
         
         -- Bracket motions (Vim defaults + snacks)
         { ']', group = '󰜴 Next' },

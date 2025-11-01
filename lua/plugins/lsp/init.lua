@@ -46,6 +46,7 @@ return {
           map('grn', vim.lsp.buf.rename, '[R]e[n]ame')
           map('K', vim.lsp.buf.hover, 'Hover Documentation')
           map('gra', vim.lsp.buf.code_action, '[G]oto Code [A]ction', { 'n', 'x' })
+          map('<leader>.', vim.lsp.buf.code_action, 'Code Actions (VSCode-like)', { 'n', 'x' })
           map('grr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
           map('gri', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
           map('grd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')

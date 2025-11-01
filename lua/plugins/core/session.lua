@@ -60,7 +60,7 @@ return {
       'Neotree close', -- Close Neo-tree before saving session
     },
     post_restore_cmds = {
-      -- You can add commands to run after restore here
+      'DeleteNoNameBuffers', -- Clean up unnamed buffers after session restore
     },
     
     -- Session lens (Telescope integration for browsing sessions)

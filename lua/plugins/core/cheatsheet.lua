@@ -228,12 +228,14 @@ return {
             { category = 'Buffer: Switch', key = '[B', desc = 'First buffer' },
             { category = 'Buffer: Switch', key = ':ls', desc = 'List all buffers' },
             
-            -- Closing buffers
-            { category = 'Buffer: Close', key = '<Space>bd', desc = 'Delete/close current buffer' },
+            -- Closing/deleting buffers
+            { category = 'Buffer: Close', key = '<Space>bd', desc = 'Delete buffer (& window if last)' },
             { category = 'Buffer: Close', key = '<Space>bD', desc = 'Force delete buffer' },
+            { category = 'Buffer: Close', key = '<Space>bu', desc = 'Unload buffer (keep in list)' },
             { category = 'Buffer: Close', key = ':bd', desc = 'Delete buffer (native)' },
             { category = 'Buffer: Close', key = ':bd!', desc = 'Force delete without saving' },
             { category = 'Buffer: Close', key = ':bd 3', desc = 'Delete buffer number 3' },
+            { category = 'Buffer: Close', key = ':bunload', desc = 'Unload buffer (native)' },
             
             -- Buffer info
             { category = 'Buffer: Info', key = 'Ctrl-g', desc = 'Show buffer info' },
@@ -250,12 +252,28 @@ return {
             -- WINDOW OPERATIONS
             -- ============================================================
             { category = 'Window', key = '<Space>ww', desc = 'Other window' },
-            { category = 'Window', key = '<Space>wd', desc = 'Delete window' },
+            { category = 'Window', key = '<Space>wc', desc = 'Close window' },
             { category = 'Window', key = '<Space>ws', desc = 'Split below' },
             { category = 'Window', key = '<Space>wv', desc = 'Split right' },
             { category = 'Window', key = '<Space>wm', desc = 'Maximize' },
+            { category = 'Window', key = '<Space>wn', desc = 'New window (tab)' },
             { category = 'Window', key = '<Space>w=', desc = 'Balance windows' },
             { category = 'Window', key = '<Space>wh/j/k/l', desc = 'Navigate windows' },
+
+            -- ============================================================
+            -- TAB OPERATIONS
+            -- ============================================================
+            { category = 'Tab', key = '<Space>tn', desc = 'New tab' },
+            { category = 'Tab', key = '<Space>wn', desc = 'New tab (alias)' },
+            { category = 'Tab', key = '<Space>tc', desc = 'Close tab' },
+            { category = 'Tab', key = '<Space>to', desc = 'Close other tabs' },
+            { category = 'Tab', key = '<Space>t]', desc = 'Next tab' },
+            { category = 'Tab', key = '<Space>t[', desc = 'Previous tab' },
+            { category = 'Tab', key = '<Space>tf', desc = 'First tab' },
+            { category = 'Tab', key = '<Space>tl', desc = 'Last tab' },
+            { category = 'Tab', key = 'gt', desc = 'Next tab (Vim native)' },
+            { category = 'Tab', key = 'gT', desc = 'Previous tab (Vim native)' },
+            { category = 'Tab', key = ':tabnew', desc = 'New tab (command)' },
 
             -- ============================================================
             -- SEARCH (TELESCOPE)
