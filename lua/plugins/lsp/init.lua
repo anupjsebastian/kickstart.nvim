@@ -96,24 +96,22 @@ return {
         end,
       })
 
-      -- Diagnostic Config
+      -- Diagnostic Config (LazyVim-style)
       vim.diagnostic.config {
         severity_sort = true,
-        underline = {
-          severity = { min = vim.diagnostic.severity.WARN },
-        },
+        underline = true,
         signs = {
           text = {
-            [vim.diagnostic.severity.ERROR] = '󰅚',
-            [vim.diagnostic.severity.WARN] = '󰀪',
-            [vim.diagnostic.severity.INFO] = '󰋽',
-            [vim.diagnostic.severity.HINT] = '󰌶',
+            [vim.diagnostic.severity.ERROR] = ' ',
+            [vim.diagnostic.severity.WARN] = ' ',
+            [vim.diagnostic.severity.INFO] = ' ',
+            [vim.diagnostic.severity.HINT] = ' ',
           },
         },
         virtual_text = {
           spacing = 4,
           source = 'if_many',
-          prefix = '■',
+          prefix = '●',
           format = function(diagnostic)
             return diagnostic.message
           end,

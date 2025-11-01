@@ -12,6 +12,39 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+-- Highlight active window with colored border/background
+vim.api.nvim_create_autocmd({ 'WinEnter', 'BufEnter' }, {
+  desc = 'Highlight active window',
+  group = vim.api.nvim_create_augroup('highlight-active-window', { clear = true }),
+  callback = function()
+    vim.opt_local.cursorline = true
+    vim.opt_local.winhl = 'Normal:Normal,NormalNC:NormalNC'
+  end,
+})
+
+vim.api.nvim_create_autocmd({ 'WinLeave', 'BufLeave' }, {
+  desc = 'Dim inactive windows',
+  group = vim.api.nvim_create_augroup('dim-inactive-window', { clear = true }),
+  callback = function()
+    vim.opt_local.cursorline = false
+  end,
+})
+
+-- Set up highlight groups for window focus
+vim.api.nvim_create_autocmd('ColorScheme', {
+  desc = 'Set window highlight colors',
+  group = vim.api.nvim_create_augroup('window-highlight-colors', { clear = true }),
+  callback = function()
+    -- Dim inactive windows slightly
+    vim.api.nvim_set_hl(0, 'NormalNC', { bg = '#1a1b26', fg = '#a9b1d6' })
+    -- Active window keeps normal colors
+    vim.api.nvim_set_hl(0, 'Normal', { bg = '#1a1b26', fg = '#c0caf5' })
+  end,
+})
+
+-- Trigger the highlight setup immediately
+vim.cmd('doautocmd ColorScheme')
+
 -- Ensure focus starts in the editor, not file tree
 vim.api.nvim_create_autocmd('VimEnter', {
   desc = 'Focus editor window on startup, not Neo-tree',
