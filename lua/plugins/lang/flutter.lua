@@ -367,16 +367,6 @@ return {
         callback = function(event)
           local opts = { buffer = true, silent = true }
 
-          -- ========================================================================
-          -- ENABLE TREESITTER FOLDING FOR DART FILES
-          -- ========================================================================
-          -- Set fold method to use Treesitter for Flutter widgets
-          vim.opt_local.foldmethod = 'expr'
-          vim.opt_local.foldexpr = 'nvim_treesitter#foldexpr()'
-          vim.opt_local.foldenable = false -- Start with folds open
-          vim.opt_local.foldlevel = 99
-          vim.opt_local.foldlevelstart = 99
-
           -- Flutter run/quit
           -- WORKFLOW: 
           --   1. First time: <leader>fd to select device

@@ -184,29 +184,73 @@ return {
       },
       spec = {
         -- Core groups with icons
-        { '<leader>b', group = '󰊄 buffer' },
-        { '<leader>c', group = '󰘦 code' },
-        { '<leader>d', group = '󰃤 debug' },
-        { '<leader>f', group = '󱓞 flutter' }, -- Only visible in Dart files
-        { '<leader>g', group = '󰊢 git' },
-        { '<leader>h', group = '󰊢 git hunk', mode = { 'n', 'v' } },
-        { '<leader>p', group = '󰌠 python' }, -- Only visible in Python files
-        { '<leader>r', group = '󱘗 rust' }, -- Only visible in Rust files
-        { '<leader>s', group = '󰍉 search' },
-        { '<leader>S', group = '󱂬 session' },
-        { '<leader>t', group = '󰔡 toggle' },
-        { '<leader>u', group = '󰙵 ui' },
-        { '<leader>v', group = '󰡄 svelte' }, -- Only visible in Svelte files
-        { '<leader>w', group = '󰖲 window' },
-        { '<leader>x', group = '󱖫 diagnostics' },
+        { '<leader>b', group = '󰊄 Buffer' },
+        { '<leader>c', group = '󰘦 Code' },
+        { '<leader>d', group = '󰃤 Debug' },
+        { '<leader>f', group = '󱓞 Flutter' }, -- Only visible in Dart files
+        { '<leader>g', group = '󰊢 Git' },
+        { '<leader>h', group = '󰊢 Git Hunk', mode = { 'n', 'v' } },
+        { '<leader>p', group = '󰌠 Python' }, -- Only visible in Python files
+        { '<leader>r', group = '󱘗 Rust' }, -- Only visible in Rust files
+        { '<leader>s', group = '󰍉 Search' },
+        { '<leader>S', group = '󱂬 Session' },
+        { '<leader>t', group = '󰔡 Toggle' },
+        { '<leader>u', group = '󰙵 UI' },
+        { '<leader>v', group = '󰡄 Svelte' }, -- Only visible in Svelte files
+        { '<leader>w', group = '󰖲 Window' },
+        { '<leader>x', group = '󱖫 Diagnostics' },
         
         -- Special standalone keymaps (not part of a group)
-        { '<leader>q', desc = '󰁨 Quickfix diagnostics' },
-        { '<leader>Q', desc = '󰗼 Quit all' },
-        { '<leader>/', desc = '󰱼 Fuzzily search in buffer' },
-        { '<leader><leader>', desc = '󰈙 Find existing buffers' },
-        { '<leader>?', desc = '󰘳 Search keymaps' },
-        { '<leader>.', desc = '󰌵 Code actions', mode = { 'n', 'v' } },
+        { '<leader>q', desc = '󰁨 Toggle Diagnostic Quickfix' },
+        { '<leader>Q', desc = '󰗼 Quit All' },
+        { '<leader>/', desc = '󰱼 Fuzzy Search in Buffer' },
+        { '<leader><leader>', desc = '󰈙 Find Buffers' },
+        { '<leader>?', desc = '󰘳 Search Keymaps' },
+        { '<leader>.', desc = '� Scratch Buffer', mode = { 'n', 'v' } },
+        
+        -- Bracket motions (Vim defaults + snacks)
+        { ']', group = '󰜴 Next' },
+        { '[', group = '󰜱 Previous' },
+        { ']]', desc = '󱡁 Next Word Occurrence (snacks.words)' },
+        { '[[', desc = '󱡁 Prev Word Occurrence (snacks.words)' },
+        { ']s', desc = '󰓆 Next Misspelled Word (spell)' },
+        { '[s', desc = '󰓆 Prev Misspelled Word (spell)' },
+        { ']c', desc = '󰊢 Next Git Change (gitsigns)' },
+        { '[c', desc = '󰊢 Prev Git Change (gitsigns)' },
+        { ']d', desc = '󱖫 Next Diagnostic (LSP)' },
+        { '[d', desc = '󱖫 Prev Diagnostic (LSP)' },
+        { ']h', desc = '󰊢 Next Git Hunk (gitsigns)' },
+        { '[h', desc = '󰊢 Prev Git Hunk (gitsigns)' },
+        
+        -- Vim argument list navigation (files passed to nvim: nvim file1.txt file2.txt)
+        { ']a', desc = '󰈔 Next Arg (:next)' },
+        { '[a', desc = '󰈔 Prev Arg (:prev)' },
+        { ']A', desc = '󰈔 Last Arg (:last)' },
+        { '[A', desc = '󰈔 First Arg (:first)' },
+        
+        -- Buffer navigation (opened files)
+        { ']b', desc = '󰊄 Next Buffer (:bnext)' },
+        { '[b', desc = '󰊄 Prev Buffer (:bprev)' },
+        { ']B', desc = '󰊄 Last Buffer (:blast)' },
+        { '[B', desc = '󰊄 First Buffer (:bfirst)' },
+        
+        -- Location list navigation (LSP locations, grep results)
+        { ']l', desc = '󱖫 Next Location (:lnext)' },
+        { '[l', desc = '󱖫 Prev Location (:lprev)' },
+        { ']L', desc = '󱖫 Last Location (:llast)' },
+        { '[L', desc = '󱖫 First Location (:lfirst)' },
+        
+        -- Quickfix list navigation (search results, errors)
+        { ']q', desc = '󰁨 Next Quickfix (:cnext)' },
+        { '[q', desc = '󰁨 Prev Quickfix (:cprev)' },
+        { ']Q', desc = '󰁨 Last Quickfix (:clast)' },
+        { '[Q', desc = '󰁨 First Quickfix (:cfirst)' },
+        
+        -- Tag navigation (ctags, jump to definition)
+        { ']t', desc = '󰓹 Next Tag (:tnext)' },
+        { '[t', desc = '󰓹 Prev Tag (:tprev)' },
+        { ']T', desc = '󰓹 Last Tag (:tlast)' },
+        { '[T', desc = '󰓹 First Tag (:tfirst)' },
       },
     },
   },

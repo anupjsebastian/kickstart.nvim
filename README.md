@@ -27,6 +27,7 @@
 - **Neo-tree**: File explorer with git integration
 - **nvim-dap**: Full debugging support for all languages
 - **Gitsigns**: Git integration with blame, hunk navigation, and staging
+- **Snacks.nvim**: Quality of life features (terminal, scratch buffers, word highlights, GitHub CLI)
 - **Mini.nvim**: Surround, autopairs, comments, and more
 
 ### 📚 **Comprehensive Documentation**

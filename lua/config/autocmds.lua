@@ -48,6 +48,19 @@ vim.api.nvim_create_autocmd('VimEnter', {
   end,
 })
 
+-- Configure diagnostic signs with nicer icons
+local signs = {
+  Error = '󰅚 ',
+  Warn = '󰀪 ',
+  Hint = '󰌶 ',
+  Info = '󰋽 ',
+}
+
+for type, icon in pairs(signs) do
+  local hl = 'DiagnosticSign' .. type
+  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+end
+
 -- Ensure virtual text diagnostics are enabled after all plugins load
 -- This needs to be set after plugins that might override diagnostic config
 vim.api.nvim_create_autocmd('User', {
@@ -58,11 +71,15 @@ vim.api.nvim_create_autocmd('User', {
       virtual_text = {
         spacing = 4,
         source = 'if_many',
-        prefix = '■',
+        prefix = '●',
         format = function(diagnostic)
           return diagnostic.message
         end,
       },
+      signs = true,
+      underline = true,
+      update_in_insert = false,
+      severity_sort = true,
     }
   end,
 })

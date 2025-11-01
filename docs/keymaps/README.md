@@ -185,7 +185,116 @@ Inside a plugin (like Telescope or Neo-tree), press `?` for help.
 
 ---
 
-## 💡 Tips
+## � Bracket Navigation (`]` and `[`)
+
+Vim's powerful bracket operators for jumping between locations. Press `]` or `[` to see all options in which-key.
+
+### Word Navigation (snacks.nvim)
+| Key  | Description | Source |
+|------|-------------|--------|
+| `]]` | Next word occurrence | snacks.words |
+| `[[` | Previous word occurrence | snacks.words |
+
+**How it works**: Place cursor on any word, press `]]` to jump to next occurrence with auto-highlighting.
+
+### Argument List (Files from Startup)
+| Key  | Description | Vim Command |
+|------|-------------|-------------|
+| `]a` | Next arg | `:next` |
+| `[a` | Previous arg | `:prev` |
+| `]A` | Last arg | `:last` |
+| `[A` | First arg | `:first` |
+
+**Usage**: When you start Vim with multiple files (`nvim file1.lua file2.lua`), use these to navigate.
+
+### Buffer List (All Open Files)
+| Key  | Description | Vim Command |
+|------|-------------|-------------|
+| `]b` | Next buffer | `:bnext` |
+| `[b` | Previous buffer | `:bprev` |
+| `]B` | Last buffer | `:blast` |
+| `[B` | First buffer | `:bfirst` |
+
+**Most useful for day-to-day navigation!** Also see `<Leader><Leader>` for Telescope buffer picker.
+
+### Location List (LSP Locations)
+| Key  | Description | Vim Command |
+|------|-------------|-------------|
+| `]l` | Next location | `:lnext` |
+| `[l` | Previous location | `:lprev` |
+| `]L` | Last location | `:llast` |
+| `[L` | First location | `:lfirst` |
+
+**When used**: After `:lvimgrep`, LSP references, or other location list operations.
+
+### Quickfix List (Search/Errors)
+| Key  | Description | Vim Command |
+|------|-------------|-------------|
+| `]q` | Next quickfix | `:cnext` |
+| `[q` | Previous quickfix | `:cprev` |
+| `]Q` | Last quickfix | `:clast` |
+| `[Q` | First quickfix | `:cfirst` |
+
+**Integrated with Trouble**: If Trouble is open, these navigate Trouble items instead!
+
+### Tags (ctags Navigation)
+| Key  | Description | Vim Command |
+|------|-------------|-------------|
+| `]t` | Next tag | `:tnext` |
+| `[t` | Previous tag | `:tprev` |
+| `]T` | Last tag | `:tlast` |
+| `[T` | First tag | `:tfirst` |
+
+**When used**: After `Ctrl-]` on a symbol with multiple tag matches.
+
+### Git Changes (gitsigns)
+| Key  | Description | Source |
+|------|-------------|--------|
+| `]c` | Next git change | gitsigns |
+| `[c` | Previous git change | gitsigns |
+| `]h` | Next git hunk | gitsigns |
+| `[h` | Previous git hunk | gitsigns |
+
+**Visual feedback**: Git signs appear in the sign column showing added/changed/deleted lines.
+
+### Diagnostics (LSP)
+| Key  | Description | Source |
+|------|-------------|--------|
+| `]d` | Next diagnostic | LSP |
+| `[d` | Previous diagnostic | LSP |
+
+**Also see**: `<Leader>sd` to search all diagnostics in Telescope.
+
+### Spelling
+| Key  | Description | Vim Feature |
+|------|-------------|-------------|
+| `]s` | Next misspelled word | `:set spell` |
+| `[s` | Previous misspelled word | `:set spell` |
+
+**Enable spelling**: `:set spell` or `<Leader>ts` (toggle spelling).
+
+### Quick Reference Card
+
+```
+Navigation Type    Next    Prev    Last    First
+─────────────────────────────────────────────────
+Word (snacks)      ]]      [[      -       -
+Arguments          ]a      [a      ]A      [A
+Buffers            ]b      [b      ]B      [B
+Location List      ]l      [l      ]L      [L
+Quickfix           ]q      [q      ]Q      [Q
+Tags               ]t      [t      ]T      [T
+Git Changes        ]c      [c      -       -
+Git Hunks          ]h      [h      -       -
+Diagnostics        ]d      [d      -       -
+Spelling           ]s      [s      -       -
+```
+
+**Pro Tip**: Press `]` or `[` and wait - which-key shows all available options!
+
+---
+
+## �💡 Tips
 
 ### Discovering Features
 1. Press `<Leader>` and wait - explore the which-key menu

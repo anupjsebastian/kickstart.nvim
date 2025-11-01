@@ -66,6 +66,23 @@ vim.o.updatetime = 250
 -- Displays which-key popup sooner
 vim.o.timeoutlen = 300
 
+-- Set time to wait for key codes (affects terminal mode escape)
+-- Lower value = faster escape from terminal insert mode
+vim.o.ttimeoutlen = 10
+
+-- Configure cursor shapes for different modes
+-- n-v-c = block in normal, visual, command modes
+-- i-ci-ve = thin vertical bar in insert mode
+-- r-cr = horizontal bar in replace mode
+vim.opt.guicursor = {
+  'n-v-c:block',           -- Block cursor in normal, visual, command
+  'i-ci-ve:ver25',         -- Thin vertical bar (25% width) in insert
+  'r-cr:hor20',            -- Horizontal bar (20% height) in replace
+  'o:hor50',               -- Horizontal bar in operator-pending
+  'a:blinkwait700-blinkoff400-blinkon250', -- Blinking settings
+  'sm:block-blinkwait175-blinkoff150-blinkon175', -- Search match
+}
+
 -- Configure how new splits should be opened
 vim.o.splitright = true
 vim.o.splitbelow = true

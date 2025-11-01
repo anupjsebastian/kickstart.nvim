@@ -437,6 +437,85 @@ return {
             { category = 'Neo-tree', key = '<Space>sg', desc = 'Telescope grep from current dir' },
 
             -- ============================================================
+            -- SNACKS.NVIM (QOL FEATURES)
+            -- ============================================================
+            -- Buffers
+            { category = 'Snacks: Buffers', key = '<Space>bd', desc = 'Delete buffer (smart)' },
+            { category = 'Snacks: Buffers', key = '<Space>bo', desc = 'Delete other buffers' },
+            
+            -- Files
+            { category = 'Snacks: Files', key = '<Space>cR', desc = 'Rename file (LSP-aware)' },
+            
+            -- Scratch buffers
+            { category = 'Snacks: Scratch', key = '<Space>.', desc = 'Toggle scratch buffer' },
+            { category = 'Snacks: Scratch', key = '<Space>S', desc = 'Select scratch buffer' },
+            { category = 'Snacks: Scratch', key = 'Enter (in scratch)', desc = 'Execute Lua line' },
+            
+            -- Word references
+            { category = 'Snacks: Words', key = ']]', desc = 'Jump to next word occurrence' },
+            { category = 'Snacks: Words', key = '[[', desc = 'Jump to previous word occurrence' },
+            
+            -- Bracket Navigation: Argument List (files passed to nvim on startup)
+            { category = 'Navigation: Args', key = ']a', desc = 'Next arg (:next)' },
+            { category = 'Navigation: Args', key = '[a', desc = 'Previous arg (:prev)' },
+            { category = 'Navigation: Args', key = ']A', desc = 'Last arg (:last)' },
+            { category = 'Navigation: Args', key = '[A', desc = 'First arg (:first)' },
+            
+            -- Bracket Navigation: Buffer List (all opened files in session)
+            { category = 'Navigation: Buffers', key = ']b', desc = 'Next buffer (:bnext)' },
+            { category = 'Navigation: Buffers', key = '[b', desc = 'Previous buffer (:bprev)' },
+            { category = 'Navigation: Buffers', key = ']B', desc = 'Last buffer (:blast)' },
+            { category = 'Navigation: Buffers', key = '[B', desc = 'First buffer (:bfirst)' },
+            
+            -- Bracket Navigation: Location List (LSP locations, grep results)
+            { category = 'Navigation: Location List', key = ']l', desc = 'Next location (:lnext)' },
+            { category = 'Navigation: Location List', key = '[l', desc = 'Previous location (:lprev)' },
+            { category = 'Navigation: Location List', key = ']L', desc = 'Last location (:llast)' },
+            { category = 'Navigation: Location List', key = '[L', desc = 'First location (:lfirst)' },
+            
+            -- Bracket Navigation: Quickfix List (search results, compile errors)
+            { category = 'Navigation: Quickfix', key = ']q', desc = 'Next quickfix (:cnext) or Trouble item' },
+            { category = 'Navigation: Quickfix', key = '[q', desc = 'Previous quickfix (:cprev) or Trouble item' },
+            { category = 'Navigation: Quickfix', key = ']Q', desc = 'Last quickfix (:clast)' },
+            { category = 'Navigation: Quickfix', key = '[Q', desc = 'First quickfix (:cfirst)' },
+            
+            -- Bracket Navigation: Tags (ctags, jump to definitions)
+            { category = 'Navigation: Tags', key = ']t', desc = 'Next tag (:tnext)' },
+            { category = 'Navigation: Tags', key = '[t', desc = 'Previous tag (:tprev)' },
+            { category = 'Navigation: Tags', key = ']T', desc = 'Last tag (:tlast)' },
+            { category = 'Navigation: Tags', key = '[T', desc = 'First tag (:tfirst)' },
+            
+            -- Bracket Navigation: Git & Diagnostics
+            { category = 'Navigation: Git', key = ']c', desc = 'Next git change (gitsigns)' },
+            { category = 'Navigation: Git', key = '[c', desc = 'Previous git change (gitsigns)' },
+            { category = 'Navigation: Git', key = ']h', desc = 'Next git hunk (gitsigns)' },
+            { category = 'Navigation: Git', key = '[h', desc = 'Previous git hunk (gitsigns)' },
+            { category = 'Navigation: Diagnostics', key = ']d', desc = 'Next diagnostic (LSP)' },
+            { category = 'Navigation: Diagnostics', key = '[d', desc = 'Previous diagnostic (LSP)' },
+            
+            -- Bracket Navigation: Spelling
+            { category = 'Navigation: Spelling', key = ']s', desc = 'Next misspelled word (spell)' },
+            { category = 'Navigation: Spelling', key = '[s', desc = 'Previous misspelled word (spell)' },
+            
+            -- Git
+            { category = 'Snacks: Git', key = '<Space>gb', desc = 'Git browse (open in web)' },
+            { category = 'Snacks: Git', key = '<Space>gB', desc = 'Git blame line' },
+            { category = 'Snacks: Git', key = '<Space>gH', desc = 'GitHub' },
+            { category = 'Snacks: Git', key = '<Space>gI', desc = 'GitHub issues' },
+            { category = 'Snacks: Git', key = '<Space>gP', desc = 'GitHub PRs' },
+            
+            -- Notifications
+            { category = 'Snacks: Notify', key = '<Space>un', desc = 'Dismiss all notifications' },
+            { category = 'Snacks: Notify', key = '<Space>uh', desc = 'Notification history' },
+            
+            -- Toggles
+            { category = 'Snacks: Toggle', key = '<Space>td', desc = 'Toggle diagnostics' },
+            { category = 'Snacks: Toggle', key = '<Space>tl', desc = 'Toggle line numbers' },
+            { category = 'Snacks: Toggle', key = '<Space>ts', desc = 'Toggle smooth scroll' },
+            { category = 'Snacks: Toggle', key = '<Space>tw', desc = 'Toggle word highlights' },
+            { category = 'Snacks: Toggle', key = '<Space>ti', desc = 'Toggle indent guides' },
+
+            -- ============================================================
             -- MINI.AI (TEXT OBJECTS)
             -- ============================================================
             { category = 'Text Objects', key = 'a/i + object', desc = 'Around/inside (w, p, [, {, ", \', `, t)' },
