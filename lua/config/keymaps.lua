@@ -136,10 +136,9 @@ vim.keymap.set('n', '<leader>q', function()
   end
 end, { desc = 'Toggle diagnostic quickfix list' })
 
--- Flutter outline toggle (only show for Dart files or when outline exists)
+-- Flutter outline toggle (works from any window)
 vim.keymap.set('n', '<leader>fo', function()
-  -- Check if current buffer is a Dart file or Flutter outline exists
-  local current_ft = vim.bo.filetype
+  -- First, check if Flutter outline window exists
   local outline_winnr = nil
   
   for _, win in ipairs(vim.api.nvim_list_wins()) do
@@ -151,12 +150,29 @@ vim.keymap.set('n', '<leader>fo', function()
     end
   end
   
+  -- If outline exists, close it
   if outline_winnr then
     vim.api.nvim_win_close(outline_winnr, true)
-  elseif current_ft == 'dart' then
+    return
+  end
+  
+  -- Otherwise, check if we have any Dart buffers open
+  local has_dart_buffer = false
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    if vim.api.nvim_buf_is_loaded(buf) then
+      local ft = vim.bo[buf].filetype
+      if ft == 'dart' then
+        has_dart_buffer = true
+        break
+      end
+    end
+  end
+  
+  -- If we have a Dart buffer, toggle outline
+  if has_dart_buffer then
     vim.cmd('FlutterOutlineToggle')
   else
-    vim.notify('Flutter outline only available for Dart files', vim.log.levels.INFO)
+    vim.notify('Flutter outline only available when a Dart file is open', vim.log.levels.INFO)
   end
 end, { desc = 'Toggle outline (Dart only)' })
 
