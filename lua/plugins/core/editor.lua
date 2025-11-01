@@ -10,7 +10,15 @@
 
 return {
   -- Detect tabstop and shiftwidth automatically
-  'NMAC427/guess-indent.nvim',
+  {
+    'NMAC427/guess-indent.nvim',
+    opts = {
+      -- Exclude Dart files - dart-vim-plugin handles indentation better
+      filetype_exclude = {
+        'dart',
+      },
+    },
+  },
 
   -- Telescope: Fuzzy finder (files, LSP, etc)
   {

@@ -16,6 +16,54 @@
 -- ========================================================================
 
 return {
+  -- ============================================================================
+  -- FLUTTER & DART DEVELOPMENT ENVIRONMENT
+  -- ============================================================================
+  -- Comprehensive Flutter development setup with:
+  --   • flutter-tools: LSP, DAP, widget tree, outline, dev tools
+  --   • nvim-dap: Debug adapter protocol support
+  --   • dart-vim-plugin: Official Dart indentation (Treesitter indent has issues)
+  --   • Treesitter: Syntax highlighting and code understanding
+  -- ============================================================================
+
+  -- ============================================================================
+  -- DART VIM PLUGIN - Official Dart indentation support
+  -- ============================================================================
+  -- Treesitter indent is broken for Dart (github.com/nvim-treesitter/nvim-treesitter/issues/1612)
+  -- This official plugin provides proper indentation for Dart/Flutter files
+  {
+    'dart-lang/dart-vim-plugin',
+    ft = 'dart',
+    init = function()
+      -- Enable Dart-specific indentation options (VSCode-like behavior)
+      vim.g.dart_style_guide = 2  -- Use 2-space indentation
+      vim.g.dart_format_on_save = 0  -- Disable format on save (we use conform.nvim)
+      
+      -- Set indentation to align with opening parenthesis (VSCode behavior)
+      -- This makes parameters align with the opening ( like:
+      -- Container(
+      --   child: Text(
+      --     'hello',
+      --   ),
+      -- )
+    end,
+    config = function()
+      -- Ensure Dart files use proper indentation settings
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = 'dart',
+        callback = function()
+          vim.opt_local.shiftwidth = 2
+          vim.opt_local.tabstop = 2
+          vim.opt_local.softtabstop = 2
+          vim.opt_local.expandtab = true
+          -- VSCode-style: align continuation lines with opening delimiter
+          -- (0 = align with opening paren, Ws = indent when line starts with whitespace
+          vim.opt_local.cinoptions = '(0,Ws,m1'
+        end,
+      })
+    end,
+  },
+
   -- ========================================================================
   -- NVIM-DAP - Debug Adapter Protocol for Flutter debugging
   -- ========================================================================
@@ -28,38 +76,6 @@ return {
       'nvim-neotest/nvim-nio',
     },
   },
-
-  -- ========================================================================
-  -- FLUTTER TOOLS - Complete Flutter development environment
-  -- ========================================================================
-  -- Provides Flutter-specific features like hot reload, device management,
-  -- widget inspector, and integrates the Dart LSP server.
-  --
-  -- Flutter-specific keymaps (available in .dart files):
-  --   <Space>fr - Flutter Run (start app)
-  --   <Space>fR - Flutter Hot Restart
-  --   <Space>fh - Flutter Hot Reload
-  --   <Space>fq - Flutter Quit (stop app)
-  --   <Space>fd - Flutter Devices (show connected devices)
-  --   <Space>fe - Flutter Emulators (launch emulator)
-  --   <Space>fo - Flutter Outline (toggle outline/widget tree)
-  --   <Space>ft - Flutter DevTools (start DevTools server)
-  --   <Space>fa - Flutter Attach (attach to running app)
-  --   <Space>fD - Flutter Detach (detach from running app)
-  --   <Space>fL - Flutter Log Toggle (show/hide logs)
-  --   <Space>fc - Flutter Copy Profiler URL (for DevTools)
-  --   <Space>fl - Flutter LSP Restart
-  --
-  -- Debug keymaps:
-  --   <F5> - Start/Continue debugging
-  --   <F10> - Step over
-  --   <F11> - Step into
-  --   <F12> - Step out
-  --   <leader>db - Toggle breakpoint
-  --   <leader>dB - Set conditional breakpoint
-  --   <leader>dc - Continue
-  --   <leader>dt - Terminate debugging
-  -- ========================================================================
   {
     'nvim-flutter/flutter-tools.nvim',
     ft = 'dart', -- Only load when opening Dart files
