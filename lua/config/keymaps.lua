@@ -41,7 +41,7 @@ vim.api.nvim_create_user_command('ListNoNameBuffers', function()
 end, { desc = 'List all unnamed buffers' })
 
 -- Manually delete all no-name buffers
-vim.api.nvim_create_user_command('DeleteNoNameBuffers', function()
+vim.api.nvim_create_user_command('DeleteNoNameBuffers', function(opts)
   local deleted = 0
   for _, buf in ipairs(vim.api.nvim_list_bufs()) do
     if vim.api.nvim_buf_is_valid(buf) then
@@ -52,8 +52,11 @@ vim.api.nvim_create_user_command('DeleteNoNameBuffers', function()
       end
     end
   end
-  vim.notify(string.format('Deleted %d unnamed buffer(s)', deleted), vim.log.levels.INFO)
-end, { desc = 'Delete all unnamed buffers' })
+  -- Only notify if called manually with bang (!): :DeleteNoNameBuffers!
+  if opts.bang then
+    vim.notify(string.format('Deleted %d unnamed buffer(s)', deleted), vim.log.levels.INFO)
+  end
+end, { desc = 'Delete all unnamed buffers (use ! to show notification)', bang = true })
 
 -- Auto-delete no-name buffers when hidden/unloaded
 -- This keeps your buffer list clean from temporary buffers
@@ -77,16 +80,37 @@ vim.api.nvim_create_autocmd({ 'BufHidden', 'BufUnload' }, {
 
 -- Close floating windows with Escape from anywhere
 vim.keymap.set('n', '<Esc>', function()
-  -- Try to close any floating windows
+  -- Get current window and check if it's floating
+  local current_win = vim.api.nvim_get_current_win()
+  local current_config = vim.api.nvim_win_get_config(current_win)
+  
+  -- If we're in a floating window, close it
+  if current_config.relative ~= '' then
+    vim.api.nvim_win_close(current_win, false)
+    return
+  end
+  
+  -- Otherwise, close ALL floating windows except notifications
+  local closed_any = false
   for _, win in ipairs(vim.api.nvim_list_wins()) do
-    local config = vim.api.nvim_win_get_config(win)
-    if config.relative ~= '' then
-      vim.api.nvim_win_close(win, false)
-      return -- Found and closed a floating window
+    if win ~= current_win then
+      local success, config = pcall(vim.api.nvim_win_get_config, win)
+      if success and config.relative and config.relative ~= '' then
+        -- Don't close notification windows (they have title with "Notify")
+        local is_notification = config.title and type(config.title) == 'table' and 
+                                vim.tbl_contains(vim.tbl_flatten(config.title), ' Notify ')
+        if not is_notification then
+          pcall(vim.api.nvim_win_close, win, false)
+          closed_any = true
+        end
+      end
     end
   end
-  -- No floating window found, do normal escape behavior
-  vim.cmd('nohlsearch')
+  
+  -- If we didn't close any floating windows, do normal escape behavior
+  if not closed_any then
+    vim.cmd('nohlsearch')
+  end
 end, { silent = true, desc = 'Close floating window or clear highlight' })
 
 -- Diagnostic keymaps - Toggle quickfix list (works in normal buffers and quickfix itself)
