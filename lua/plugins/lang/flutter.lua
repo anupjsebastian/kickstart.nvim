@@ -13,9 +13,60 @@
 --   - Flutter-specific keymaps (e.g., <leader>fr for Flutter Run)
 --
 -- Usage: Just open a .dart file and these plugins will automatically load!
+--
+-- Note: Flutter utility functions are in lua/utils/flutter.lua and loaded
+-- early to ensure they're available when core plugins need them.
 -- ========================================================================
 
 return {
+  -- ============================================================================
+  -- FLUTTER & DART DEVELOPMENT ENVIRONMENT
+  -- ============================================================================
+  -- Comprehensive Flutter development setup with:
+  --   • flutter-tools: LSP, DAP, widget tree, outline, dev tools
+  --   • nvim-dap: Debug adapter protocol support
+  --   • dart-vim-plugin: Official Dart indentation (Treesitter indent has issues)
+  --   • Treesitter: Syntax highlighting and code understanding
+  -- ============================================================================
+
+  -- ============================================================================
+  -- DART VIM PLUGIN - Official Dart indentation support
+  -- ============================================================================
+  -- Treesitter indent is broken for Dart (github.com/nvim-treesitter/nvim-treesitter/issues/1612)
+  -- This official plugin provides proper indentation for Dart/Flutter files
+  {
+    'dart-lang/dart-vim-plugin',
+    ft = 'dart',
+    init = function()
+      -- Enable Dart-specific indentation options (VSCode-like behavior)
+      vim.g.dart_style_guide = 2  -- Use 2-space indentation
+      vim.g.dart_format_on_save = 0  -- Disable format on save (we use conform.nvim)
+      
+      -- Set indentation to align with opening parenthesis (VSCode behavior)
+      -- This makes parameters align with the opening ( like:
+      -- Container(
+      --   child: Text(
+      --     'hello',
+      --   ),
+      -- )
+    end,
+    config = function()
+      -- Ensure Dart files use proper indentation settings
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = 'dart',
+        callback = function()
+          vim.opt_local.shiftwidth = 2
+          vim.opt_local.tabstop = 2
+          vim.opt_local.softtabstop = 2
+          vim.opt_local.expandtab = true
+          -- VSCode-style: align continuation lines with opening delimiter
+          -- (0 = align with opening paren, Ws = indent when line starts with whitespace
+          vim.opt_local.cinoptions = '(0,Ws,m1'
+        end,
+      })
+    end,
+  },
+
   -- ========================================================================
   -- NVIM-DAP - Debug Adapter Protocol for Flutter debugging
   -- ========================================================================
@@ -28,38 +79,6 @@ return {
       'nvim-neotest/nvim-nio',
     },
   },
-
-  -- ========================================================================
-  -- FLUTTER TOOLS - Complete Flutter development environment
-  -- ========================================================================
-  -- Provides Flutter-specific features like hot reload, device management,
-  -- widget inspector, and integrates the Dart LSP server.
-  --
-  -- Flutter-specific keymaps (available in .dart files):
-  --   <Space>fr - Flutter Run (start app)
-  --   <Space>fR - Flutter Hot Restart
-  --   <Space>fh - Flutter Hot Reload
-  --   <Space>fq - Flutter Quit (stop app)
-  --   <Space>fd - Flutter Devices (show connected devices)
-  --   <Space>fe - Flutter Emulators (launch emulator)
-  --   <Space>fo - Flutter Outline (toggle outline/widget tree)
-  --   <Space>ft - Flutter DevTools (start DevTools server)
-  --   <Space>fa - Flutter Attach (attach to running app)
-  --   <Space>fD - Flutter Detach (detach from running app)
-  --   <Space>fL - Flutter Log Toggle (show/hide logs)
-  --   <Space>fc - Flutter Copy Profiler URL (for DevTools)
-  --   <Space>fl - Flutter LSP Restart
-  --
-  -- Debug keymaps:
-  --   <F5> - Start/Continue debugging
-  --   <F10> - Step over
-  --   <F11> - Step into
-  --   <F12> - Step out
-  --   <leader>db - Toggle breakpoint
-  --   <leader>dB - Set conditional breakpoint
-  --   <leader>dc - Continue
-  --   <leader>dt - Terminate debugging
-  -- ========================================================================
   {
     'nvim-flutter/flutter-tools.nvim',
     ft = 'dart', -- Only load when opening Dart files
@@ -254,7 +273,8 @@ return {
         -- Create new tab with a named buffer for debug views
         vim.cmd 'tabnew'
         local debug_buf = vim.api.nvim_create_buf(false, true)
-        vim.api.nvim_buf_set_name(debug_buf, 'Flutter Debug')
+        -- Use pcall to safely set buffer name (may fail if name exists)
+        pcall(vim.api.nvim_buf_set_name, debug_buf, 'Flutter Debug')
         vim.api.nvim_set_current_buf(debug_buf)
         
         -- Open DAP UI in this tab
@@ -289,35 +309,6 @@ return {
       dap.listeners.after.event_initialized['dapui_config'] = open_dapui_in_tabs
       dap.listeners.before.event_terminated['dapui_config'] = close_dapui_tabs
       dap.listeners.before.event_exited['dapui_config'] = close_dapui_tabs
-
-      -- Fix for Flutter Tools log buffer - make it non-saveable
-      -- This prevents Vim from asking to save changes to the log file on exit
-      vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWinEnter' }, {
-        pattern = '*',
-        callback = function(args)
-          local bufname = vim.api.nvim_buf_get_name(args.buf)
-          -- Check if this is a Flutter log buffer
-          if bufname:match('__FLUTTER_DEV_LOG__') or vim.bo[args.buf].filetype == 'log' then
-            vim.bo[args.buf].modifiable = true -- Allow Flutter to write to it
-            vim.bo[args.buf].modified = false -- Mark as unmodified
-            vim.bo[args.buf].buftype = 'nofile' -- Don't associate with a file (prevents save prompt)
-            vim.bo[args.buf].swapfile = false -- Don't create swap file
-          end
-        end,
-      })
-
-      -- Keep log buffer marked as unmodified whenever it changes
-      -- This prevents the "save changes?" prompt on exit
-      vim.api.nvim_create_autocmd('BufModifiedSet', {
-        pattern = '*',
-        callback = function(args)
-          local bufname = vim.api.nvim_buf_get_name(args.buf)
-          if bufname:match('__FLUTTER_DEV_LOG__') then
-            vim.bo[args.buf].modifiable = true
-            vim.bo[args.buf].modified = false -- Keep it marked as unmodified
-          end
-        end,
-      })
 
       -- ========================================================================
       -- ENABLE TREESITTER FOLDING FOR DART FILES
@@ -357,57 +348,42 @@ return {
       })
 
       -- ========================================================================
-      -- FLUTTER-SPECIFIC KEYMAPS
+      -- FLUTTER-SPECIFIC KEYMAPS (Dart files only)
       -- ========================================================================
-      -- These keymaps are only available when editing Dart files
-      -- They provide quick access to common Flutter commands
+      -- These keymaps are only for Dart files (code actions, run)
+      -- Global Flutter commands (reload, quit, logs, devices) are in lua/config/keymaps.lua
       -- ========================================================================
       vim.api.nvim_create_autocmd('FileType', {
         pattern = 'dart',
         callback = function(event)
           local opts = { buffer = true, silent = true }
 
-          -- Flutter run/quit
+          -- Flutter run - only available in Dart files
           -- WORKFLOW: 
-          --   1. First time: <leader>fd to select device
-          --   2. Then: <leader>fr to run (uses selected device)
-          --   3. Subsequent runs: <leader>fr uses same device
+          --   1. First time: <leader>fd to select device (global keymap)
+          --   2. Then: <leader>fr to run (Dart only)
+          --   3. Use <leader>fh (reload), <leader>fq (quit) from anywhere
           vim.keymap.set('n', '<leader>fr', '<cmd>FlutterRun<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Run app' }))
-          vim.keymap.set('n', '<leader>fR', '<cmd>FlutterRestart<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Hot restart' }))
-          vim.keymap.set('n', '<leader>fh', '<cmd>FlutterReload<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Hot reload' }))
-          vim.keymap.set('n', '<leader>fq', '<cmd>FlutterQuit<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Quit app' }))
 
           -- Code Actions (Cmd+. equivalent) - wrap, remove, extract widgets, etc.
+          -- Note: 'gra' is already defined globally in lua/plugins/lsp/init.lua for all languages
           vim.keymap.set('n', '<leader>.', vim.lsp.buf.code_action, vim.tbl_extend('force', opts, { desc = 'Flutter: Code actions (Cmd+.)' }))
           vim.keymap.set('v', '<leader>.', vim.lsp.buf.code_action, vim.tbl_extend('force', opts, { desc = 'Flutter: Code actions (Cmd+.)' }))
-          -- Alternative: use the default LSP keymap
-          vim.keymap.set('n', 'gra', vim.lsp.buf.code_action, vim.tbl_extend('force', opts, { desc = '[G]oto Code [A]ction' }))
-          vim.keymap.set('v', 'gra', vim.lsp.buf.code_action, vim.tbl_extend('force', opts, { desc = '[G]oto Code [A]ction' }))
 
-          -- Device management
-          -- Use <leader>fd to see/select devices FIRST, then <leader>fr will use that device
-          vim.keymap.set('n', '<leader>fd', '<cmd>FlutterDevices<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Select device' }))
-          vim.keymap.set('n', '<leader>fe', '<cmd>FlutterEmulators<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Launch emulator' }))
-
-          -- Dev tools and debugging
-          -- Note: <leader>fo (outline toggle) is now a global keymap in lua/config/keymaps.lua
-          vim.keymap.set('n', '<leader>ft', '<cmd>FlutterDevTools<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Start DevTools' }))
+          -- Attach/Detach - Dart specific
+          vim.keymap.set('n', '<leader>fa', '<cmd>FlutterAttach<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Attach to app' }))
+          vim.keymap.set('n', '<leader>fD', '<cmd>FlutterDetach<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Detach from app' }))
+          
+          -- LSP restart - Dart specific
+          vim.keymap.set('n', '<leader>fl', '<cmd>FlutterLspRestart<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Restart LSP' }))
+          
+          -- Copy profiler URL - Dart specific
           vim.keymap.set(
             'n',
             '<leader>fc',
             '<cmd>FlutterCopyProfilerUrl<cr>',
             vim.tbl_extend('force', opts, { desc = 'Flutter: Copy profiler URL' })
           )
-          
-          -- Attach/Detach
-          vim.keymap.set('n', '<leader>fa', '<cmd>FlutterAttach<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Attach to app' }))
-          vim.keymap.set('n', '<leader>fD', '<cmd>FlutterDetach<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Detach from app' }))
-          
-          -- Logs
-          vim.keymap.set('n', '<leader>fL', '<cmd>FlutterLogToggle<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Toggle logs' }))
-          
-          -- LSP
-          vim.keymap.set('n', '<leader>fl', '<cmd>FlutterLspRestart<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Restart LSP' }))
 
           -- Register which-key group for Flutter
           require('which-key').add {

@@ -15,6 +15,8 @@ return {
   -- Main LSP Configuration
   {
     'neovim/nvim-lspconfig',
+    lazy = false,
+    priority = 1000,
     dependencies = {
       { 'mason-org/mason.nvim', opts = {} },
       'mason-org/mason-lspconfig.nvim',
@@ -23,6 +25,15 @@ return {
       'saghen/blink.cmp',
     },
     config = function()
+      -- Check if blink.cmp is available
+      local blink_ok = pcall(require, 'blink.cmp')
+      if not blink_ok then
+        vim.defer_fn(function()
+          require('lazy').load({ plugins = { 'nvim-lspconfig' } })
+        end, 1000)
+        return
+      end
+      
       -- LSP UI Enhancements - Better hover, signature help, and borders
       vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, {
         border = 'rounded',
@@ -32,6 +43,29 @@ return {
       vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers.signature_help, {
         border = 'rounded',
         max_width = 80,
+      })
+
+      -- Add keymaps to close LSP floating windows
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = 'lspinfo',
+        callback = function(event)
+          vim.keymap.set('n', '<Esc>', '<cmd>close<cr>', { buffer = event.buf, silent = true })
+          vim.keymap.set('n', 'q', '<cmd>close<cr>', { buffer = event.buf, silent = true })
+        end,
+      })
+
+      -- When you jump into a floating window (K twice), allow q to close it
+      vim.api.nvim_create_autocmd('BufEnter', {
+        callback = function(event)
+          local buftype = vim.bo[event.buf].buftype
+          if buftype == 'nofile' or buftype == 'help' then
+            local winid = vim.api.nvim_get_current_win()
+            local config = vim.api.nvim_win_get_config(winid)
+            if config.relative ~= '' then
+              vim.keymap.set('n', 'q', '<cmd>close<cr>', { buffer = event.buf, silent = true, nowait = true })
+            end
+          end
+        end,
       })
 
       -- LSP Keymaps (applied when LSP attaches to a buffer)
@@ -46,6 +80,7 @@ return {
           map('grn', vim.lsp.buf.rename, '[R]e[n]ame')
           map('K', vim.lsp.buf.hover, 'Hover Documentation')
           map('gra', vim.lsp.buf.code_action, '[G]oto Code [A]ction', { 'n', 'x' })
+          map('<leader>.', vim.lsp.buf.code_action, 'Code Actions (VSCode-like)', { 'n', 'x' })
           map('grr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
           map('gri', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
           map('grd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
@@ -99,7 +134,7 @@ return {
       -- Get capabilities from blink.cmp
       local capabilities = require('blink.cmp').get_lsp_capabilities()
 
-      -- General LSP servers (lua_ls for Neovim config)
+      -- General LSP servers (lua_ls for Neovim config, pyright for Python)
       local servers = {
         lua_ls = {
           settings = {
@@ -110,37 +145,65 @@ return {
             },
           },
         },
+        pyright = {
+          settings = {
+            python = {
+              analysis = {
+                typeCheckingMode = 'basic',
+                autoImportCompletions = true,
+                autoSearchPaths = true,
+                useLibraryCodeForTypes = true,
+                diagnosticMode = 'workspace',
+              },
+            },
+          },
+        },
       }
 
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Lua formatter
+        'ruff', -- Python linter/formatter
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
+      -- Get LSP servers to install (keys of servers table)
+      local lsp_servers = vim.tbl_keys(servers or {})
+      
       require('mason-lspconfig').setup {
-        ensure_installed = {},
+        ensure_installed = lsp_servers,
         automatic_installation = false,
         handlers = {
           function(server_name)
             local server = servers[server_name] or {}
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-
-            local ok, lspconfig_server = pcall(require, 'lspconfig.server_configurations.' .. server_name)
-            if ok and lspconfig_server.default_config then
-              local config = lspconfig_server.default_config
-              vim.lsp.config(server_name, {
-                cmd = server.cmd or config.cmd,
-                filetypes = server.filetypes or config.filetypes,
-                root_markers = config.root_dir,
-                capabilities = server.capabilities,
-                settings = server.settings,
-              })
-              vim.lsp.enable(server_name)
-            end
+            require('lspconfig')[server_name].setup(server)
           end,
         },
       }
+
+      -- ========================================================================
+      -- PYTHON VENV DETECTION
+      -- ========================================================================
+      -- Automatically configure pyright to use .venv when it attaches
+      -- This is here instead of python.lua to ensure it runs after LSP setup
+      -- ========================================================================
+      vim.api.nvim_create_autocmd('LspAttach', {
+        group = vim.api.nvim_create_augroup('python-venv-detection', { clear = true }),
+        callback = function(args)
+          local client = vim.lsp.get_client_by_id(args.data.client_id)
+          if client and client.name == 'pyright' then
+            local root_dir = client.config.root_dir
+            local venv_python = root_dir .. '/.venv/bin/python'
+            
+            if vim.loop.fs_stat(venv_python) then
+              client.config.settings.python = client.config.settings.python or {}
+              client.config.settings.python.pythonPath = venv_python
+              client.notify('workspace/didChangeConfiguration', { settings = client.config.settings })
+            end
+          end
+        end,
+      })
     end,
   },
 

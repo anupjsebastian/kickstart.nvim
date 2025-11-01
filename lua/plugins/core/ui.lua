@@ -199,7 +199,7 @@ return {
         enable = true,
         additional_vim_regex_highlighting = { 'ruby' },
       },
-      indent = { enable = true, disable = { 'ruby' } },
+      indent = { enable = true, disable = { 'ruby', 'dart' } }, -- Dart: Treesitter indent too aggressive for widget trees
       fold = {
         enable = true,
       },

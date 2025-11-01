@@ -257,8 +257,8 @@ return {
     { '<leader>cR', function() require('snacks').rename.rename_file() end, desc = 'Rename File (LSP)' },
     
     -- Scratch buffers
-    { '<leader>.', function() require('snacks').scratch() end, desc = 'Toggle Scratch Buffer' },
-    { '<leader>S', function() require('snacks').scratch.select() end, desc = 'Select Scratch Buffer' },
+    { '<leader>bS', function() require('snacks').scratch() end, desc = 'Toggle Scratch Buffer' },
+    { '<leader>bs', function() require('snacks').scratch.select() end, desc = 'Select Scratch Buffer' },
     
     -- Git
     { '<leader>gb', function() require('snacks').gitbrowse() end, desc = 'Git Browse (web)', mode = { 'n', 'v' } },

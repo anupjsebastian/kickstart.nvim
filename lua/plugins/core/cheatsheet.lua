@@ -206,8 +206,9 @@ return {
             -- LEADER KEYMAPS (CORE)
             -- ============================================================
             { category = 'Core: Quit', key = '<Space>Q', desc = 'Quit all' },
-            { category = 'Core: Quit', key = '<Space>q', desc = 'Quickfix diagnostics' },
+            { category = 'Core: Quit', key = '<Space>q', desc = 'Toggle diagnostic quickfix' },
             { category = 'Core: Files', key = '\\', desc = 'Toggle Neo-tree' },
+            { category = 'Core: Files', key = 'Esc', desc = 'Close floating windows or clear highlight' },
             { category = 'Core: Terminal', key = 'Esc Esc', desc = 'Exit terminal mode (in terminal)' },
 
             -- ============================================================
@@ -221,41 +222,68 @@ return {
             { category = 'Buffer: Open', key = ':e %:h/file', desc = 'Open file in current directory' },
             
             -- Switching between buffers
-            { category = 'Buffer: Switch', key = '<Space><Space>', desc = 'Buffer picker (with icons)' },
+            { category = 'Buffer: Switch', key = '<Space><Space>', desc = 'Buffer picker (enhanced with icons/diagnostics)' },
             { category = 'Buffer: Switch', key = ']b', desc = 'Next buffer' },
             { category = 'Buffer: Switch', key = '[b', desc = 'Previous buffer' },
             { category = 'Buffer: Switch', key = ']B', desc = 'Last buffer' },
             { category = 'Buffer: Switch', key = '[B', desc = 'First buffer' },
             { category = 'Buffer: Switch', key = ':ls', desc = 'List all buffers' },
             
-            -- Closing buffers
-            { category = 'Buffer: Close', key = '<Space>bd', desc = 'Delete/close current buffer' },
+            -- Closing/deleting buffers
+            { category = 'Buffer: Close', key = '<Space>bd', desc = 'Delete buffer (smart - closes window if last)' },
             { category = 'Buffer: Close', key = '<Space>bD', desc = 'Force delete buffer' },
+            { category = 'Buffer: Close', key = '<Space>bu', desc = 'Unload buffer (keep in list)' },
+            { category = 'Buffer: Close', key = '<Space>bo', desc = 'Delete other buffers' },
             { category = 'Buffer: Close', key = ':bd', desc = 'Delete buffer (native)' },
             { category = 'Buffer: Close', key = ':bd!', desc = 'Force delete without saving' },
             { category = 'Buffer: Close', key = ':bd 3', desc = 'Delete buffer number 3' },
+            { category = 'Buffer: Close', key = ':bunload', desc = 'Unload buffer (native)' },
             
             -- Buffer info
             { category = 'Buffer: Info', key = 'Ctrl-g', desc = 'Show buffer info' },
             { category = 'Buffer: Info', key = '<Space>sn', desc = 'Find in Neovim config' },
 
             -- ============================================================
-            -- BUFFER OPERATIONS (Legacy)
+            -- BUFFER OPERATIONS (Additional)
             -- ============================================================
-            { category = 'Buffer', key = '<Space>bn', desc = 'Next buffer (use ]b)' },
-            { category = 'Buffer', key = '<Space>bp', desc = 'Previous buffer (use [b)' },
-            { category = 'Buffer', key = '<Space>bo', desc = 'Delete other buffers' },
+            { category = 'Buffer', key = '<Space>bn', desc = 'Next buffer (prefer ]b)' },
+            { category = 'Buffer', key = '<Space>bp', desc = 'Previous buffer (prefer [b)' },
+            { category = 'Buffer', key = '<Space>bS', desc = 'Toggle scratch buffer (snacks)' },
+            { category = 'Buffer', key = '<Space>bs', desc = 'Select scratch buffer (snacks)' },
 
             -- ============================================================
             -- WINDOW OPERATIONS
             -- ============================================================
             { category = 'Window', key = '<Space>ww', desc = 'Other window' },
-            { category = 'Window', key = '<Space>wd', desc = 'Delete window' },
-            { category = 'Window', key = '<Space>ws', desc = 'Split below' },
-            { category = 'Window', key = '<Space>wv', desc = 'Split right' },
-            { category = 'Window', key = '<Space>wm', desc = 'Maximize' },
+            { category = 'Window', key = '<Space>wc', desc = 'Close window' },
+            { category = 'Window', key = '<Space>ws', desc = 'Split window below' },
+            { category = 'Window', key = '<Space>wv', desc = 'Split window right' },
+            { category = 'Window', key = '<Space>wm', desc = 'Maximize window' },
+            { category = 'Window', key = '<Space>wn', desc = 'New window (tab)' },
             { category = 'Window', key = '<Space>w=', desc = 'Balance windows' },
-            { category = 'Window', key = '<Space>wh/j/k/l', desc = 'Navigate windows' },
+            { category = 'Window', key = '<Space>wh', desc = 'Go to left window' },
+            { category = 'Window', key = '<Space>wj', desc = 'Go to lower window' },
+            { category = 'Window', key = '<Space>wk', desc = 'Go to upper window' },
+            { category = 'Window', key = '<Space>wl', desc = 'Go to right window' },
+            { category = 'Window', key = 'Ctrl-h', desc = 'Move focus to left window' },
+            { category = 'Window', key = 'Ctrl-j', desc = 'Move focus to lower window' },
+            { category = 'Window', key = 'Ctrl-k', desc = 'Move focus to upper window' },
+            { category = 'Window', key = 'Ctrl-l', desc = 'Move focus to right window' },
+
+            -- ============================================================
+            -- TAB OPERATIONS
+            -- ============================================================
+            { category = 'Tab', key = '<Space>tn', desc = 'New tab' },
+            { category = 'Tab', key = '<Space>wn', desc = 'New tab (alias)' },
+            { category = 'Tab', key = '<Space>tc', desc = 'Close tab' },
+            { category = 'Tab', key = '<Space>to', desc = 'Close other tabs' },
+            { category = 'Tab', key = '<Space>t]', desc = 'Next tab' },
+            { category = 'Tab', key = '<Space>t[', desc = 'Previous tab' },
+            { category = 'Tab', key = '<Space>tf', desc = 'First tab' },
+            { category = 'Tab', key = '<Space>tl', desc = 'Last tab' },
+            { category = 'Tab', key = 'gt', desc = 'Next tab (Vim native)' },
+            { category = 'Tab', key = 'gT', desc = 'Previous tab (Vim native)' },
+            { category = 'Tab', key = ':tabnew', desc = 'New tab (command)' },
 
             -- ============================================================
             -- SEARCH (TELESCOPE)
@@ -288,14 +316,20 @@ return {
             -- ============================================================
             { category = 'UI', key = '<Space>ul', desc = 'Open Lazy' },
             { category = 'UI', key = '<Space>um', desc = 'Open Mason' },
-            { category = 'UI', key = '<Space>ui', desc = 'Inspect position' },
-            { category = 'UI', key = '<Space>uI', desc = 'Inspect tree' },
-            { category = 'UI', key = '<Space>un', desc = 'Dismiss notifications' },
+            { category = 'UI', key = '<Space>ui', desc = 'Inspect position (treesitter)' },
+            { category = 'UI', key = '<Space>uI', desc = 'Inspect tree (treesitter)' },
+            { category = 'UI', key = '<Space>un', desc = 'Dismiss all notifications' },
+            { category = 'UI', key = '<Space>uh', desc = 'Notification history' },
 
             -- ============================================================
             -- TOGGLE
             -- ============================================================
-            { category = 'Toggle', key = '<Space>th', desc = 'Inlay hints' },
+            { category = 'Toggle', key = '<Space>th', desc = 'Inlay hints (LSP)' },
+            { category = 'Toggle', key = '<Space>td', desc = 'Diagnostics (snacks)' },
+            { category = 'Toggle', key = '<Space>tl', desc = 'Line numbers (snacks)' },
+            { category = 'Toggle', key = '<Space>ts', desc = 'Smooth scroll (snacks)' },
+            { category = 'Toggle', key = '<Space>tw', desc = 'Word highlights (snacks)' },
+            { category = 'Toggle', key = '<Space>ti', desc = 'Indent guides (snacks)' },
 
             -- ============================================================
             -- DIAGNOSTICS
@@ -305,17 +339,28 @@ return {
             { category = 'Diagnostics', key = '<Space>xs', desc = 'Symbols (Trouble)' },
 
             -- ============================================================
-            -- GIT
+            -- GIT (GITSIGNS)
             -- ============================================================
-            { category = 'Git', key = '<Space>hs', desc = 'Stage hunk' },
-            { category = 'Git', key = '<Space>hr', desc = 'Reset hunk' },
-            { category = 'Git', key = '<Space>hS', desc = 'Stage buffer' },
-            { category = 'Git', key = '<Space>hu', desc = 'Undo stage hunk' },
-            { category = 'Git', key = '<Space>hR', desc = 'Reset buffer' },
-            { category = 'Git', key = '<Space>hp', desc = 'Preview hunk' },
-            { category = 'Git', key = '<Space>hb', desc = 'Blame line' },
-            { category = 'Git', key = '<Space>hd', desc = 'Diff this' },
-            { category = 'Git', key = '<Space>hD', desc = 'Diff this ~' },
+            { category = 'Git', key = '<Space>hs', desc = 'Stage hunk (gitsigns)' },
+            { category = 'Git', key = '<Space>hr', desc = 'Reset hunk (gitsigns)' },
+            { category = 'Git', key = '<Space>hS', desc = 'Stage buffer (gitsigns)' },
+            { category = 'Git', key = '<Space>hu', desc = 'Undo stage hunk (gitsigns)' },
+            { category = 'Git', key = '<Space>hR', desc = 'Reset buffer (gitsigns)' },
+            { category = 'Git', key = '<Space>hp', desc = 'Preview hunk (gitsigns)' },
+            { category = 'Git', key = '<Space>hb', desc = 'Blame line (gitsigns)' },
+            { category = 'Git', key = '<Space>hd', desc = 'Diff this (gitsigns)' },
+            { category = 'Git', key = '<Space>hD', desc = 'Diff this ~ (gitsigns)' },
+            { category = 'Git', key = ']c or ]h', desc = 'Next git change/hunk (gitsigns)' },
+            { category = 'Git', key = '[c or [h', desc = 'Previous git change/hunk (gitsigns)' },
+            
+            -- ============================================================
+            -- GIT (SNACKS)
+            -- ============================================================
+            { category = 'Git: Snacks', key = '<Space>gb', desc = 'Git browse (open in web)' },
+            { category = 'Git: Snacks', key = '<Space>gB', desc = 'Git blame line' },
+            { category = 'Git: Snacks', key = '<Space>gH', desc = 'GitHub CLI' },
+            { category = 'Git: Snacks', key = '<Space>gI', desc = 'GitHub issues' },
+            { category = 'Git: Snacks', key = '<Space>gP', desc = 'GitHub PRs' },
 
             -- ============================================================
             -- LSP (ALL LANGUAGES)
@@ -326,10 +371,14 @@ return {
             { category = 'LSP', key = 'gri', desc = 'Go to implementation' },
             { category = 'LSP', key = 'grr', desc = 'Go to references' },
             { category = 'LSP', key = 'grt', desc = 'Go to type definition' },
-            { category = 'LSP', key = 'grn', desc = 'Rename' },
+            { category = 'LSP', key = 'grn', desc = 'Rename symbol' },
             { category = 'LSP', key = 'gra', desc = 'Code action' },
-            { category = 'LSP', key = 'gO', desc = 'Document symbols' },
-            { category = 'LSP', key = 'gW', desc = 'Workspace symbols' },
+            { category = 'LSP', key = '<Space>.', desc = 'Code action (VSCode-style)' },
+            { category = 'LSP', key = 'gO', desc = 'Document symbols (Telescope)' },
+            { category = 'LSP', key = 'gW', desc = 'Workspace symbols (Telescope)' },
+            { category = 'LSP', key = '<Space>th', desc = 'Toggle inlay hints' },
+            { category = 'LSP', key = 'q (in hover)', desc = 'Close LSP floating window' },
+            { category = 'LSP', key = 'Esc', desc = 'Close all floating windows' },
 
             -- ============================================================
             -- DEBUG (ALL LANGUAGES)
@@ -354,19 +403,19 @@ return {
             -- ============================================================
             -- FLUTTER (DART FILES)
             -- ============================================================
-            { category = 'Flutter', key = '<Space>fr', desc = 'Run app' },
-            { category = 'Flutter', key = '<Space>fR', desc = 'Hot restart' },
-            { category = 'Flutter', key = '<Space>fh', desc = 'Hot reload' },
-            { category = 'Flutter', key = '<Space>fq', desc = 'Quit app' },
-            { category = 'Flutter', key = '<Space>fd', desc = 'Select device' },
-            { category = 'Flutter', key = '<Space>fe', desc = 'Launch emulator' },
-            { category = 'Flutter', key = '<Space>fo', desc = 'Toggle outline' },
-            { category = 'Flutter', key = '<Space>ft', desc = 'Start DevTools' },
-            { category = 'Flutter', key = '<Space>fa', desc = 'Attach to app' },
-            { category = 'Flutter', key = '<Space>fD', desc = 'Detach from app' },
-            { category = 'Flutter', key = '<Space>fL', desc = 'Toggle logs' },
-            { category = 'Flutter', key = '<Space>fc', desc = 'Copy profiler URL' },
-            { category = 'Flutter', key = '<Space>fl', desc = 'Restart LSP' },
+            { category = 'Flutter', key = '<Space>fr', desc = 'Run app (Dart files)' },
+            { category = 'Flutter', key = '<Space>fR', desc = 'Hot restart (any buffer)' },
+            { category = 'Flutter', key = '<Space>fh', desc = 'Hot reload (any buffer)' },
+            { category = 'Flutter', key = '<Space>fq', desc = 'Quit app (any buffer)' },
+            { category = 'Flutter', key = '<Space>fd', desc = 'Select device (any buffer)' },
+            { category = 'Flutter', key = '<Space>fe', desc = 'Launch emulator (any buffer)' },
+            { category = 'Flutter', key = '<Space>fo', desc = 'Toggle outline (Dart files)' },
+            { category = 'Flutter', key = '<Space>ft', desc = 'Start DevTools (any buffer)' },
+            { category = 'Flutter', key = '<Space>fa', desc = 'Attach to app (Dart files)' },
+            { category = 'Flutter', key = '<Space>fD', desc = 'Detach from app (Dart files)' },
+            { category = 'Flutter', key = '<Space>fL', desc = 'Toggle logs (any buffer)' },
+            { category = 'Flutter', key = '<Space>fc', desc = 'Copy profiler URL (Dart files)' },
+            { category = 'Flutter', key = '<Space>fl', desc = 'Restart LSP (Dart files)' },
             { category = 'Flutter', key = '<Space>. or gra', desc = 'Code actions (Cmd+.)' },
 
             -- ============================================================
@@ -385,45 +434,56 @@ return {
             -- ============================================================
             -- RUST CRATES (CARGO.TOML)
             -- ============================================================
-            { category = 'Rust: Crates', key = '<Space>rct', desc = 'Toggle' },
-            { category = 'Rust: Crates', key = '<Space>rcr', desc = 'Reload' },
-            { category = 'Rust: Crates', key = '<Space>rcv', desc = 'Show versions' },
-            { category = 'Rust: Crates', key = '<Space>rcf', desc = 'Show features' },
-            { category = 'Rust: Crates', key = '<Space>rcd', desc = 'Show dependencies' },
-            { category = 'Rust: Crates', key = '<Space>rcu', desc = 'Update crate' },
-            { category = 'Rust: Crates', key = '<Space>rca', desc = 'Update all' },
-            { category = 'Rust: Crates', key = '<Space>rcU', desc = 'Upgrade crate' },
-            { category = 'Rust: Crates', key = '<Space>rcA', desc = 'Upgrade all' },
+            { category = 'Rust: Crates', key = '<Space>rct', desc = 'Toggle crates popup' },
+            { category = 'Rust: Crates', key = '<Space>rcr', desc = 'Reload crates' },
+            { category = 'Rust: Crates', key = '<Space>rcv', desc = 'Show versions popup' },
+            { category = 'Rust: Crates', key = '<Space>rcf', desc = 'Show features popup' },
+            { category = 'Rust: Crates', key = '<Space>rcd', desc = 'Show dependencies popup' },
+            { category = 'Rust: Crates', key = '<Space>rcu', desc = 'Update crate under cursor' },
+            { category = 'Rust: Crates', key = '<Space>rcu (visual)', desc = 'Update selected crates' },
+            { category = 'Rust: Crates', key = '<Space>rca', desc = 'Update all crates' },
+            { category = 'Rust: Crates', key = '<Space>rcU', desc = 'Upgrade crate under cursor' },
+            { category = 'Rust: Crates', key = '<Space>rcU (visual)', desc = 'Upgrade selected crates' },
+            { category = 'Rust: Crates', key = '<Space>rcA', desc = 'Upgrade all crates' },
+            { category = 'Rust: Crates', key = '<Space>rce', desc = 'Expand to inline table' },
+            { category = 'Rust: Crates', key = '<Space>rcE', desc = 'Extract to table' },
+            { category = 'Rust: Crates', key = '<Space>rcH', desc = 'Open homepage' },
+            { category = 'Rust: Crates', key = '<Space>rcR', desc = 'Open repository' },
+            { category = 'Rust: Crates', key = '<Space>rcD', desc = 'Open documentation' },
+            { category = 'Rust: Crates', key = '<Space>rcC', desc = 'Open crates.io' },
 
             -- ============================================================
             -- PYTHON (PYTHON FILES)
             -- ============================================================
-            { category = 'Python', key = '<Space>pr', desc = 'Run file' },
-            { category = 'Python', key = '<Space>pR', desc = 'Run with args' },
-            { category = 'Python', key = '<Space>pe', desc = 'Select venv' },
-            { category = 'Python', key = '<Space>pl', desc = 'Restart LSP' },
-            { category = 'Python', key = '<Space>pi', desc = 'Organize imports' },
-            { category = 'Python', key = '<Space>pf', desc = 'Format code' },
+            { category = 'Python', key = '<Space>pr', desc = 'Run file (python3)' },
+            { category = 'Python', key = '<Space>pR', desc = 'Run with args (python3)' },
+            { category = 'Python', key = '<Space>pe', desc = 'Activate .venv' },
+            { category = 'Python', key = '<Space>pl', desc = 'Restart pyright LSP' },
+            { category = 'Python', key = '<Space>pi', desc = 'Organize imports (ruff)' },
+            { category = 'Python', key = '<Space>pf', desc = 'Format code (ruff)' },
 
             -- ============================================================
             -- SVELTE (SVELTE FILES)
             -- ============================================================
             { category = 'Svelte', key = '<Space>vf', desc = 'Format with prettier' },
             { category = 'Svelte', key = '<Space>vl', desc = 'Restart Svelte LSP' },
-            { category = 'Svelte', key = '<Space>vt', desc = 'Restart TypeScript LSP' },
+            { category = 'Svelte', key = '<Space>vt', desc = 'Restart TypeScript LSP (ts_ls)' },
             { category = 'Svelte', key = '<Space>vo', desc = 'Open component in split' },
+            { category = 'Svelte', key = 'Ctrl-e,', desc = 'Expand Emmet abbreviation' },
 
             -- ============================================================
             -- TELESCOPE (INSIDE TELESCOPE)
             -- ============================================================
-            { category = 'Telescope', key = 'Ctrl-j/k or j/k', desc = 'Next/previous item' },
+            { category = 'Telescope', key = 'Ctrl-j/k', desc = 'Next/previous item' },
+            { category = 'Telescope', key = 'j/k (normal)', desc = 'Next/previous item' },
             { category = 'Telescope', key = 'Ctrl-d/u', desc = 'Scroll preview down/up' },
+            { category = 'Telescope', key = 'Ctrl-n/p', desc = 'Cycle history next/prev' },
             { category = 'Telescope', key = 'Enter', desc = 'Open in current window' },
             { category = 'Telescope', key = 'Ctrl-x', desc = 'Open in horizontal split' },
             { category = 'Telescope', key = 'Ctrl-v', desc = 'Open in vertical split' },
             { category = 'Telescope', key = 'Ctrl-t', desc = 'Open in new tab' },
             { category = 'Telescope', key = 'Ctrl-c/Esc/q', desc = 'Close' },
-            { category = 'Telescope', key = 'Tab/Shift-Tab', desc = 'Toggle selection' },
+            { category = 'Telescope', key = 'Tab/Shift-Tab', desc = 'Toggle selection & move' },
             { category = 'Telescope', key = 'Ctrl-q', desc = 'Send all to quickfix' },
             { category = 'Telescope', key = 'Alt-q', desc = 'Send selected to quickfix' },
             { category = 'Telescope', key = '? (normal)', desc = 'Show help' },
@@ -466,6 +526,16 @@ return {
             -- ============================================================
             -- SNACKS.NVIM (QOL FEATURES)
             -- ============================================================
+            -- Dashboard (startup screen)
+            { category = 'Snacks: Dashboard', key = 'f', desc = 'Find File (dashboard)' },
+            { category = 'Snacks: Dashboard', key = 'n', desc = 'New File (dashboard)' },
+            { category = 'Snacks: Dashboard', key = 'g', desc = 'Find Text (dashboard)' },
+            { category = 'Snacks: Dashboard', key = 'r', desc = 'Recent Files (dashboard)' },
+            { category = 'Snacks: Dashboard', key = 'c', desc = 'Config (dashboard)' },
+            { category = 'Snacks: Dashboard', key = 's', desc = 'Restore Session (dashboard)' },
+            { category = 'Snacks: Dashboard', key = 'l', desc = 'Lazy (dashboard)' },
+            { category = 'Snacks: Dashboard', key = 'q', desc = 'Quit (dashboard)' },
+            
             -- Buffers
             { category = 'Snacks: Buffers', key = '<Space>bd', desc = 'Delete buffer (smart)' },
             { category = 'Snacks: Buffers', key = '<Space>bo', desc = 'Delete other buffers' },
@@ -474,8 +544,8 @@ return {
             { category = 'Snacks: Files', key = '<Space>cR', desc = 'Rename file (LSP-aware)' },
             
             -- Scratch buffers
-            { category = 'Snacks: Scratch', key = '<Space>.', desc = 'Toggle scratch buffer' },
-            { category = 'Snacks: Scratch', key = '<Space>S', desc = 'Select scratch buffer' },
+            { category = 'Snacks: Scratch', key = '<Space>bS', desc = 'Toggle scratch buffer' },
+            { category = 'Snacks: Scratch', key = '<Space>bs', desc = 'Select scratch buffer' },
             { category = 'Snacks: Scratch', key = 'Enter (in scratch)', desc = 'Execute Lua line' },
             
             -- Word references
@@ -541,6 +611,13 @@ return {
             { category = 'Snacks: Toggle', key = '<Space>ts', desc = 'Toggle smooth scroll' },
             { category = 'Snacks: Toggle', key = '<Space>tw', desc = 'Toggle word highlights' },
             { category = 'Snacks: Toggle', key = '<Space>ti', desc = 'Toggle indent guides' },
+
+            -- ============================================================
+            -- CODE ACTIONS
+            -- ============================================================
+            { category = 'Code', key = '<Space>.', desc = 'Code actions (VSCode-style)' },
+            { category = 'Code', key = 'gra', desc = 'Code actions (LSP)' },
+            { category = 'Code', key = '<Space>cR', desc = 'Rename file (LSP-aware, snacks)' },
 
             -- ============================================================
             -- MINI.AI (TEXT OBJECTS)
