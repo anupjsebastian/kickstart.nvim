@@ -12,6 +12,20 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+-- Highlight active window borders
+vim.api.nvim_create_autocmd('ColorScheme', {
+  desc = 'Set window border colors',
+  group = vim.api.nvim_create_augroup('window-border-colors', { clear = true }),
+  callback = function()
+    -- Active window border - bright blue
+    vim.api.nvim_set_hl(0, 'WinSeparator', { fg = '#7aa2f7', bold = true })
+    -- You can also use: '#bb9af7' (purple), '#9ece6a' (green), '#f7768e' (red)
+  end,
+})
+
+-- Trigger the highlight setup immediately
+vim.cmd('doautocmd ColorScheme')
+
 -- Ensure focus starts in the editor, not file tree
 vim.api.nvim_create_autocmd('VimEnter', {
   desc = 'Focus editor window on startup, not Neo-tree',
@@ -34,23 +48,25 @@ vim.api.nvim_create_autocmd('VimEnter', {
   end,
 })
 
--- Ensure virtual text diagnostics are enabled after all plugins load
--- This needs to be set after plugins that might override diagnostic config
-vim.api.nvim_create_autocmd('User', {
-  pattern = 'VeryLazy',
-  once = true,
-  callback = function()
-    vim.diagnostic.config {
-      virtual_text = {
-        spacing = 4,
-        source = 'if_many',
-        prefix = '■',
-        format = function(diagnostic)
-          return diagnostic.message
-        end,
-      },
-    }
-  end,
+-- Configure diagnostic signs with nicer icons
+-- Must be set early, before LSP attaches
+vim.diagnostic.config({
+  signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = '󰅚 ',
+      [vim.diagnostic.severity.WARN] = '󰀪 ',
+      [vim.diagnostic.severity.HINT] = '󰌶 ',
+      [vim.diagnostic.severity.INFO] = '󰋽 ',
+    },
+  },
+  virtual_text = {
+    spacing = 4,
+    source = 'if_many',
+    prefix = '●',
+  },
+  underline = true,
+  update_in_insert = false,
+  severity_sort = true,
 })
 
 -- Command to restart Python LSP (useful when switching projects/venvs)

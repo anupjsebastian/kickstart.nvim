@@ -9,7 +9,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setup Node.js PATH for plugins like Copilot ]]
 -- Add fnm's Node.js to PATH so Neovim can find it
@@ -66,6 +66,23 @@ vim.o.updatetime = 250
 -- Displays which-key popup sooner
 vim.o.timeoutlen = 300
 
+-- Set time to wait for key codes (affects terminal mode escape)
+-- Lower value = faster escape from terminal insert mode
+vim.o.ttimeoutlen = 10
+
+-- Configure cursor shapes for different modes
+-- n-v-c = block in normal, visual, command modes
+-- i-ci-ve = thin vertical bar in insert mode
+-- r-cr = horizontal bar in replace mode
+vim.opt.guicursor = {
+  'n-v-c:block',           -- Block cursor in normal, visual, command
+  'i-ci-ve:ver25',         -- Thin vertical bar (25% width) in insert
+  'r-cr:hor20',            -- Horizontal bar (20% height) in replace
+  'o:hor50',               -- Horizontal bar in operator-pending
+  'a:blinkwait700-blinkoff400-blinkon250', -- Blinking settings
+  'sm:block-blinkwait175-blinkoff150-blinkon175', -- Search match
+}
+
 -- Configure how new splits should be opened
 vim.o.splitright = true
 vim.o.splitbelow = true
@@ -80,6 +97,9 @@ vim.o.inccommand = 'split'
 
 -- Show which line your cursor is on
 vim.o.cursorline = true
+
+-- Window separators - visible borders between windows
+vim.opt.fillchars = { vert = '│', horiz = '─', horizup = '┴', horizdown = '┬', vertleft = '┤', vertright = '├', verthoriz = '┼' }
 
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.o.scrolloff = 10

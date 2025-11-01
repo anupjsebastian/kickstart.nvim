@@ -15,8 +15,47 @@ vim.keymap.set('n', '<Esc>', function()
   vim.cmd('nohlsearch')
 end, { silent = true, desc = 'Close floating window or clear highlight' })
 
--- Diagnostic keymaps
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+-- Diagnostic keymaps - Toggle quickfix list (works in normal buffers and quickfix itself)
+vim.keymap.set('n', '<leader>q', function()
+  -- Don't work in special buffers except quickfix/loclist and terminal
+  local buftype = vim.bo.buftype
+  if buftype ~= "" and buftype ~= "terminal" and buftype ~= "quickfix" then
+    vim.notify("Quickfix toggle only works in regular buffers", vim.log.levels.WARN)
+    return
+  end
+  
+  local qf_winid = nil
+  for _, win in pairs(vim.fn.getwininfo()) do
+    if win['loclist'] == 1 then
+      qf_winid = win.winid
+      break
+    end
+  end
+  if qf_winid then
+    vim.api.nvim_win_close(qf_winid, true)
+  else
+    vim.diagnostic.setloclist()
+  end
+end, { desc = 'Toggle diagnostic quickfix list' })
+
+-- Flutter outline toggle (global, works from any window including the outline itself)
+vim.keymap.set('n', '<leader>fo', function()
+  local outline_winnr = nil
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    local buf = vim.api.nvim_win_get_buf(win)
+    local buf_name = vim.api.nvim_buf_get_name(buf)
+    if buf_name:match('FlutterOutline') then
+      outline_winnr = win
+      break
+    end
+  end
+  
+  if outline_winnr then
+    vim.api.nvim_win_close(outline_winnr, true)
+  else
+    vim.cmd('FlutterOutlineToggle')
+  end
+end, { desc = 'Toggle outline' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -26,6 +65,9 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 -- or just use <C-\><C-n> to exit terminal mode
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
+-- ========================================================================
+-- KEYBINDS TO IMPROVE DEFAULT EXPERIENCE
+-- ========================================================================
 -- TIP: Disable arrow keys in normal mode
 -- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
 -- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
@@ -40,8 +82,12 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
+-- ========================================================================
+-- QUIT OPERATIONS (<leader>Q)
+-- ========================================================================
 -- Quit keymaps - easier ways to close Neovim (using capital Q to avoid conflict with diagnostic quickfix)
--- Session management is automatic via auto-session plugin (saves on exit, restores on startup)
+-- Session management auto-saves on exit but doesn't auto-restore on startup
+-- Use dashboard 's' or <leader>Sr to restore sessions manually
 vim.keymap.set('n', '<leader>Q', '<cmd>qa<CR>', { desc = '[Q]uit [A]ll' })
 
 -- Alternative quit options (commented out, uncomment if needed):

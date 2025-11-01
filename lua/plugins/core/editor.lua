@@ -15,7 +15,7 @@ return {
   -- Telescope: Fuzzy finder (files, LSP, etc)
   {
     'nvim-telescope/telescope.nvim',
-    event = 'VimEnter',
+    event = 'VeryLazy', -- Deferred for faster startup
     dependencies = {
       'nvim-lua/plenary.nvim',
       {
@@ -114,14 +114,108 @@ return {
       vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
-      vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+      vim.keymap.set('n', '<leader><leader>', function()
+        local make_entry = require('telescope.make_entry')
+        local entry_display = require('telescope.pickers.entry_display')
+        
+        -- Custom entry maker with indicators
+        local function buffer_entry_maker(opts)
+          opts = opts or {}
+          
+          local displayer = entry_display.create {
+            separator = ' ',
+            items = {
+              { width = 2 },  -- Modified indicator
+              { width = 2 },  -- Diagnostic indicator
+              { width = 3 },  -- Icon
+              { remaining = true },  -- Filename
+            },
+          }
+          
+          local make_display = function(entry)
+            local bufnr = entry.bufnr
+            local bufname = entry.filename
+            
+            -- Get buffer state
+            local is_modified = vim.api.nvim_buf_get_option(bufnr, 'modified')
+            local is_loaded = vim.api.nvim_buf_is_loaded(bufnr)
+            
+            -- Get diagnostic counts for this buffer
+            local diagnostics = vim.diagnostic.get(bufnr)
+            local error_count = 0
+            local warn_count = 0
+            for _, d in ipairs(diagnostics) do
+              if d.severity == vim.diagnostic.severity.ERROR then
+                error_count = error_count + 1
+              elseif d.severity == vim.diagnostic.severity.WARN then
+                warn_count = warn_count + 1
+              end
+            end
+            
+            -- Build separate indicators for alignment
+            local modified_indicator = is_modified and { '●', 'DiagnosticInfo' } or { ' ', 'Normal' }
+            
+            local diag_indicator
+            if error_count > 0 then
+              diag_indicator = { '󰅚', 'DiagnosticError' }
+            elseif warn_count > 0 then
+              diag_indicator = { '󰀪', 'DiagnosticWarn' }
+            else
+              diag_indicator = { ' ', 'Normal' }
+            end
+            
+            -- Get file icon
+            local icon, icon_hl = require('nvim-web-devicons').get_icon(bufname, string.match(bufname, '%a+$'), { default = true })
+            icon = icon or ''
+            
+            return displayer {
+              modified_indicator,
+              diag_indicator,
+              { icon, icon_hl },
+              bufname,
+            }
+          end
+          
+          return function(entry)
+            local bufnr = entry.bufnr
+            local bufname = vim.api.nvim_buf_get_name(bufnr)
+            if bufname == '' then
+              bufname = '[No Name]'
+            else
+              bufname = vim.fn.fnamemodify(bufname, ':t')  -- Just filename, no path
+            end
+            
+            return {
+              bufnr = bufnr,
+              filename = bufname,
+              ordinal = bufname,
+              display = make_display,
+              lnum = entry.lnum,
+            }
+          end
+        end
+        
+        require('telescope.builtin').buffers {
+          sort_mru = true,
+          sort_lastused = true,
+          ignore_current_buffer = false,
+          show_all_buffers = true,
+          previewer = false,
+          theme = 'dropdown',
+          layout_config = {
+            width = 0.7,
+            height = 0.5,
+          },
+          entry_maker = buffer_entry_maker(),
+        }
+      end, { desc = '[ ] Find existing buffers' })
 
       vim.keymap.set('n', '<leader>/', function()
         builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
           winblend = 10,
           previewer = false,
         })
-      end, { desc = '[/] Fuzzily search in current buffer' })
+      end, { desc = 'Fuzzily search in current buffer' })
 
       vim.keymap.set('n', '<leader>s/', function()
         builtin.live_grep {
@@ -139,7 +233,7 @@ return {
   -- Which-key: Shows pending keybinds
   {
     'folke/which-key.nvim',
-    event = 'VimEnter',
+    event = 'VeryLazy', -- Deferred for faster startup
     opts = {
       delay = 0,
       -- Floating window configuration (bottom right)
@@ -161,61 +255,96 @@ return {
         spacing = 3,                      -- Spacing between columns
       },
       icons = {
-        mappings = vim.g.have_nerd_font,
-        keys = vim.g.have_nerd_font and {} or {
-          Up = '<Up> ',
-          Down = '<Down> ',
-          Left = '<Left> ',
-          Right = '<Right> ',
-          C = '<C-…> ',
-          M = '<M-…> ',
-          D = '<D-…> ',
-          S = '<S-…> ',
-          CR = '<CR> ',
-          Esc = '<Esc> ',
-          ScrollWheelDown = '<ScrollWheelDown> ',
-          ScrollWheelUp = '<ScrollWheelUp> ',
-          NL = '<NL> ',
-          BS = '<BS> ',
-          Space = '<Space> ',
-          Tab = '<Tab> ',
-          F1 = '<F1>',
-          F2 = '<F2>',
-          F3 = '<F3>',
-          F4 = '<F4>',
-          F5 = '<F5>',
-          F6 = '<F6>',
-          F7 = '<F7>',
-          F8 = '<F8>',
-          F9 = '<F9>',
-          F10 = '<F10>',
-          F11 = '<F11>',
-          F12 = '<F12>',
+        breadcrumb = "»", -- symbol used in the command line area that shows your active key combo
+        separator = "➜", -- symbol used between a key and it's label
+        group = "+", -- symbol prepended to a group
+        ellipsis = "…",
+        mappings = true, -- Always show icons (we have Nerd Font)
+        rules = false, -- Disable built-in icon rules to use our custom icons
+        -- Setting keys to empty object means use defaults
+        keys = {},
+      },
+      -- Filter to hide keymaps that won't work in current buffer
+      plugins = {
+        presets = {
+          operators = false, -- adds help for operators like d, y, ...
+          motions = false, -- adds help for motions
+          text_objects = false, -- help for text objects triggered after entering an operator
+          windows = true, -- default bindings on <c-w>
+          nav = true, -- misc bindings to work with windows
+          z = true, -- bindings for folds, spelling and others prefixed with z
+          g = true, -- bindings for prefixed with g
         },
       },
       spec = {
         -- Core groups with icons
-        { '<leader>b', group = '󰊄 buffer', icon = '󰊄' },
-        { '<leader>c', group = ' code', icon = '' },
-        { '<leader>d', group = ' debug', icon = '' },
-        { '<leader>f', group = ' flutter', icon = '' }, -- Only visible in Dart files
-        { '<leader>g', group = ' git', icon = '' },
-        { '<leader>p', group = ' python', icon = '' }, -- Only visible in Python files
-        { '<leader>r', group = '󱘗 rust', icon = '󱘗' }, -- Only visible in Rust files
-        { '<leader>s', group = ' search', icon = '' },
-        { '<leader>S', group = '󱂬 session', icon = '󱂬' },
-        { '<leader>t', group = '󰔡 toggle', icon = '󰔡' },
-        { '<leader>u', group = ' ui', icon = '' },
-        { '<leader>v', group = ' svelte', icon = '' }, -- Only visible in Svelte files
-        { '<leader>w', group = ' window', icon = '' },
-        { '<leader>x', group = '󱖫 diagnostics', icon = '󱖫' },
+        { '<leader>b', group = '󰊄 Buffer' },
+        { '<leader>c', group = '󰘦 Code' },
+        { '<leader>d', group = '󰃤 Debug' },
+        { '<leader>f', group = '󱓞 Flutter' }, -- Only visible in Dart files
+        { '<leader>g', group = '󰊢 Git' },
+        { '<leader>h', group = '󰊢 Git Hunk', mode = { 'n', 'v' } },
+        { '<leader>p', group = '󰌠 Python' }, -- Only visible in Python files
+        { '<leader>r', group = '󱘗 Rust' }, -- Only visible in Rust files
+        { '<leader>s', group = '󰍉 Search' },
+        { '<leader>S', group = '󱂬 Session' },
+        { '<leader>t', group = '󰔡 Toggle' },
+        { '<leader>u', group = '󰙵 UI' },
+        { '<leader>v', group = '󰡄 Svelte' }, -- Only visible in Svelte files
+        { '<leader>w', group = '󰖲 Window' },
+        { '<leader>x', group = '󱖫 Diagnostics' },
         
-        -- Special groups
-        { '<leader>q', desc = '󰁨 Quickfix diagnostics' },
-        { '<leader>Q', desc = '󰗼 Quit all' },
+        -- Special standalone keymaps (not part of a group)
+        { '<leader>q', desc = '󰁨 Toggle Diagnostic Quickfix' },
+        { '<leader>Q', desc = '󰗼 Quit All' },
+        { '<leader>/', desc = '󰱼 Fuzzy Search in Buffer' },
+        { '<leader><leader>', desc = '󰈙 Find Buffers' },
+        { '<leader>?', desc = '󰘳 Search Keymaps' },
+        { '<leader>.', desc = '� Scratch Buffer', mode = { 'n', 'v' } },
         
-        -- Git hunks (normal and visual mode)
-        { '<leader>h', group = ' git hunk', mode = { 'n', 'v' }, icon = '' },
+        -- Bracket motions (Vim defaults + snacks)
+        { ']', group = '󰜴 Next' },
+        { '[', group = '󰜱 Previous' },
+        { ']]', desc = '󱡁 Next Word Occurrence (snacks.words)' },
+        { '[[', desc = '󱡁 Prev Word Occurrence (snacks.words)' },
+        { ']s', desc = '󰓆 Next Misspelled Word (spell)' },
+        { '[s', desc = '󰓆 Prev Misspelled Word (spell)' },
+        { ']c', desc = '󰊢 Next Git Change (gitsigns)' },
+        { '[c', desc = '󰊢 Prev Git Change (gitsigns)' },
+        { ']d', desc = '󱖫 Next Diagnostic (LSP)' },
+        { '[d', desc = '󱖫 Prev Diagnostic (LSP)' },
+        { ']h', desc = '󰊢 Next Git Hunk (gitsigns)' },
+        { '[h', desc = '󰊢 Prev Git Hunk (gitsigns)' },
+        
+        -- Vim argument list navigation (files passed to nvim: nvim file1.txt file2.txt)
+        { ']a', desc = '󰈔 Next Arg (:next)' },
+        { '[a', desc = '󰈔 Prev Arg (:prev)' },
+        { ']A', desc = '󰈔 Last Arg (:last)' },
+        { '[A', desc = '󰈔 First Arg (:first)' },
+        
+        -- Buffer navigation (opened files)
+        { ']b', desc = '󰊄 Next Buffer (:bnext)' },
+        { '[b', desc = '󰊄 Prev Buffer (:bprev)' },
+        { ']B', desc = '󰊄 Last Buffer (:blast)' },
+        { '[B', desc = '󰊄 First Buffer (:bfirst)' },
+        
+        -- Location list navigation (LSP locations, grep results)
+        { ']l', desc = '󱖫 Next Location (:lnext)' },
+        { '[l', desc = '󱖫 Prev Location (:lprev)' },
+        { ']L', desc = '󱖫 Last Location (:llast)' },
+        { '[L', desc = '󱖫 First Location (:lfirst)' },
+        
+        -- Quickfix list navigation (search results, errors)
+        { ']q', desc = '󰁨 Next Quickfix (:cnext)' },
+        { '[q', desc = '󰁨 Prev Quickfix (:cprev)' },
+        { ']Q', desc = '󰁨 Last Quickfix (:clast)' },
+        { '[Q', desc = '󰁨 First Quickfix (:cfirst)' },
+        
+        -- Tag navigation (ctags, jump to definition)
+        { ']t', desc = '󰓹 Next Tag (:tnext)' },
+        { '[t', desc = '󰓹 Prev Tag (:tprev)' },
+        { ']T', desc = '󰓹 Last Tag (:tlast)' },
+        { '[T', desc = '󰓹 First Tag (:tfirst)' },
       },
     },
   },

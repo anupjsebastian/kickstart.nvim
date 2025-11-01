@@ -8,20 +8,20 @@
 --
 -- Features:
 --   - ✅ Auto-saves session on exit (automatically!)
---   - ✅ Auto-restores session when you `cd` into a directory and run `nvim`
+--   - ⏸️  Manual restore via dashboard 's' or <leader>Sr (no auto-restore on startup)
 --   - Saves per-directory (each project has its own session)
 --   - Saves open buffers, window splits, cursor positions, and more
 --
--- IMPORTANT: Auto-restore works when you:
---   1. cd /path/to/your/project
---   2. nvim (without specifying files)
+-- IMPORTANT: Session restore options:
+--   1. Press 's' on the dashboard to restore last session
+--   2. Use <leader>Sr to restore manually
+--   3. Sessions auto-save on exit but don't auto-restore on startup
 --   
--- If you open a specific file (e.g., `nvim main.dart`), auto-restore is skipped.
--- Use manual restore (<leader>Sr) if needed.
+-- This gives you the choice to start fresh or resume your work.
 --
 -- Keymaps:
 --   <leader>Ss - Save session manually
---   <leader>Sr - Restore session manually (if auto-restore didn't trigger)
+--   <leader>Sr - Restore session manually
 --   <leader>Sd - Delete session for current directory
 --   <leader>Sf - Find/search all sessions (Telescope)
 --
@@ -32,10 +32,10 @@
 --
 -- WORKFLOW:
 --   1. cd into your project directory
---   2. nvim (session auto-restores if it exists!)
+--   2. nvim (opens dashboard - press 's' to restore or start fresh!)
 --   3. Work on your project
 --   4. Quit with <leader>Qa or just :qa (auto-saves!)
---   5. Next time: repeat from step 1 - your workspace is restored!
+--   5. Next time: repeat from step 1 - your choice to restore or not!
 --
 -- Sessions are saved in: ~/.local/share/nvim/sessions/
 -- ========================================================================
@@ -46,7 +46,7 @@ return {
   opts = {
     -- Session save/restore options
     auto_session_enabled = true, -- Automatically save sessions on exit
-    auto_restore_enabled = true, -- Automatically restore sessions on startup
+    auto_restore_enabled = false, -- Don't auto-restore - use dashboard 's' or <leader>Sr instead
     auto_save_enabled = true, -- Auto-save session on exit
     auto_session_suppress_dirs = { '~/', '~/Downloads', '/' }, -- Don't save sessions in these dirs
     auto_session_use_git_branch = false, -- One session per directory (not per git branch)

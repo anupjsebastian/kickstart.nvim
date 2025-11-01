@@ -179,7 +179,7 @@ return {
         },
 
         outline = {
-          open_cmd = '30vnew', -- command to use to open the outline buffer
+          open_cmd = '60vnew', -- command to use to open the outline buffer (increased from 30 to 50)
           auto_open = false, -- if true this will open the outline automatically when it is first populated
         },
 
@@ -367,16 +367,6 @@ return {
         callback = function(event)
           local opts = { buffer = true, silent = true }
 
-          -- ========================================================================
-          -- ENABLE TREESITTER FOLDING FOR DART FILES
-          -- ========================================================================
-          -- Set fold method to use Treesitter for Flutter widgets
-          vim.opt_local.foldmethod = 'expr'
-          vim.opt_local.foldexpr = 'nvim_treesitter#foldexpr()'
-          vim.opt_local.foldenable = false -- Start with folds open
-          vim.opt_local.foldlevel = 99
-          vim.opt_local.foldlevelstart = 99
-
           -- Flutter run/quit
           -- WORKFLOW: 
           --   1. First time: <leader>fd to select device
@@ -400,7 +390,7 @@ return {
           vim.keymap.set('n', '<leader>fe', '<cmd>FlutterEmulators<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Launch emulator' }))
 
           -- Dev tools and debugging
-          vim.keymap.set('n', '<leader>fo', '<cmd>FlutterOutlineToggle<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Toggle outline' }))
+          -- Note: <leader>fo (outline toggle) is now a global keymap in lua/config/keymaps.lua
           vim.keymap.set('n', '<leader>ft', '<cmd>FlutterDevTools<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Start DevTools' }))
           vim.keymap.set(
             'n',

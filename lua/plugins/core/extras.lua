@@ -13,54 +13,6 @@
 
 return {
   -- ========================================================================
-  -- FILE EXPLORER - Neo-tree
-  -- ========================================================================
-  -- Neo-tree provides a modern file explorer sidebar similar to VS Code.
-  -- It's loaded for all profiles so you can browse files regardless of
-  -- what language you're working with.
-  --
-  -- Keybindings:
-  --   \ (backslash) - Toggle Neo-tree file explorer
-  --   Within Neo-tree:
-  --     a - Add file/folder
-  --     d - Delete
-  --     r - Rename
-  --     x - Cut
-  --     c - Copy
-  --     p - Paste
-  --     ? - Show help (see all keybindings)
-  --
-  -- Note: This references the existing neo-tree configuration from
-  -- kickstart/plugins/neo-tree.lua. We're just ensuring it's loaded.
-  -- ========================================================================
---   {
---     'nvim-neo-tree/neo-tree.nvim',
---     version = '*',
---     dependencies = {
---       'nvim-lua/plenary.nvim',
---       'nvim-tree/nvim-web-devicons', -- not strictly required, but recommended
---       'MunifTanjim/nui.nvim',
---     },
---     cmd = 'Neotree', -- Lazy load on command
---     keys = {
---       { '\\', ':Neotree reveal<CR>', desc = 'NeoTree reveal', silent = true },
---     },
---     opts = {
---       filesystem = {
---         window = {
---           mappings = {
---             ['\\'] = 'close_window',
---           },
---         },
---         follow_current_file = {
---           enabled = true, -- Focus on the current file when opening
---         },
---         hijack_netrw_behavior = 'open_current', -- Use neo-tree instead of netrw
---       },
---     },
---   },
-
-  -- ========================================================================
   -- GITHUB COPILOT - AI pair programming assistant
   -- ========================================================================
   -- GitHub Copilot provides AI-powered code completions and suggestions.
@@ -141,9 +93,9 @@ return {
           timing = animate.gen_timing.linear({ duration = 100, unit = 'total' }),
         },
         
-        -- Smooth scrolling
+        -- Smooth scrolling - DISABLED (using snacks.nvim scroll instead)
         scroll = {
-          enable = true,
+          enable = false, -- Conflicts with snacks.scroll
           timing = animate.gen_timing.linear({ duration = 150, unit = 'total' }),
           subscroll = animate.gen_subscroll.equal({
             predicate = function(total_scroll)
@@ -257,7 +209,7 @@ return {
             end
           end
         end,
-        desc = 'Previous Trouble/Quickfix Item',
+        desc = 'Prev Quickfix/Trouble (:cprev)',
       },
       {
         ']q',
@@ -271,7 +223,7 @@ return {
             end
           end
         end,
-        desc = 'Next Trouble/Quickfix Item',
+        desc = 'Next Quickfix/Trouble (:cnext)',
       },
     },
   },
