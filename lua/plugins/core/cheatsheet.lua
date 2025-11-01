@@ -211,14 +211,40 @@ return {
             { category = 'Core: Terminal', key = 'Esc Esc', desc = 'Exit terminal mode (in terminal)' },
 
             -- ============================================================
-            -- BUFFER OPERATIONS
+            -- BUFFER WORKFLOW
             -- ============================================================
-            { category = 'Buffer', key = '<Space>bd', desc = 'Delete buffer' },
-            { category = 'Buffer', key = '<Space>bD', desc = 'Delete buffer (force)' },
-            { category = 'Buffer', key = '<Space>bn', desc = 'Next buffer' },
-            { category = 'Buffer', key = '<Space>bp', desc = 'Previous buffer' },
+            -- Opening files/buffers
+            { category = 'Buffer: Open', key = '<Space>sf', desc = 'Find and open file (Telescope)' },
+            { category = 'Buffer: Open', key = '\\', desc = 'Browse and open file (Neo-tree)' },
+            { category = 'Buffer: Open', key = ':e filename', desc = 'Edit/open file by path' },
+            { category = 'Buffer: Open', key = 'gf', desc = 'Go to file under cursor' },
+            { category = 'Buffer: Open', key = ':e %:h/file', desc = 'Open file in current directory' },
+            
+            -- Switching between buffers
+            { category = 'Buffer: Switch', key = '<Space><Space>', desc = 'Buffer picker (with icons)' },
+            { category = 'Buffer: Switch', key = ']b', desc = 'Next buffer' },
+            { category = 'Buffer: Switch', key = '[b', desc = 'Previous buffer' },
+            { category = 'Buffer: Switch', key = ']B', desc = 'Last buffer' },
+            { category = 'Buffer: Switch', key = '[B', desc = 'First buffer' },
+            { category = 'Buffer: Switch', key = ':ls', desc = 'List all buffers' },
+            
+            -- Closing buffers
+            { category = 'Buffer: Close', key = '<Space>bd', desc = 'Delete/close current buffer' },
+            { category = 'Buffer: Close', key = '<Space>bD', desc = 'Force delete buffer' },
+            { category = 'Buffer: Close', key = ':bd', desc = 'Delete buffer (native)' },
+            { category = 'Buffer: Close', key = ':bd!', desc = 'Force delete without saving' },
+            { category = 'Buffer: Close', key = ':bd 3', desc = 'Delete buffer number 3' },
+            
+            -- Buffer info
+            { category = 'Buffer: Info', key = 'Ctrl-g', desc = 'Show buffer info' },
+            { category = 'Buffer: Info', key = '<Space>sn', desc = 'Find in Neovim config' },
+
+            -- ============================================================
+            -- BUFFER OPERATIONS (Legacy)
+            -- ============================================================
+            { category = 'Buffer', key = '<Space>bn', desc = 'Next buffer (use ]b)' },
+            { category = 'Buffer', key = '<Space>bp', desc = 'Previous buffer (use [b)' },
             { category = 'Buffer', key = '<Space>bo', desc = 'Delete other buffers' },
-            { category = 'Buffer', key = '<Space><Space>', desc = 'Find buffers (Telescope)' },
 
             -- ============================================================
             -- WINDOW OPERATIONS
@@ -250,11 +276,12 @@ return {
             { category = 'Search', key = '<Space>/', desc = 'Fuzzy find in buffer' },
 
             -- ============================================================
-            -- SESSION
+            -- SESSION (Auto-saves on exit, manual restore)
             -- ============================================================
-            { category = 'Session', key = '<Space>Ss', desc = 'Save session' },
-            { category = 'Session', key = '<Space>Sr', desc = 'Restore session' },
+            { category = 'Session', key = '<Space>Ss', desc = 'Save session manually' },
+            { category = 'Session', key = '<Space>Sr', desc = 'Restore session (or use dashboard "s")' },
             { category = 'Session', key = '<Space>Sd', desc = 'Delete session' },
+            { category = 'Session', key = '<Space>Sf', desc = 'Find/browse all sessions' },
 
             -- ============================================================
             -- UI OPERATIONS

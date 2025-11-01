@@ -86,7 +86,8 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 -- QUIT OPERATIONS (<leader>Q)
 -- ========================================================================
 -- Quit keymaps - easier ways to close Neovim (using capital Q to avoid conflict with diagnostic quickfix)
--- Session management is automatic via auto-session plugin (saves on exit, restores on startup)
+-- Session management auto-saves on exit but doesn't auto-restore on startup
+-- Use dashboard 's' or <leader>Sr to restore sessions manually
 vim.keymap.set('n', '<leader>Q', '<cmd>qa<CR>', { desc = '[Q]uit [A]ll' })
 
 -- Alternative quit options (commented out, uncomment if needed):

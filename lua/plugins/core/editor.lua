@@ -15,7 +15,7 @@ return {
   -- Telescope: Fuzzy finder (files, LSP, etc)
   {
     'nvim-telescope/telescope.nvim',
-    event = 'VimEnter',
+    event = 'VeryLazy', -- Deferred for faster startup
     dependencies = {
       'nvim-lua/plenary.nvim',
       {
@@ -114,7 +114,101 @@ return {
       vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
-      vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+      vim.keymap.set('n', '<leader><leader>', function()
+        local make_entry = require('telescope.make_entry')
+        local entry_display = require('telescope.pickers.entry_display')
+        
+        -- Custom entry maker with indicators
+        local function buffer_entry_maker(opts)
+          opts = opts or {}
+          
+          local displayer = entry_display.create {
+            separator = ' ',
+            items = {
+              { width = 2 },  -- Modified indicator
+              { width = 2 },  -- Diagnostic indicator
+              { width = 3 },  -- Icon
+              { remaining = true },  -- Filename
+            },
+          }
+          
+          local make_display = function(entry)
+            local bufnr = entry.bufnr
+            local bufname = entry.filename
+            
+            -- Get buffer state
+            local is_modified = vim.api.nvim_buf_get_option(bufnr, 'modified')
+            local is_loaded = vim.api.nvim_buf_is_loaded(bufnr)
+            
+            -- Get diagnostic counts for this buffer
+            local diagnostics = vim.diagnostic.get(bufnr)
+            local error_count = 0
+            local warn_count = 0
+            for _, d in ipairs(diagnostics) do
+              if d.severity == vim.diagnostic.severity.ERROR then
+                error_count = error_count + 1
+              elseif d.severity == vim.diagnostic.severity.WARN then
+                warn_count = warn_count + 1
+              end
+            end
+            
+            -- Build separate indicators for alignment
+            local modified_indicator = is_modified and { '●', 'DiagnosticInfo' } or { ' ', 'Normal' }
+            
+            local diag_indicator
+            if error_count > 0 then
+              diag_indicator = { '󰅚', 'DiagnosticError' }
+            elseif warn_count > 0 then
+              diag_indicator = { '󰀪', 'DiagnosticWarn' }
+            else
+              diag_indicator = { ' ', 'Normal' }
+            end
+            
+            -- Get file icon
+            local icon, icon_hl = require('nvim-web-devicons').get_icon(bufname, string.match(bufname, '%a+$'), { default = true })
+            icon = icon or ''
+            
+            return displayer {
+              modified_indicator,
+              diag_indicator,
+              { icon, icon_hl },
+              bufname,
+            }
+          end
+          
+          return function(entry)
+            local bufnr = entry.bufnr
+            local bufname = vim.api.nvim_buf_get_name(bufnr)
+            if bufname == '' then
+              bufname = '[No Name]'
+            else
+              bufname = vim.fn.fnamemodify(bufname, ':t')  -- Just filename, no path
+            end
+            
+            return {
+              bufnr = bufnr,
+              filename = bufname,
+              ordinal = bufname,
+              display = make_display,
+              lnum = entry.lnum,
+            }
+          end
+        end
+        
+        require('telescope.builtin').buffers {
+          sort_mru = true,
+          sort_lastused = true,
+          ignore_current_buffer = false,
+          show_all_buffers = true,
+          previewer = false,
+          theme = 'dropdown',
+          layout_config = {
+            width = 0.7,
+            height = 0.5,
+          },
+          entry_maker = buffer_entry_maker(),
+        }
+      end, { desc = '[ ] Find existing buffers' })
 
       vim.keymap.set('n', '<leader>/', function()
         builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
@@ -139,7 +233,7 @@ return {
   -- Which-key: Shows pending keybinds
   {
     'folke/which-key.nvim',
-    event = 'VimEnter',
+    event = 'VeryLazy', -- Deferred for faster startup
     opts = {
       delay = 0,
       -- Floating window configuration (bottom right)

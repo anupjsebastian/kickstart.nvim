@@ -11,7 +11,7 @@ return {
   -- Autocompletion
   {
     'saghen/blink.cmp',
-    event = 'VimEnter',
+    event = 'InsertEnter', -- Only load when entering insert mode
     version = '1.*',
     dependencies = {
       {

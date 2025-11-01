@@ -179,7 +179,7 @@ return {
         },
 
         outline = {
-          open_cmd = '30vnew', -- command to use to open the outline buffer
+          open_cmd = '60vnew', -- command to use to open the outline buffer (increased from 30 to 50)
           auto_open = false, -- if true this will open the outline automatically when it is first populated
         },
 

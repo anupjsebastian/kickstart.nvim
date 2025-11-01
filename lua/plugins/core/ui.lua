@@ -149,7 +149,7 @@ return {
   -- Highlight todo, notes, etc in comments
   {
     'folke/todo-comments.nvim',
-    event = 'VimEnter',
+    event = 'VeryLazy', -- Deferred for faster startup
     dependencies = { 'nvim-lua/plenary.nvim' },
     opts = { signs = false },
   },
@@ -173,6 +173,8 @@ return {
   {
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
+    event = 'VeryLazy', -- Deferred for faster startup
+    priority = 50, -- Load after other VeryLazy plugins
     main = 'nvim-treesitter.configs',
     opts = {
       ensure_installed = {

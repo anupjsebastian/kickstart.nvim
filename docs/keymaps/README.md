@@ -47,6 +47,51 @@ Same keys work the same way everywhere:
 
 ## 🗺️ Keymap Categories
 
+### Buffer Workflow 📂
+
+**What are Buffers?**
+Buffers = open files in memory. When you open a file, it becomes a buffer.
+
+**Opening Files/Buffers:**
+| Command | Action |
+|---------|--------|
+| `<Leader>sf` | Telescope: Find and open file |
+| `\` | Neo-tree: Navigate and open file |
+| `:e filename` | Edit/open a file by path |
+| `nvim file1 file2` | Open multiple files from terminal |
+| `gf` | Go to file under cursor (imports/paths) |
+
+**Switching Between Buffers:**
+| Command | Action |
+|---------|--------|
+| `<Leader><space>` | **Telescope buffer picker** (with icons & modified indicators) |
+| `]b` | Next buffer |
+| `[b` | Previous buffer |
+| `:ls` | List all buffers |
+
+**Closing Buffers:**
+| Command | Action |
+|---------|--------|
+| `<Leader>bd` | Delete/close current buffer (smart - keeps window) |
+| `:bd` | Delete buffer (native) |
+| `:bd!` | Force delete without saving |
+| `<Leader>bo` | Close other buffers (when using bufferline) |
+
+**Buffer Facts:**
+- No practical limit (thousands possible, limited by RAM)
+- Typical workflow: 5-50 buffers open
+- Hidden buffers stay in memory (fast switching!)
+- Sessions auto-save your buffer state
+
+**Workflow Example:**
+```
+1. <Leader>sf → Open file1.py → Becomes buffer
+2. <Leader>sf → Open file2.py → Becomes another buffer
+3. <Leader><space> → See both buffers with icons
+4. ]b / [b → Quick switch between them
+5. <Leader>bd → Close buffer when done
+```
+
 ### Core Editor
 | Prefix | Category | Example |
 |--------|----------|---------|

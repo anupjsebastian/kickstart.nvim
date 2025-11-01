@@ -186,7 +186,7 @@ return {
           { icon = ' ', key = 'g', desc = 'Find Text', action = ':Telescope live_grep' },
           { icon = ' ', key = 'r', desc = 'Recent Files', action = ':Telescope oldfiles' },
           { icon = ' ', key = 'c', desc = 'Config', action = ':e $MYVIMRC' },
-          { icon = ' ', key = 's', desc = 'Restore Session', action = ':SessionRestore' },
+          { icon = ' ', key = 's', desc = 'Restore Session', action = ':AutoSession restore' },
           { icon = '󰒲 ', key = 'l', desc = 'Lazy', action = ':Lazy' },
           { icon = ' ', key = 'q', desc = 'Quit', action = ':qa' },
         },

@@ -26,6 +26,27 @@ return {
       indent = {
         padding = 0,
       },
+      diagnostics = {
+        symbols = {
+          hint = '󰌶 ',
+          info = '󰋽 ',
+          warn = '󰀪 ',
+          error = '󰅚 ',
+        },
+      },
+      git_status = {
+        symbols = {
+          added = '',
+          deleted = '',
+          modified = '',
+          renamed = '➜',
+          untracked = '★',
+          ignored = '◌',
+          unstaged = '✗',
+          staged = '✓',
+          conflict = '',
+        },
+      },
     },
     
     -- Global window mappings (apply to all Neo-tree windows)

@@ -49,39 +49,24 @@ vim.api.nvim_create_autocmd('VimEnter', {
 })
 
 -- Configure diagnostic signs with nicer icons
-local signs = {
-  Error = '󰅚 ',
-  Warn = '󰀪 ',
-  Hint = '󰌶 ',
-  Info = '󰋽 ',
-}
-
-for type, icon in pairs(signs) do
-  local hl = 'DiagnosticSign' .. type
-  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
-end
-
--- Ensure virtual text diagnostics are enabled after all plugins load
--- This needs to be set after plugins that might override diagnostic config
-vim.api.nvim_create_autocmd('User', {
-  pattern = 'VeryLazy',
-  once = true,
-  callback = function()
-    vim.diagnostic.config {
-      virtual_text = {
-        spacing = 4,
-        source = 'if_many',
-        prefix = '●',
-        format = function(diagnostic)
-          return diagnostic.message
-        end,
-      },
-      signs = true,
-      underline = true,
-      update_in_insert = false,
-      severity_sort = true,
-    }
-  end,
+-- Must be set early, before LSP attaches
+vim.diagnostic.config({
+  signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = '󰅚 ',
+      [vim.diagnostic.severity.WARN] = '󰀪 ',
+      [vim.diagnostic.severity.HINT] = '󰌶 ',
+      [vim.diagnostic.severity.INFO] = '󰋽 ',
+    },
+  },
+  virtual_text = {
+    spacing = 4,
+    source = 'if_many',
+    prefix = '●',
+  },
+  underline = true,
+  update_in_insert = false,
+  severity_sort = true,
 })
 
 -- Command to restart Python LSP (useful when switching projects/venvs)
