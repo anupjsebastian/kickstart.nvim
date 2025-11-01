@@ -28,6 +28,7 @@ require('lazy').setup({
   { import = 'plugins.core' },     -- Core plugins (always loaded)
   { import = 'plugins.lsp' },      -- LSP configuration
   { import = 'plugins.lang' },     -- Language-specific plugins (lazy-loaded)
+  { import = 'plugins.ui' },       -- UI enhancements (smear cursor, etc.)
 }, {
   ui = {
     icons = vim.g.have_nerd_font and {} or {
