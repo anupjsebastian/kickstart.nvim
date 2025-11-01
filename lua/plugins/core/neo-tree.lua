@@ -8,6 +8,7 @@ return {
     'nvim-lua/plenary.nvim',
     'nvim-tree/nvim-web-devicons', -- not strictly required, but recommended
     'MunifTanjim/nui.nvim',
+    's1n7ax/nvim-window-picker', -- Required for split_with_window_picker
   },
   lazy = false,
   keys = {
@@ -71,8 +72,9 @@ return {
           ['P'] = { 'toggle_preview', config = { use_float = true } },
           
           -- Telescope integration from Neo-tree
-          ['<leader>sf'] = 'telescope_find',
-          ['<leader>sg'] = 'telescope_grep',
+          ['/'] = 'telescope_find_root',       -- Search from root directory
+          ['<leader>sf'] = 'telescope_find',   -- Search from current directory
+          ['<leader>sg'] = 'telescope_grep',   -- Grep from current directory
           
           -- Refresh
           ['R'] = 'refresh',
@@ -103,6 +105,12 @@ return {
     
     -- Add custom commands for Telescope integration
     commands = {
+      telescope_find_root = function(state)
+        -- Always search from the root of the workspace
+        require('telescope.builtin').find_files {
+          cwd = vim.fn.getcwd(),
+        }
+      end,
       telescope_find = function(state)
         local node = state.tree:get_node()
         local path = node:get_id()

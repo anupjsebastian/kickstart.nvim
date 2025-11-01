@@ -35,6 +35,16 @@ Having duplicate keymaps is **intentional and beneficial**:
 
 **Why duplicates?** Neo-tree defaults are efficient single-key presses. Consistent alternatives (`Ctrl-x/v/t/j/k`) work the same way in Telescope, reducing cognitive load when switching between file finder and file tree.
 
+## Neo-tree Telescope Integration
+
+| Action | Keys | Notes |
+|--------|------|-------|
+| Find files from root | `/` | Opens Telescope at workspace root |
+| Find files from current dir | `<Space>sf` | Opens Telescope at selected directory |
+| Grep from current dir | `<Space>sg` | Live grep at selected directory |
+
+**Why different keys?** `/` is the natural "search" key that searches the entire workspace. `<Space>sf` respects the directory context you're currently viewing in Neo-tree, useful for scoped searches.
+
 ## Flutter Code Actions
 
 | Action | Keys | Notes |

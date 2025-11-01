@@ -55,16 +55,103 @@ return {
             { category = 'Vim: Editing', key = 'J', desc = 'Join lines' },
             { category = 'Vim: Editing', key = '~', desc = 'Toggle case' },
             { category = 'Vim: Editing', key = '>>/<<', desc = 'Indent/unindent line' },
+            { category = 'Vim: Editing', key = '={motion}', desc = 'Auto-indent (==, =G)' },
+            { category = 'Vim: Editing', key = 'gU{motion}', desc = 'Uppercase (gUiw, gUU)' },
+            { category = 'Vim: Editing', key = 'gu{motion}', desc = 'Lowercase (guiw, guu)' },
+            { category = 'Vim: Editing', key = 'g~{motion}', desc = 'Toggle case (g~iw, g~~)' },
+            { category = 'Vim: Editing', key = 'gq{motion}', desc = 'Format text (gqip)' },
+            { category = 'Vim: Editing', key = 'gJ', desc = 'Join lines without space' },
+            { category = 'Vim: Editing', key = 'Ctrl-a/Ctrl-x', desc = 'Increment/decrement number' },
+            
+            -- Comments (Neovim 0.10+ built-in)
+            { category = 'Vim: Comments', key = 'gcc', desc = 'Toggle comment line' },
+            { category = 'Vim: Comments', key = 'gc{motion}', desc = 'Toggle comment (gcap, gcip)' },
+            { category = 'Vim: Comments', key = 'gc (visual)', desc = 'Toggle comment selection' },
+            { category = 'Vim: Comments', key = 'gbc', desc = 'Toggle block comment line' },
+            { category = 'Vim: Comments', key = 'gb{motion}', desc = 'Toggle block comment (gbap)' },
+            { category = 'Vim: Comments', key = 'gb (visual)', desc = 'Toggle block comment selection' },
+            { category = 'Vim: Comments', key = 'gcO', desc = 'Add comment above' },
+            { category = 'Vim: Comments', key = 'gco', desc = 'Add comment below' },
+            { category = 'Vim: Comments', key = 'gcA', desc = 'Add comment at end of line' },
+            
+            -- Line operations
+            { category = 'Vim: Lines', key = 'dd', desc = 'Delete line' },
+            { category = 'Vim: Lines', key = 'yy', desc = 'Yank/copy line' },
+            { category = 'Vim: Lines', key = 'cc', desc = 'Change line' },
+            { category = 'Vim: Lines', key = 'D', desc = 'Delete to end of line' },
+            { category = 'Vim: Lines', key = 'C', desc = 'Change to end of line' },
+            { category = 'Vim: Lines', key = 'Y', desc = 'Yank to end of line' },
+            { category = 'Vim: Lines', key = 'S', desc = 'Substitute line (same as cc)' },
+            { category = 'Vim: Lines', key = ':m {line}', desc = 'Move line to line number' },
+            { category = 'Vim: Lines', key = ':t {line}', desc = 'Copy line to line number' },
+            { category = 'Vim: Lines', key = ':5,10d', desc = 'Delete lines 5-10' },
+            { category = 'Vim: Lines', key = ':5,10y', desc = 'Yank lines 5-10' },
 
             { category = 'Vim: Visual', key = 'v/V/Ctrl-v', desc = 'Visual/line/block mode' },
             { category = 'Vim: Visual', key = 'o', desc = 'Go to other end of selection' },
             { category = 'Vim: Visual', key = 'gv', desc = 'Reselect last visual' },
+            { category = 'Vim: Visual', key = '>/<', desc = 'Indent/unindent selection' },
+            { category = 'Vim: Visual', key = 'I/A (block)', desc = 'Insert at start/end of block' },
+            { category = 'Vim: Visual', key = 'U/u', desc = 'Uppercase/lowercase selection' },
+            { category = 'Vim: Visual', key = '~', desc = 'Toggle case of selection' },
+            { category = 'Vim: Visual', key = 'J', desc = 'Join selected lines' },
+            { category = 'Vim: Visual', key = ':sort', desc = 'Sort selected lines' },
+            { category = 'Vim: Visual', key = ':!{cmd}', desc = 'Filter selection through command' },
 
+            -- Search & Replace (comprehensive)
             { category = 'Vim: Search', key = '/{pattern}', desc = 'Search forward' },
             { category = 'Vim: Search', key = '?{pattern}', desc = 'Search backward' },
-            { category = 'Vim: Search', key = ':s/old/new/g', desc = 'Substitute in line' },
-            { category = 'Vim: Search', key = ':%s/old/new/g', desc = 'Substitute in file' },
+            { category = 'Vim: Search', key = 'n/N', desc = 'Next/previous match' },
+            { category = 'Vim: Search', key = '*/#', desc = 'Search word under cursor fwd/back' },
             { category = 'Vim: Search', key = ':noh', desc = 'Clear search highlight' },
+            
+            -- Replace variations (flags: g=global, c=confirm, i=ignore case)
+            { category = 'Vim: Replace', key = ':s/old/new/', desc = 'Replace first in line' },
+            { category = 'Vim: Replace', key = ':s/old/new/g', desc = 'Replace all in line' },
+            { category = 'Vim: Replace', key = ':s/old/new/gc', desc = 'Replace in line (confirm each)' },
+            { category = 'Vim: Replace', key = ':%s/old/new/g', desc = 'Replace all in file' },
+            { category = 'Vim: Replace', key = ':%s/old/new/gc', desc = 'Replace in file (confirm each)' },
+            { category = 'Vim: Replace', key = ':%s/old/new/gi', desc = 'Replace all (case insensitive)' },
+            { category = 'Vim: Replace', key = ":'<,'>s/old/new/g", desc = 'Replace in visual selection' },
+            { category = 'Vim: Replace', key = ':5,10s/old/new/g', desc = 'Replace in line range' },
+            { category = 'Vim: Replace', key = ':.,+5s/old/new/g', desc = 'Replace current + 5 lines' },
+            { category = 'Vim: Replace', key = ':%s//new/g', desc = 'Replace last search pattern' },
+            
+            -- Confirm prompts: y=yes, n=no, a=all, q=quit, l=this and quit
+            { category = 'Vim: Replace', key = 'y/n/a/q/l', desc = 'Confirm: yes/no/all/quit/last' },
+            
+            -- Macro recording
+            { category = 'Vim: Macros', key = 'q{letter}', desc = 'Start recording macro' },
+            { category = 'Vim: Macros', key = 'q', desc = 'Stop recording macro' },
+            { category = 'Vim: Macros', key = '@{letter}', desc = 'Play macro' },
+            { category = 'Vim: Macros', key = '@@', desc = 'Replay last macro' },
+            { category = 'Vim: Macros', key = '{count}@{letter}', desc = 'Repeat macro N times' },
+            { category = 'Vim: Macros', key = ':reg', desc = 'View all macros/registers' },
+            
+            -- Marks (navigate to locations)
+            { category = 'Vim: Marks', key = 'm{letter}', desc = 'Set mark (a-z local, A-Z global)' },
+            { category = 'Vim: Marks', key = "'{letter}", desc = 'Jump to mark line' },
+            { category = 'Vim: Marks', key = '`{letter}', desc = 'Jump to mark exact position' },
+            { category = 'Vim: Marks', key = "''", desc = 'Jump to last jump position' },
+            { category = 'Vim: Marks', key = "`.`", desc = 'Jump to last edit position' },
+            { category = 'Vim: Marks', key = ':marks', desc = 'List all marks' },
+            { category = 'Vim: Marks', key = ':delmarks a-z', desc = 'Delete marks' },
+            
+            -- Registers (copy/paste storage)
+            { category = 'Vim: Registers', key = '"{letter}y', desc = 'Yank to register' },
+            { category = 'Vim: Registers', key = '"{letter}p', desc = 'Paste from register' },
+            { category = 'Vim: Registers', key = '"0p', desc = 'Paste last yank (not delete)' },
+            { category = 'Vim: Registers', key = '"+y', desc = 'Yank to system clipboard' },
+            { category = 'Vim: Registers', key = '"+p', desc = 'Paste from system clipboard' },
+            { category = 'Vim: Registers', key = ':reg', desc = 'View all registers' },
+            
+            -- Jump list navigation
+            { category = 'Vim: Jumps', key = 'Ctrl-o', desc = 'Jump to older position' },
+            { category = 'Vim: Jumps', key = 'Ctrl-i', desc = 'Jump to newer position' },
+            { category = 'Vim: Jumps', key = ':jumps', desc = 'View jump list' },
+            { category = 'Vim: Jumps', key = 'g;', desc = 'Go to older change position' },
+            { category = 'Vim: Jumps', key = 'g,', desc = 'Go to newer change position' },
+            { category = 'Vim: Jumps', key = ':changes', desc = 'View change list' },
 
             { category = 'Vim: Windows', key = 'Ctrl-w s', desc = 'Split horizontal' },
             { category = 'Vim: Windows', key = 'Ctrl-w v', desc = 'Split vertical' },
@@ -76,11 +163,44 @@ return {
             { category = 'Vim: Tabs', key = ':tabnew', desc = 'New tab' },
             { category = 'Vim: Tabs', key = ':tabc', desc = 'Close tab' },
             { category = 'Vim: Tabs', key = 'gt/gT', desc = 'Next/previous tab' },
+            { category = 'Vim: Tabs', key = '{count}gt', desc = 'Go to tab number' },
+
+            { category = 'Vim: Buffers', key = ':bn/:bp', desc = 'Next/previous buffer' },
+            { category = 'Vim: Buffers', key = ':bd', desc = 'Delete buffer' },
+            { category = 'Vim: Buffers', key = ':b {name}', desc = 'Switch to buffer by name' },
+            { category = 'Vim: Buffers', key = ':ls or :buffers', desc = 'List all buffers' },
+            { category = 'Vim: Buffers', key = 'Ctrl-^', desc = 'Switch to alternate buffer' },
+            
+            { category = 'Vim: Folding', key = 'za', desc = 'Toggle fold' },
+            { category = 'Vim: Folding', key = 'zo/zc', desc = 'Open/close fold' },
+            { category = 'Vim: Folding', key = 'zR/zM', desc = 'Open/close all folds' },
+            { category = 'Vim: Folding', key = 'zj/zk', desc = 'Move to next/previous fold' },
+            { category = 'Vim: Folding', key = 'zf{motion}', desc = 'Create fold' },
+            { category = 'Vim: Folding', key = 'zd', desc = 'Delete fold' },
+            
+            { category = 'Vim: Spell', key = ':set spell', desc = 'Enable spell check' },
+            { category = 'Vim: Spell', key = ':set nospell', desc = 'Disable spell check' },
+            { category = 'Vim: Spell', key = 'z=', desc = 'Suggest corrections' },
+            { category = 'Vim: Spell', key = 'zg', desc = 'Add word to dictionary' },
+            { category = 'Vim: Spell', key = 'zw', desc = 'Mark word as wrong' },
+            { category = 'Vim: Spell', key = ']s/[s', desc = 'Next/previous misspelled word' },
 
             { category = 'Vim: Files', key = ':w', desc = 'Save file' },
+            { category = 'Vim: Files', key = ':w !sudo tee %', desc = 'Save with sudo' },
             { category = 'Vim: Files', key = ':q', desc = 'Quit' },
             { category = 'Vim: Files', key = ':wq or ZZ', desc = 'Save and quit' },
             { category = 'Vim: Files', key = ':q! or ZQ', desc = 'Quit without saving' },
+            { category = 'Vim: Files', key = ':e {file}', desc = 'Edit file' },
+            { category = 'Vim: Files', key = ':e!', desc = 'Reload file (discard changes)' },
+            { category = 'Vim: Files', key = ':saveas {file}', desc = 'Save as new file' },
+            
+            { category = 'Vim: Command', key = ':', desc = 'Enter command mode' },
+            { category = 'Vim: Command', key = 'q:', desc = 'Open command history window' },
+            { category = 'Vim: Command', key = 'Ctrl-f (in :)', desc = 'Edit command in window' },
+            { category = 'Vim: Command', key = ':!{cmd}', desc = 'Run shell command' },
+            { category = 'Vim: Command', key = ':r !{cmd}', desc = 'Insert command output' },
+            { category = 'Vim: Command', key = ':{range}!{cmd}', desc = 'Filter lines through command' },
+            { category = 'Vim: Command', key = ':shell', desc = 'Open shell (exit to return)' },
 
             -- ============================================================
             -- LEADER KEYMAPS (CORE)
@@ -312,8 +432,9 @@ return {
             { category = 'Neo-tree', key = 'c', desc = 'Copy (with path input)' },
             { category = 'Neo-tree', key = 'm', desc = 'Move (with path input)' },
             { category = 'Neo-tree', key = '?', desc = 'Show help (in Neo-tree)' },
-            { category = 'Neo-tree', key = '<Space>sf', desc = 'Telescope find from this dir' },
-            { category = 'Neo-tree', key = '<Space>sg', desc = 'Telescope grep from this dir' },
+            { category = 'Neo-tree', key = '/', desc = 'Telescope find from root dir' },
+            { category = 'Neo-tree', key = '<Space>sf', desc = 'Telescope find from current dir' },
+            { category = 'Neo-tree', key = '<Space>sg', desc = 'Telescope grep from current dir' },
 
             -- ============================================================
             -- MINI.AI (TEXT OBJECTS)

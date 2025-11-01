@@ -106,7 +106,83 @@ On first launch:
 
 ---
 
-## 📖 Documentation
+## � Version & Stability
+
+### Tested Configuration
+- **Neovim Version**: `v0.11.4`
+- **Last Tested**: November 2025
+- **Plugin Lock**: `lazy-lock.json` (commit-pinned versions)
+
+This configuration is tested and confirmed working with the versions specified above. The `lazy-lock.json` file locks all plugins to specific commits, ensuring reproducible installations.
+
+### Restoring After Updates Break
+
+If a plugin update causes issues, you can restore to the last known-good state:
+
+#### Quick Restore (Recommended)
+```vim
+" Inside Neovim
+:Lazy restore
+```
+
+This restores all plugins to the exact commits specified in `lazy-lock.json`.
+
+#### Full Reset to This Configuration
+```bash
+# 1. Backup your current state
+cd ~/.config/nvim
+git commit -am "Before restore"
+
+# 2. Reset to the last stable commit
+git log --oneline  # Find the commit hash you want
+git reset --hard <commit-hash>
+
+# 3. Restore plugins
+nvim -c "Lazy restore" -c "qa"
+
+# 4. Verify everything works
+nvim -c "checkhealth"
+```
+
+#### Install Specific Neovim Version (macOS)
+```bash
+# If you need to downgrade/upgrade Neovim
+brew unlink neovim
+brew install neovim  # Latest stable
+
+# Or install specific version
+brew tap neovim/neovim
+brew install neovim --HEAD  # Development version
+```
+
+### Before Updating
+
+Always create a safety checkpoint before updating:
+
+```bash
+# 1. Commit current state
+cd ~/.config/nvim
+git add -A
+git commit -m "Pre-update checkpoint $(date +%Y-%m-%d)"
+
+# 2. Backup lock file
+cp lazy-lock.json lazy-lock.json.backup
+
+# 3. Update
+nvim -c "Lazy update" -c "qa"
+
+# 4. Test thoroughly before committing
+```
+
+If issues occur, restore with:
+```bash
+cp lazy-lock.json.backup lazy-lock.json
+nvim -c "Lazy restore" -c "qa"
+```
+
+---
+
+## �📖 Documentation
 
 ### Essential Reading
 - **[Getting Started](docs/getting-started/README.md)** - First-time setup and orientation

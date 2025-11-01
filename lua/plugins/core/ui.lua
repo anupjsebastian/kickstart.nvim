@@ -62,6 +62,17 @@ return {
                 return str:sub(1, 1)
               end,
             },
+            {
+              -- Macro recording indicator
+              function()
+                local reg = vim.fn.reg_recording()
+                if reg == '' then
+                  return ''
+                end
+                return '󰑋 @' .. reg
+              end,
+              color = { fg = '#ff9e64', gui = 'bold' },
+            },
           },
           lualine_b = {
             {
