@@ -15,8 +15,40 @@ vim.keymap.set('n', '<Esc>', function()
   vim.cmd('nohlsearch')
 end, { silent = true, desc = 'Close floating window or clear highlight' })
 
--- Diagnostic keymaps
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+-- Diagnostic keymaps - Toggle quickfix list (global, works from any window)
+vim.keymap.set('n', '<leader>q', function()
+  local qf_winid = nil
+  for _, win in pairs(vim.fn.getwininfo()) do
+    if win['loclist'] == 1 then
+      qf_winid = win.winid
+      break
+    end
+  end
+  if qf_winid then
+    vim.api.nvim_win_close(qf_winid, true)
+  else
+    vim.diagnostic.setloclist()
+  end
+end, { desc = 'Toggle diagnostic [Q]uickfix list' })
+
+-- Flutter outline toggle (global, works from any window including the outline itself)
+vim.keymap.set('n', '<leader>fo', function()
+  local outline_winnr = nil
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    local buf = vim.api.nvim_win_get_buf(win)
+    local buf_name = vim.api.nvim_buf_get_name(buf)
+    if buf_name:match('FlutterOutline') then
+      outline_winnr = win
+      break
+    end
+  end
+  
+  if outline_winnr then
+    vim.api.nvim_win_close(outline_winnr, true)
+  else
+    vim.cmd('FlutterOutlineToggle')
+  end
+end, { desc = 'Flutter: Toggle outline' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which

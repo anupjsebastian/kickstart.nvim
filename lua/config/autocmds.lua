@@ -12,33 +12,14 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
--- Highlight active window with colored border/background
-vim.api.nvim_create_autocmd({ 'WinEnter', 'BufEnter' }, {
-  desc = 'Highlight active window',
-  group = vim.api.nvim_create_augroup('highlight-active-window', { clear = true }),
-  callback = function()
-    vim.opt_local.cursorline = true
-    vim.opt_local.winhl = 'Normal:Normal,NormalNC:NormalNC'
-  end,
-})
-
-vim.api.nvim_create_autocmd({ 'WinLeave', 'BufLeave' }, {
-  desc = 'Dim inactive windows',
-  group = vim.api.nvim_create_augroup('dim-inactive-window', { clear = true }),
-  callback = function()
-    vim.opt_local.cursorline = false
-  end,
-})
-
--- Set up highlight groups for window focus
+-- Highlight active window borders
 vim.api.nvim_create_autocmd('ColorScheme', {
-  desc = 'Set window highlight colors',
-  group = vim.api.nvim_create_augroup('window-highlight-colors', { clear = true }),
+  desc = 'Set window border colors',
+  group = vim.api.nvim_create_augroup('window-border-colors', { clear = true }),
   callback = function()
-    -- Dim inactive windows slightly
-    vim.api.nvim_set_hl(0, 'NormalNC', { bg = '#1a1b26', fg = '#a9b1d6' })
-    -- Active window keeps normal colors
-    vim.api.nvim_set_hl(0, 'Normal', { bg = '#1a1b26', fg = '#c0caf5' })
+    -- Active window border - bright blue
+    vim.api.nvim_set_hl(0, 'WinSeparator', { fg = '#7aa2f7', bold = true })
+    -- You can also use: '#bb9af7' (purple), '#9ece6a' (green), '#f7768e' (red)
   end,
 })
 

@@ -400,7 +400,7 @@ return {
           vim.keymap.set('n', '<leader>fe', '<cmd>FlutterEmulators<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Launch emulator' }))
 
           -- Dev tools and debugging
-          vim.keymap.set('n', '<leader>fo', '<cmd>FlutterOutlineToggle<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Toggle outline' }))
+          -- Note: <leader>fo (outline toggle) is now a global keymap in lua/config/keymaps.lua
           vim.keymap.set('n', '<leader>ft', '<cmd>FlutterDevTools<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Start DevTools' }))
           vim.keymap.set(
             'n',
