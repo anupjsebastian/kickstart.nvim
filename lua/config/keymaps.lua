@@ -15,8 +15,15 @@ vim.keymap.set('n', '<Esc>', function()
   vim.cmd('nohlsearch')
 end, { silent = true, desc = 'Close floating window or clear highlight' })
 
--- Diagnostic keymaps - Toggle quickfix list (global, works from any window)
+-- Diagnostic keymaps - Toggle quickfix list (works in normal buffers and quickfix itself)
 vim.keymap.set('n', '<leader>q', function()
+  -- Don't work in special buffers except quickfix/loclist and terminal
+  local buftype = vim.bo.buftype
+  if buftype ~= "" and buftype ~= "terminal" and buftype ~= "quickfix" then
+    vim.notify("Quickfix toggle only works in regular buffers", vim.log.levels.WARN)
+    return
+  end
+  
   local qf_winid = nil
   for _, win in pairs(vim.fn.getwininfo()) do
     if win['loclist'] == 1 then
@@ -29,7 +36,7 @@ vim.keymap.set('n', '<leader>q', function()
   else
     vim.diagnostic.setloclist()
   end
-end, { desc = 'Toggle diagnostic [Q]uickfix list' })
+end, { desc = 'Toggle diagnostic quickfix list' })
 
 -- Flutter outline toggle (global, works from any window including the outline itself)
 vim.keymap.set('n', '<leader>fo', function()
@@ -48,7 +55,7 @@ vim.keymap.set('n', '<leader>fo', function()
   else
     vim.cmd('FlutterOutlineToggle')
   end
-end, { desc = 'Flutter: Toggle outline' })
+end, { desc = 'Toggle outline' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -57,6 +64,28 @@ end, { desc = 'Flutter: Toggle outline' })
 -- NOTE: This won't work in all terminal emulators/tmux/etc. Try your own mapping
 -- or just use <C-\><C-n> to exit terminal mode
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
+
+-- ========================================================================
+-- KEYBINDS TO IMPROVE DEFAULT EXPERIENCE
+-- ========================================================================
+-- TIP: Disable arrow keys in normal mode
+-- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
+-- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
+-- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
+-- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
+
+-- Keybinds to make split navigation easier.
+-- Use CTRL+<hjkl> to switch between windows
+-- See `:help wincmd` for a list of all window commands
+vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
+vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
+vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
+vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+
+-- ========================================================================
+-- QUIT OPERATIONS (<leader>Q)
+-- ========================================================================
+vim.keymap.set('n', '<leader>Q', '<cmd>qa<CR>', { desc = 'Quit all' })
 
 -- TIP: Disable arrow keys in normal mode
 -- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')

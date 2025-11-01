@@ -121,7 +121,7 @@ return {
           winblend = 10,
           previewer = false,
         })
-      end, { desc = '[/] Fuzzily search in current buffer' })
+      end, { desc = 'Fuzzily search in current buffer' })
 
       vim.keymap.set('n', '<leader>s/', function()
         builtin.live_grep {
@@ -161,61 +161,52 @@ return {
         spacing = 3,                      -- Spacing between columns
       },
       icons = {
-        mappings = vim.g.have_nerd_font,
-        keys = vim.g.have_nerd_font and {} or {
-          Up = '<Up> ',
-          Down = '<Down> ',
-          Left = '<Left> ',
-          Right = '<Right> ',
-          C = '<C-…> ',
-          M = '<M-…> ',
-          D = '<D-…> ',
-          S = '<S-…> ',
-          CR = '<CR> ',
-          Esc = '<Esc> ',
-          ScrollWheelDown = '<ScrollWheelDown> ',
-          ScrollWheelUp = '<ScrollWheelUp> ',
-          NL = '<NL> ',
-          BS = '<BS> ',
-          Space = '<Space> ',
-          Tab = '<Tab> ',
-          F1 = '<F1>',
-          F2 = '<F2>',
-          F3 = '<F3>',
-          F4 = '<F4>',
-          F5 = '<F5>',
-          F6 = '<F6>',
-          F7 = '<F7>',
-          F8 = '<F8>',
-          F9 = '<F9>',
-          F10 = '<F10>',
-          F11 = '<F11>',
-          F12 = '<F12>',
+        breadcrumb = "»", -- symbol used in the command line area that shows your active key combo
+        separator = "➜", -- symbol used between a key and it's label
+        group = "+", -- symbol prepended to a group
+        ellipsis = "…",
+        mappings = true, -- Always show icons (we have Nerd Font)
+        rules = false, -- Disable built-in icon rules to use our custom icons
+        -- Setting keys to empty object means use defaults
+        keys = {},
+      },
+      -- Filter to hide keymaps that won't work in current buffer
+      plugins = {
+        presets = {
+          operators = false, -- adds help for operators like d, y, ...
+          motions = false, -- adds help for motions
+          text_objects = false, -- help for text objects triggered after entering an operator
+          windows = true, -- default bindings on <c-w>
+          nav = true, -- misc bindings to work with windows
+          z = true, -- bindings for folds, spelling and others prefixed with z
+          g = true, -- bindings for prefixed with g
         },
       },
       spec = {
         -- Core groups with icons
-        { '<leader>b', group = '󰊄 buffer', icon = '󰊄' },
-        { '<leader>c', group = ' code', icon = '' },
-        { '<leader>d', group = ' debug', icon = '' },
-        { '<leader>f', group = ' flutter', icon = '' }, -- Only visible in Dart files
-        { '<leader>g', group = ' git', icon = '' },
-        { '<leader>p', group = ' python', icon = '' }, -- Only visible in Python files
-        { '<leader>r', group = '󱘗 rust', icon = '󱘗' }, -- Only visible in Rust files
-        { '<leader>s', group = ' search', icon = '' },
-        { '<leader>S', group = '󱂬 session', icon = '󱂬' },
-        { '<leader>t', group = '󰔡 toggle', icon = '󰔡' },
-        { '<leader>u', group = ' ui', icon = '' },
-        { '<leader>v', group = ' svelte', icon = '' }, -- Only visible in Svelte files
-        { '<leader>w', group = ' window', icon = '' },
-        { '<leader>x', group = '󱖫 diagnostics', icon = '󱖫' },
+        { '<leader>b', group = '󰊄 buffer' },
+        { '<leader>c', group = '󰘦 code' },
+        { '<leader>d', group = '󰃤 debug' },
+        { '<leader>f', group = '󱓞 flutter' }, -- Only visible in Dart files
+        { '<leader>g', group = '󰊢 git' },
+        { '<leader>h', group = '󰊢 git hunk', mode = { 'n', 'v' } },
+        { '<leader>p', group = '󰌠 python' }, -- Only visible in Python files
+        { '<leader>r', group = '󱘗 rust' }, -- Only visible in Rust files
+        { '<leader>s', group = '󰍉 search' },
+        { '<leader>S', group = '󱂬 session' },
+        { '<leader>t', group = '󰔡 toggle' },
+        { '<leader>u', group = '󰙵 ui' },
+        { '<leader>v', group = '󰡄 svelte' }, -- Only visible in Svelte files
+        { '<leader>w', group = '󰖲 window' },
+        { '<leader>x', group = '󱖫 diagnostics' },
         
-        -- Special groups
+        -- Special standalone keymaps (not part of a group)
         { '<leader>q', desc = '󰁨 Quickfix diagnostics' },
         { '<leader>Q', desc = '󰗼 Quit all' },
-        
-        -- Git hunks (normal and visual mode)
-        { '<leader>h', group = ' git hunk', mode = { 'n', 'v' }, icon = '' },
+        { '<leader>/', desc = '󰱼 Fuzzily search in buffer' },
+        { '<leader><leader>', desc = '󰈙 Find existing buffers' },
+        { '<leader>?', desc = '󰘳 Search keymaps' },
+        { '<leader>.', desc = '󰌵 Code actions', mode = { 'n', 'v' } },
       },
     },
   },

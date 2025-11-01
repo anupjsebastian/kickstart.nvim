@@ -30,10 +30,8 @@ return {
       { '<leader>dC', function() require('dap').run_to_cursor() end, desc = 'Run to cursor' },
     },
     config = function()
-      -- Register which-key group
-      require('which-key').add {
-        { '<leader>d', group = ' debug' },
-      }
+      -- nvim-dap doesn't need explicit setup unless configuring adapters
+      -- Adapters are configured in language-specific files (flutter.lua, rust.lua, etc.)
     end,
   },
 
