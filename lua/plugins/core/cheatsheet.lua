@@ -95,8 +95,41 @@ return {
             { category = 'Vim: Visual', key = 'U/u', desc = 'Uppercase/lowercase selection' },
             { category = 'Vim: Visual', key = '~', desc = 'Toggle case of selection' },
             { category = 'Vim: Visual', key = 'J', desc = 'Join selected lines' },
+            { category = 'Vim: Visual', key = 'y/d/c', desc = 'Yank/delete/change selection' },
+            { category = 'Vim: Visual', key = 'p', desc = 'Replace selection with paste' },
             { category = 'Vim: Visual', key = ':sort', desc = 'Sort selected lines' },
             { category = 'Vim: Visual', key = ':!{cmd}', desc = 'Filter selection through command' },
+            { category = 'Vim: Visual', key = ':norm {cmd}', desc = 'Execute normal command on each line' },
+            { category = 'Vim: Visual', key = 'g Ctrl-a', desc = 'Increment numbers sequentially' },
+            { category = 'Vim: Visual', key = 'Ctrl-a/x', desc = 'Increment/decrement all numbers' },
+
+            -- ============================================================
+            -- COMMON WORKFLOWS & PATTERNS
+            -- ============================================================
+            -- Multi-file search and replace
+            { category = 'Workflow: Multi-File', key = '<Space>sg → Ctrl-q', desc = 'Grep → send to quickfix' },
+            { category = 'Workflow: Multi-File', key = ':cdo s/old/new/g | update', desc = 'Replace in all quickfix files' },
+            { category = 'Workflow: Multi-File', key = ':cfdo %s/old/new/g | update', desc = 'Replace per file (faster)' },
+            
+            -- Multi-cursor simulation
+            { category = 'Workflow: Multi-Edit', key = '*cgn{text}<Esc>', desc = 'Change next occurrence, then . to repeat' },
+            { category = 'Workflow: Multi-Edit', key = 'qayiw/<C-r>"<CR>cw{text}<Esc>q', desc = 'Record macro, then @a and @@' },
+            { category = 'Workflow: Multi-Edit', key = 'Ctrl-v select → I{text}<Esc>', desc = 'Visual block insert' },
+            
+            -- Code navigation workflow
+            { category = 'Workflow: Navigate', key = 'grd → Ctrl-o', desc = 'Go to definition, jump back' },
+            { category = 'Workflow: Navigate', key = '<Space>sw → ]q', desc = 'Search word → jump through results' },
+            { category = 'Workflow: Navigate', key = 'K → K → q', desc = 'Hover → follow link → close' },
+            
+            -- Refactoring workflow
+            { category = 'Workflow: Refactor', key = 'grn', desc = 'Rename symbol (LSP)' },
+            { category = 'Workflow: Refactor', key = '<Space>cR', desc = 'Rename file (updates imports)' },
+            { category = 'Workflow: Refactor', key = 'gra', desc = 'Code actions (extract, inline, etc.)' },
+            
+            -- Git workflow
+            { category = 'Workflow: Git', key = ']c → <Space>hp → <Space>hs', desc = 'Next change → preview → stage' },
+            { category = 'Workflow: Git', key = '<Space>hb → <Space>gb', desc = 'Blame line → open in browser' },
+            { category = 'Workflow: Git', key = 'Select → <Space>hs', desc = 'Visual select → stage hunk' },
 
             -- Search & Replace (comprehensive)
             { category = 'Vim: Search', key = '/{pattern}', desc = 'Search forward' },
@@ -326,8 +359,9 @@ return {
             -- ============================================================
             { category = 'Toggle', key = '<Space>ta', desc = 'Copilot Autocomplete' },
             { category = 'Toggle', key = '<Space>tr', desc = 'Relative line numbers' },
+            { category = 'Toggle', key = '<Space>tv', desc = 'Virtual text (inline diagnostic messages)' },
             { category = 'Toggle', key = '<Space>th', desc = 'Inlay hints (LSP)' },
-            { category = 'Toggle', key = '<Space>td', desc = 'Diagnostics (snacks)' },
+            { category = 'Toggle', key = '<Space>td', desc = 'ALL Diagnostics - gutter + virtual text (snacks)' },
             { category = 'Toggle', key = '<Space>tl', desc = 'Line numbers (snacks)' },
             { category = 'Toggle', key = '<Space>ts', desc = 'Smooth scroll (snacks)' },
             { category = 'Toggle', key = '<Space>tw', desc = 'Word highlights (snacks)' },
@@ -339,6 +373,74 @@ return {
             { category = 'Diagnostics', key = '<Space>xx', desc = 'Toggle diagnostics (Trouble)' },
             { category = 'Diagnostics', key = '<Space>xX', desc = 'Buffer diagnostics (Trouble)' },
             { category = 'Diagnostics', key = '<Space>xs', desc = 'Symbols (Trouble)' },
+
+            -- ============================================================
+            -- QUICKFIX & LOCATION LIST OPERATIONS
+            -- ============================================================
+            -- Quickfix (global list - shared across windows)
+            { category = 'Quickfix', key = ':copen', desc = 'Open quickfix window' },
+            { category = 'Quickfix', key = ':cclose', desc = 'Close quickfix window' },
+            { category = 'Quickfix', key = ':cnext', desc = 'Next item in quickfix' },
+            { category = 'Quickfix', key = ':cprev', desc = 'Previous item in quickfix' },
+            { category = 'Quickfix', key = ':cfirst', desc = 'First item in quickfix' },
+            { category = 'Quickfix', key = ':clast', desc = 'Last item in quickfix' },
+            { category = 'Quickfix', key = ':cnfile', desc = 'First item in next file' },
+            { category = 'Quickfix', key = ':cpfile', desc = 'Last item in previous file' },
+            { category = 'Quickfix', key = ':cdo {cmd}', desc = 'Execute command on each quickfix entry' },
+            { category = 'Quickfix', key = ':cfdo {cmd}', desc = 'Execute command on each file in quickfix' },
+            
+            -- Location list (window-local - each window has its own)
+            { category = 'Location List', key = ':lopen', desc = 'Open location list window' },
+            { category = 'Location List', key = ':lclose', desc = 'Close location list window' },
+            { category = 'Location List', key = ':lnext', desc = 'Next item in location list' },
+            { category = 'Location List', key = ':lprev', desc = 'Previous item in location list' },
+            { category = 'Location List', key = ':lfirst', desc = 'First item in location list' },
+            { category = 'Location List', key = ':llast', desc = 'Last item in location list' },
+            { category = 'Location List', key = ':lnfile', desc = 'First item in next file' },
+            { category = 'Location List', key = ':lpfile', desc = 'Last item in previous file' },
+            { category = 'Location List', key = ':ldo {cmd}', desc = 'Execute command on each location entry' },
+            { category = 'Location List', key = ':lfdo {cmd}', desc = 'Execute command on each file in location list' },
+
+            -- ============================================================
+            -- COPILOT (AI CODE COMPLETION)
+            -- ============================================================
+            { category = 'Copilot', key = 'Tab (insert)', desc = 'Accept Copilot suggestion' },
+            { category = 'Copilot', key = 'Ctrl-]', desc = 'Dismiss Copilot suggestion' },
+            { category = 'Copilot', key = 'Alt-]', desc = 'Next Copilot suggestion' },
+            { category = 'Copilot', key = 'Alt-[', desc = 'Previous Copilot suggestion' },
+            { category = 'Copilot', key = 'Alt-\\', desc = 'Trigger Copilot manually' },
+            { category = 'Copilot', key = '<Space>ta', desc = 'Toggle Copilot on/off' },
+            { category = 'Copilot', key = ':Copilot setup', desc = 'Setup/auth Copilot' },
+            { category = 'Copilot', key = ':Copilot status', desc = 'Check Copilot status' },
+            { category = 'Copilot', key = ':Copilot panel', desc = 'Open Copilot panel' },
+
+            -- ============================================================
+            -- EMMET (HTML/CSS ABBREVIATIONS)
+            -- ============================================================
+            -- Available in: HTML, CSS, JavaScript, TypeScript, Svelte files
+            { category = 'Emmet', key = 'Ctrl-e,', desc = 'Expand abbreviation (div.class>ul>li*3)' },
+            { category = 'Emmet', key = 'Ctrl-e;', desc = 'Expand word (w100 → width:100px)' },
+            { category = 'Emmet', key = 'Ctrl-e u', desc = 'Update tag' },
+            { category = 'Emmet', key = 'Ctrl-e d', desc = 'Balance tag outward' },
+            { category = 'Emmet', key = 'Ctrl-e D', desc = 'Balance tag inward' },
+            { category = 'Emmet', key = 'Ctrl-e n', desc = 'Go to next edit point' },
+            { category = 'Emmet', key = 'Ctrl-e N', desc = 'Go to previous edit point' },
+            { category = 'Emmet', key = 'Ctrl-e k', desc = 'Remove tag' },
+            { category = 'Emmet', key = 'Ctrl-e /', desc = 'Toggle comment' },
+            { category = 'Emmet', key = 'Ctrl-e a', desc = 'Make anchor from URL' },
+            { category = 'Emmet', key = 'Ctrl-e A', desc = 'Make quoted text from URL' },
+            
+            -- Common Emmet patterns
+            { category = 'Emmet: Patterns', key = 'div.class#id', desc = '<div class="class" id="id"></div>' },
+            { category = 'Emmet: Patterns', key = 'ul>li*5', desc = 'ul with 5 li children' },
+            { category = 'Emmet: Patterns', key = 'div+p+bq', desc = 'Siblings: div, p, blockquote' },
+            { category = 'Emmet: Patterns', key = 'div>ul>li^div', desc = 'Climb up with ^' },
+            { category = 'Emmet: Patterns', key = '(div>h1)+footer', desc = 'Grouping with ()' },
+            { category = 'Emmet: Patterns', key = 'ul>li.item$*3', desc = 'Numbering: item1, item2, item3' },
+            { category = 'Emmet: Patterns', key = 'a[href="#"]', desc = 'Custom attributes' },
+            { category = 'Emmet: Patterns', key= 'p{Click me}', desc = 'Text content' },
+            { category = 'Emmet: Patterns', key = 'lorem', desc = 'Lorem ipsum text' },
+            { category = 'Emmet: Patterns', key = 'lorem5', desc = '5 words of lorem' },
 
             -- ============================================================
             -- GIT (GITSIGNS)
@@ -673,22 +775,66 @@ return {
             -- ============================================================
             -- MINI.AI (TEXT OBJECTS)
             -- ============================================================
-            { category = 'Text Objects', key = 'a/i + object', desc = 'Around/inside (w, p, [, {, ", \', `, t)' },
-            { category = 'Text Objects', key = 'daw', desc = 'Delete around word' },
-            { category = 'Text Objects', key = 'ciw', desc = 'Change inside word' },
-            { category = 'Text Objects', key = 'di"', desc = 'Delete inside quotes' },
-            { category = 'Text Objects', key = 'da(', desc = 'Delete around parentheses' },
-            { category = 'Text Objects', key = 'vit', desc = 'Visual inside tag' },
+            -- Enhanced text objects with next/last support
+            { category = 'Text Objects', key = 'a/i + object', desc = 'Around/inside: w(word) s(sentence) p(paragraph) []{}<>() "\'\` t(tag)' },
+            { category = 'Text Objects', key = 'an/in', desc = 'Around/inside next - an) goes to next ), cin changes inside next )' },
+            { category = 'Text Objects', key = 'al/il', desc = 'Around/inside last - al" goes to previous ", vil selects inside last "' },
+            
+            -- Common text object operations (repeatable with .)
+            { category = 'Text Objects', key = 'daw', desc = 'Delete around word (repeatable)' },
+            { category = 'Text Objects', key = 'ciw', desc = 'Change inside word (repeatable)' },
+            { category = 'Text Objects', key = 'yap', desc = 'Yank around paragraph (repeatable)' },
+            { category = 'Text Objects', key = 'di"', desc = 'Delete inside quotes (repeatable)' },
+            { category = 'Text Objects', key = 'da(', desc = 'Delete around parentheses (repeatable)' },
+            { category = 'Text Objects', key = 'ci{', desc = 'Change inside braces (repeatable)' },
+            { category = 'Text Objects', key = 'da[', desc = 'Delete around brackets (repeatable)' },
+            { category = 'Text Objects', key = 'dit', desc = 'Delete inside HTML/XML tag (repeatable)' },
+            { category = 'Text Objects', key = 'vit', desc = 'Visual inside tag - select content between tags' },
+            { category = 'Text Objects', key = 'vis', desc = 'Visual inside sentence' },
+            
+            -- Function/call text objects (mini.ai)
+            { category = 'Text Objects', key = 'daf', desc = 'Delete around function call - includes name + ()' },
+            { category = 'Text Objects', key = 'cif', desc = 'Change inside function call - only arguments' },
+            { category = 'Text Objects', key = 'daa', desc = 'Delete around argument - including commas' },
+            { category = 'Text Objects', key = 'cia', desc = 'Change inside argument - current arg only' },
 
             -- ============================================================
-            -- MINI.SURROUND
+            -- MINI.SURROUND (works with vim-repeat!)
             -- ============================================================
-            { category = 'Surround', key = 'sa{motion}{char}', desc = 'Add surround' },
-            { category = 'Surround', key = 'sd{char}', desc = 'Delete surround' },
-            { category = 'Surround', key = 'sr{old}{new}', desc = 'Replace surround' },
-            { category = 'Surround', key = 'sf{char}', desc = 'Find right surround' },
-            { category = 'Surround', key = 'sF{char}', desc = 'Find left surround' },
-            { category = 'Surround', key = 'sh', desc = 'Highlight surround' },
+            -- Note: All surround operations are repeatable with . command
+            
+            -- Add surroundings (sa = surround add) [REPEATABLE]
+            { category = 'Surround', key = 'saiw"', desc = 'Surround word with " - then press . to repeat on next word' },
+            { category = 'Surround', key = 'sa2w)', desc = 'Surround 2 words with () - use . to repeat' },
+            { category = 'Surround', key = 'sap}', desc = 'Surround paragraph with {} - use . to repeat' },
+            { category = 'Surround', key = 'sa$]', desc = 'Surround to end of line with [] - use . to repeat' },
+            { category = 'Surround', key = 'saW<q>', desc = 'Surround WORD with <q> tag - use . to repeat' },
+            { category = 'Surround', key = 'saiw`', desc = 'Surround word with backticks (markdown code) - use . to repeat' },
+            
+            -- Delete surroundings (sd = surround delete) [REPEATABLE]
+            { category = 'Surround', key = 'sd"', desc = 'Delete surrounding " - move to next and press . to repeat' },
+            { category = 'Surround', key = 'sd)', desc = 'Delete surrounding () - use . to repeat on next' },
+            { category = 'Surround', key = 'sd}', desc = 'Delete surrounding {} - use . to repeat' },
+            { category = 'Surround', key = 'sdt', desc = 'Delete surrounding HTML/XML tag - use . to repeat' },
+            
+            -- Replace surroundings (sr = surround replace) [REPEATABLE]
+            { category = 'Surround', key = 'sr"\'', desc = 'Replace " with \' - move to next " and press . to repeat' },
+            { category = 'Surround', key = 'sr)]', desc = 'Replace () with [] - use . to repeat' },
+            { category = 'Surround', key = 'sr}t<div>', desc = 'Replace {} with <div> tag - use . to repeat' },
+            { category = 'Surround', key = 'srt<p>', desc = 'Replace current tag with <p> - use . to repeat' },
+            
+            -- Find surroundings (navigation)
+            { category = 'Surround', key = 'sf"', desc = 'Find/jump to right (next) " surround' },
+            { category = 'Surround', key = 'sF"', desc = 'Find/jump to left (previous) " surround' },
+            { category = 'Surround', key = 'sf)', desc = 'Find/jump to right (next) ) surround' },
+            { category = 'Surround', key = 'sF{', desc = 'Find/jump to left (previous) { surround' },
+            
+            -- Highlight surroundings (visual feedback)
+            { category = 'Surround', key = 'sh', desc = 'Highlight nearest surroundings - shows what sd/sr would affect' },
+            
+            -- Visual mode surround (surround selection)
+            { category = 'Surround', key = 'viwsa"', desc = 'Visual select word, then surround with " - use . after viw' },
+            { category = 'Surround', key = 'vipsa)', desc = 'Visual select paragraph, then surround with ()' },
           }
 
           -- Create picker

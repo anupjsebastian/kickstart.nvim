@@ -479,6 +479,18 @@ vim.keymap.set('n', '<leader>tr', function()
   end
 end, { desc = 'Toggle [R]elative line numbers' })
 
+-- Toggle inline diagnostics virtual text only (keeps gutter signs)
+vim.keymap.set('n', '<leader>tv', function()
+  local current = vim.diagnostic.config().virtual_text
+  if current then
+    vim.diagnostic.config({ virtual_text = false })
+    vim.notify('Inline diagnostic messages hidden', vim.log.levels.INFO)
+  else
+    vim.diagnostic.config({ virtual_text = true })
+    vim.notify('Inline diagnostic messages shown', vim.log.levels.INFO)
+  end
+end, { desc = 'Toggle [V]irtual text (inline messages)' })
+
 -- ========================================================================
 -- UI OPERATIONS (<leader>u)
 -- ========================================================================

@@ -169,6 +169,12 @@ return {
     end,
   },
 
+  -- vim-repeat: Enable repeating plugin maps with '.'
+  {
+    'tpope/vim-repeat',
+    event = 'VeryLazy',
+  },
+
   -- Treesitter: Syntax highlighting and code understanding
   {
     'nvim-treesitter/nvim-treesitter',
