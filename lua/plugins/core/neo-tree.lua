@@ -40,7 +40,7 @@ return {
           deleted = '',
           modified = '',
           renamed = '➜',
-          untracked = '*',
+          untracked = '?',
           ignored = '◌',
           unstaged = '✗',
           staged = '✓',
