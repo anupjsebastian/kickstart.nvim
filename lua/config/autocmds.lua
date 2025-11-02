@@ -77,3 +77,4 @@ vim.api.nvim_create_user_command('PythonRestart', function()
   end
   vim.notify('Pyright stopped. It will restart on next edit.', vim.log.levels.INFO)
 end, { desc = 'Restart Python LSP (pyright)' })
+

@@ -58,19 +58,82 @@ vim.api.nvim_create_user_command('DeleteNoNameBuffers', function(opts)
   end
 end, { desc = 'Delete all unnamed buffers (use ! to show notification)', bang = true })
 
--- Auto-delete no-name buffers when hidden/unloaded
--- This keeps your buffer list clean from temporary buffers
-vim.api.nvim_create_autocmd({ 'BufHidden', 'BufUnload' }, {
-  pattern = '*',
-  callback = function(args)
-    local bufname = vim.api.nvim_buf_get_name(args.buf)
+-- Smart cleanup of unnamed buffers - only when they're truly abandoned
+-- This runs periodically instead of aggressively on every BufHidden
+vim.api.nvim_create_autocmd('FocusGained', {
+  desc = 'Clean up abandoned unnamed buffers',
+  group = vim.api.nvim_create_augroup('cleanup-unnamed-buffers', { clear = true }),
+  callback = function()
+    vim.schedule(function()
+      for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        if vim.api.nvim_buf_is_valid(buf) then
+          local bufname = vim.api.nvim_buf_get_name(buf)
+          local buftype = vim.bo[buf].buftype
+          local modified = vim.bo[buf].modified
+          local loaded = vim.api.nvim_buf_is_loaded(buf)
+          
+          -- Only delete if: unnamed, normal buffer, not modified, not loaded in any window
+          if bufname == '' and buftype == '' and not modified and not loaded then
+            -- Check if buffer is visible in any window
+            local is_visible = false
+            for _, win in ipairs(vim.api.nvim_list_wins()) do
+              if vim.api.nvim_win_get_buf(win) == buf then
+                is_visible = true
+                break
+              end
+            end
+            
+            if not is_visible then
+              pcall(vim.api.nvim_buf_delete, buf, { force = false })
+            end
+          end
+        end
+      end
+    end)
+  end,
+})
+
+-- Handle the initial [No Name] buffer when opening a real file
+-- This ensures clean buffer replacement when starting with `nvim .`
+vim.api.nvim_create_autocmd('BufReadPost', {
+  desc = 'Replace initial [No Name] buffer with opened file',
+  group = vim.api.nvim_create_augroup('replace-initial-buffer', { clear = true }),
+  callback = function(event)
+    local new_buf = event.buf
     
-    -- Delete if buffer has no name (empty string)
-    if bufname == '' and vim.api.nvim_buf_is_valid(args.buf) then
-      vim.schedule(function()
-        pcall(vim.api.nvim_buf_delete, args.buf, { force = true })
-      end)
+    -- Only proceed if this is a real file
+    if vim.bo[new_buf].buftype ~= '' or vim.api.nvim_buf_get_name(new_buf) == '' then
+      return
     end
+    
+    -- Look for unnamed buffers that are empty and not visible
+    vim.schedule(function()
+      for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        if buf ~= new_buf and vim.api.nvim_buf_is_valid(buf) then
+          local bufname = vim.api.nvim_buf_get_name(buf)
+          local buftype = vim.bo[buf].buftype
+          local modified = vim.bo[buf].modified
+          
+          if bufname == '' and buftype == '' and not modified then
+            -- Check if truly empty
+            local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+            local is_empty = #lines == 0 or (#lines == 1 and lines[1] == '')
+            
+            if is_empty then
+              -- Find if this buffer is in a window, and switch it to the new buffer
+              for _, win in ipairs(vim.api.nvim_list_wins()) do
+                if vim.api.nvim_win_get_buf(win) == buf then
+                  pcall(vim.api.nvim_win_set_buf, win, new_buf)
+                end
+              end
+              
+              -- Now delete the old buffer
+              pcall(vim.api.nvim_buf_delete, buf, { force = true })
+            end
+          end
+        end
+      end
+    end)
   end,
 })
 
