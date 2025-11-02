@@ -242,14 +242,76 @@ end, { desc = 'Toggle outline (Dart only)' })
 -- ========================================================================
 -- GLOBAL FLUTTER COMMANDS (available in any buffer when app is running)
 -- ========================================================================
--- These work from anywhere - log buffers, other files, etc.
-vim.keymap.set('n', '<leader>fh', '<cmd>FlutterReload<cr>', { desc = 'Flutter: Hot reload', silent = true })
-vim.keymap.set('n', '<leader>fR', '<cmd>FlutterRestart<cr>', { desc = 'Flutter: Hot restart', silent = true })
-vim.keymap.set('n', '<leader>fq', '<cmd>FlutterQuit<cr>', { desc = 'Flutter: Quit app', silent = true })
-vim.keymap.set('n', '<leader>fL', '<cmd>FlutterLogToggle<cr>', { desc = 'Flutter: Toggle logs', silent = true })
-vim.keymap.set('n', '<leader>ft', '<cmd>FlutterDevTools<cr>', { desc = 'Flutter: Start DevTools', silent = true })
-vim.keymap.set('n', '<leader>fd', '<cmd>FlutterDevices<cr>', { desc = 'Flutter: Select device', silent = true })
-vim.keymap.set('n', '<leader>fe', '<cmd>FlutterEmulators<cr>', { desc = 'Flutter: Launch emulator', silent = true })
+-- Helper function to check if Flutter app is running
+local function is_flutter_running()
+  -- Check if FlutterLog buffer exists and is loaded
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    local name = vim.api.nvim_buf_get_name(buf)
+    if name:match('__Flutter_') and vim.api.nvim_buf_is_loaded(buf) then
+      return true
+    end
+  end
+  return false
+end
+
+-- Hot reload with status check
+vim.keymap.set('n', '<leader>fh', function()
+  if is_flutter_running() then
+    vim.cmd('FlutterReload')
+    vim.notify('󱓞 Hot reload triggered', vim.log.levels.INFO)
+  else
+    vim.notify('󱓞 No Flutter app running', vim.log.levels.INFO)
+  end
+end, { desc = 'Flutter: Hot reload' })
+
+-- Hot restart with status check
+vim.keymap.set('n', '<leader>fR', function()
+  if is_flutter_running() then
+    vim.cmd('FlutterRestart')
+    vim.notify('󱓞 Hot restart triggered', vim.log.levels.INFO)
+  else
+    vim.notify('󱓞 No Flutter app running', vim.log.levels.INFO)
+  end
+end, { desc = 'Flutter: Hot restart' })
+
+-- Quit with status check
+vim.keymap.set('n', '<leader>fq', function()
+  if is_flutter_running() then
+    vim.cmd('FlutterQuit')
+    vim.notify('󱓞 Flutter app stopped', vim.log.levels.INFO)
+  else
+    vim.notify('󱓞 No Flutter app running', vim.log.levels.INFO)
+  end
+end, { desc = 'Flutter: Quit app' })
+
+-- Toggle logs with notification
+vim.keymap.set('n', '<leader>fL', function()
+  vim.cmd('FlutterLogToggle')
+  vim.notify('󱓞 Toggled Flutter logs', vim.log.levels.INFO)
+end, { desc = 'Flutter: Toggle logs' })
+
+-- DevTools with status check
+vim.keymap.set('n', '<leader>ft', function()
+  if is_flutter_running() then
+    vim.cmd('FlutterDevTools')
+    vim.notify('󱓞 Opening DevTools...', vim.log.levels.INFO)
+  else
+    vim.notify('󱓞 Start Flutter app first to use DevTools', vim.log.levels.INFO)
+  end
+end, { desc = 'Flutter: Start DevTools' })
+
+-- Select device (always available)
+vim.keymap.set('n', '<leader>fd', function()
+  vim.cmd('FlutterDevices')
+  -- Longer timeout for device selection since it takes time to load
+  vim.notify('󱓞 Select Device. Loading Flutter devices...', vim.log.levels.INFO, { timeout = 8000 })
+end, { desc = 'Flutter: Select device' })
+
+-- Launch emulator (always available)
+vim.keymap.set('n', '<leader>fe', function()
+  vim.cmd('FlutterEmulators')
+  vim.notify('󱓞 Select emulator to launch', vim.log.levels.INFO)
+end, { desc = 'Flutter: Launch emulator' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -322,29 +384,52 @@ vim.keymap.set('n', '<leader>bp', '<cmd>bprevious<CR>', { desc = 'Previous buffe
 vim.keymap.set('n', '<leader>bo', '<cmd>%bd|e#|bd#<CR>', { desc = 'Delete other buffers' })
 
 -- ========================================================================
--- WINDOW/TAB OPERATIONS (<leader>w, <leader>t)
+-- WINDOW/TAB OPERATIONS (<leader>w)
 -- ========================================================================
 -- Window operations
 vim.keymap.set('n', '<leader>ww', '<C-w>w', { desc = 'Other window' })
-vim.keymap.set('n', '<leader>wc', '<C-w>c', { desc = 'Close window' })
+vim.keymap.set('n', '<leader>wc', '<C-w>c', { desc = 'Close window/tab' })
 vim.keymap.set('n', '<leader>ws', '<C-w>s', { desc = 'Split window below' })
 vim.keymap.set('n', '<leader>wv', '<C-w>v', { desc = 'Split window right' })
 vim.keymap.set('n', '<leader>wm', '<C-w>_<C-w>|', { desc = 'Maximize window' })
-vim.keymap.set('n', '<leader>wn', '<cmd>tabnew<CR>', { desc = 'New window (tab)' })
-
--- Tab operations
-vim.keymap.set('n', '<leader>tn', '<cmd>tabnew<CR>', { desc = 'New tab' })
-vim.keymap.set('n', '<leader>tc', '<cmd>tabclose<CR>', { desc = 'Close tab' })
-vim.keymap.set('n', '<leader>to', '<cmd>tabonly<CR>', { desc = 'Close other tabs' })
-vim.keymap.set('n', '<leader>t]', '<cmd>tabnext<CR>', { desc = 'Next tab' })
-vim.keymap.set('n', '<leader>t[', '<cmd>tabprevious<CR>', { desc = 'Previous tab' })
-vim.keymap.set('n', '<leader>tf', '<cmd>tabfirst<CR>', { desc = 'First tab' })
-vim.keymap.set('n', '<leader>tl', '<cmd>tablast<CR>', { desc = 'Last tab' })
 vim.keymap.set('n', '<leader>w=', '<C-w>=', { desc = 'Balance windows' })
 vim.keymap.set('n', '<leader>wh', '<C-w>h', { desc = 'Go to left window' })
 vim.keymap.set('n', '<leader>wj', '<C-w>j', { desc = 'Go to lower window' })
 vim.keymap.set('n', '<leader>wk', '<C-w>k', { desc = 'Go to upper window' })
 vim.keymap.set('n', '<leader>wl', '<C-w>l', { desc = 'Go to right window' })
+
+-- Tab operations (moved from <leader>t to keep toggle menu clean)
+vim.keymap.set('n', '<leader>wn', '<cmd>tabnew<CR>', { desc = 'New tab' })
+vim.keymap.set('n', '<leader>wo', '<cmd>tabonly<CR>', { desc = 'Close other tabs' })
+vim.keymap.set('n', '<leader>w]', '<cmd>tabnext<CR>', { desc = 'Next tab' })
+vim.keymap.set('n', '<leader>w[', '<cmd>tabprevious<CR>', { desc = 'Previous tab' })
+vim.keymap.set('n', '<leader>wf', '<cmd>tabfirst<CR>', { desc = 'First tab' })
+vim.keymap.set('n', '<leader>wL', '<cmd>tablast<CR>', { desc = 'Last tab' })
+
+-- ========================================================================
+-- TOGGLE OPERATIONS (<leader>t)
+-- ========================================================================
+-- Copilot toggle
+vim.keymap.set('n', '<leader>ta', function()
+  local status = vim.fn['copilot#Enabled']()
+  if status == 1 then
+    vim.cmd('Copilot disable')
+    vim.notify('Copilot Autocomplete disabled', vim.log.levels.INFO)
+  else
+    vim.cmd('Copilot enable')
+    vim.notify('Copilot Autocomplete enabled', vim.log.levels.INFO)
+  end
+end, { desc = 'Toggle Copilot [A]utocomplete' })
+
+-- Toggle relative line numbers
+vim.keymap.set('n', '<leader>tr', function()
+  vim.wo.relativenumber = not vim.wo.relativenumber
+  if vim.wo.relativenumber then
+    vim.notify('Relative line numbers enabled', vim.log.levels.INFO)
+  else
+    vim.notify('Absolute line numbers enabled', vim.log.levels.INFO)
+  end
+end, { desc = 'Toggle [R]elative line numbers' })
 
 -- ========================================================================
 -- UI OPERATIONS (<leader>u)

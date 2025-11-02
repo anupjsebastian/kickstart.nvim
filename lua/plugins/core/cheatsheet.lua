@@ -255,11 +255,10 @@ return {
             -- WINDOW OPERATIONS
             -- ============================================================
             { category = 'Window', key = '<Space>ww', desc = 'Other window' },
-            { category = 'Window', key = '<Space>wc', desc = 'Close window' },
+            { category = 'Window', key = '<Space>wc', desc = 'Close window/tab' },
             { category = 'Window', key = '<Space>ws', desc = 'Split window below' },
             { category = 'Window', key = '<Space>wv', desc = 'Split window right' },
             { category = 'Window', key = '<Space>wm', desc = 'Maximize window' },
-            { category = 'Window', key = '<Space>wn', desc = 'New window (tab)' },
             { category = 'Window', key = '<Space>w=', desc = 'Balance windows' },
             { category = 'Window', key = '<Space>wh', desc = 'Go to left window' },
             { category = 'Window', key = '<Space>wj', desc = 'Go to lower window' },
@@ -271,16 +270,14 @@ return {
             { category = 'Window', key = 'Ctrl-l', desc = 'Move focus to right window' },
 
             -- ============================================================
-            -- TAB OPERATIONS
+            -- TAB OPERATIONS (under Window menu)
             -- ============================================================
-            { category = 'Tab', key = '<Space>tn', desc = 'New tab' },
-            { category = 'Tab', key = '<Space>wn', desc = 'New tab (alias)' },
-            { category = 'Tab', key = '<Space>tc', desc = 'Close tab' },
-            { category = 'Tab', key = '<Space>to', desc = 'Close other tabs' },
-            { category = 'Tab', key = '<Space>t]', desc = 'Next tab' },
-            { category = 'Tab', key = '<Space>t[', desc = 'Previous tab' },
-            { category = 'Tab', key = '<Space>tf', desc = 'First tab' },
-            { category = 'Tab', key = '<Space>tl', desc = 'Last tab' },
+            { category = 'Tab', key = '<Space>wn', desc = 'New tab' },
+            { category = 'Tab', key = '<Space>wo', desc = 'Close other tabs' },
+            { category = 'Tab', key = '<Space>w]', desc = 'Next tab' },
+            { category = 'Tab', key = '<Space>w[', desc = 'Previous tab' },
+            { category = 'Tab', key = '<Space>wf', desc = 'First tab' },
+            { category = 'Tab', key = '<Space>wL', desc = 'Last tab' },
             { category = 'Tab', key = 'gt', desc = 'Next tab (Vim native)' },
             { category = 'Tab', key = 'gT', desc = 'Previous tab (Vim native)' },
             { category = 'Tab', key = ':tabnew', desc = 'New tab (command)' },
@@ -324,6 +321,8 @@ return {
             -- ============================================================
             -- TOGGLE
             -- ============================================================
+            { category = 'Toggle', key = '<Space>ta', desc = 'Copilot Autocomplete' },
+            { category = 'Toggle', key = '<Space>tr', desc = 'Relative line numbers' },
             { category = 'Toggle', key = '<Space>th', desc = 'Inlay hints (LSP)' },
             { category = 'Toggle', key = '<Space>td', desc = 'Diagnostics (snacks)' },
             { category = 'Toggle', key = '<Space>tl', desc = 'Line numbers (snacks)' },
