@@ -840,7 +840,7 @@ return {
           -- Create picker
           pickers
             .new({}, {
-              prompt_title = '  Command Cheatsheet  ',
+              prompt_title = ' Command Cheatsheet ',
               finder = finders.new_table {
                 results = cheatsheet,
                 entry_maker = function(entry)
