@@ -32,12 +32,15 @@ return {
   -- ========================================================================
   {
     'WhoIsSethDaniel/mason-tool-installer.nvim',
-    ft = { 'svelte', 'typescript', 'javascript' }, -- Load for web files
+    ft = { 'svelte', 'typescript', 'javascript', 'html', 'css', 'json' }, -- Load for web files
     opts = {
       ensure_installed = {
         'svelte-language-server',
         'typescript-language-server',
         'tailwindcss-language-server',
+        'html-lsp',  -- HTML language server
+        'css-lsp',   -- CSS language server
+        'json-lsp',  -- JSON language server
         'prettier',
         'eslint_d',
       },
@@ -75,7 +78,7 @@ return {
   -- ========================================================================
   {
     'nvim-treesitter/nvim-treesitter',
-    ft = { 'svelte', 'typescript', 'javascript', 'css', 'html' },
+    ft = { 'svelte', 'typescript', 'javascript', 'css', 'html', 'json' },
     opts = function(_, opts)
       -- Ensure web language parsers are installed
       opts.ensure_installed = opts.ensure_installed or {}

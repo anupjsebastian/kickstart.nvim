@@ -472,6 +472,16 @@ return {
             { category = 'Svelte', key = 'Ctrl-e,', desc = 'Expand Emmet abbreviation' },
 
             -- ============================================================
+            -- WEB DEVELOPMENT (HTML/CSS/JS)
+            -- ============================================================
+            { category = 'Web Dev', key = '<Space>od', desc = 'Open in default browser' },
+            { category = 'Web Dev', key = '<Space>oc', desc = 'Open in Chrome' },
+            { category = 'Web Dev', key = '<Space>os', desc = 'Open in Safari' },
+            { category = 'Web Dev', key = '<Space>of', desc = 'Open in Firefox' },
+            { category = 'Web Dev', key = '<Space>ol', desc = 'Start live-server' },
+            { category = 'Web Dev', key = 'Ctrl-e,', desc = 'Expand Emmet abbreviation' },
+
+            -- ============================================================
             -- TELESCOPE (INSIDE TELESCOPE)
             -- ============================================================
             { category = 'Telescope', key = 'Ctrl-j/k', desc = 'Next/previous item' },

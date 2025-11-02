@@ -158,6 +158,37 @@ return {
             },
           },
         },
+        html = {
+          -- HTML language server
+          filetypes = { 'html', 'svelte' },
+          root_dir = function(fname)
+            local util = require('lspconfig.util')
+            return util.find_git_ancestor(fname)
+              or util.find_node_modules_ancestor(fname)
+              or util.find_package_json_ancestor(fname)
+              or vim.fn.getcwd()
+          end,
+        },
+        cssls = {
+          -- CSS language server
+          filetypes = { 'css', 'scss', 'less', 'svelte' },
+          root_dir = function(fname)
+            local util = require('lspconfig.util')
+            return util.find_git_ancestor(fname)
+              or util.find_node_modules_ancestor(fname)
+              or util.find_package_json_ancestor(fname)
+              or vim.fn.getcwd()
+          end,
+        },
+        jsonls = {
+          -- JSON language server
+          filetypes = { 'json', 'jsonc' },
+          root_dir = function(fname)
+            local util = require('lspconfig.util')
+            return util.find_git_ancestor(fname)
+              or vim.fn.getcwd()
+          end,
+        },
       }
 
       local ensure_installed = vim.tbl_keys(servers or {})
