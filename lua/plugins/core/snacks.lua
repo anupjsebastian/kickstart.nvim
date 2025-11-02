@@ -11,6 +11,7 @@
 --   - scratch: Persistent scratch buffers by context
 --   - words: Highlight word under cursor + references
 --   - indent: Animated indent guides and scope
+--   - animate: Cursor animations and movement trails
 --   - gitbrowse: Open files in GitHub/GitLab
 --   - gh: GitHub CLI integration
 --
@@ -272,6 +273,10 @@ return {
     -- Notifications
     { '<leader>un', function() require('snacks').notifier.hide() end, desc = 'Dismiss All Notifications' },
     { '<leader>uh', function() require('snacks').notifier.show_history() end, desc = 'Notification History' },
+    { '<leader>us', function() 
+        require('smear_cursor').toggle()
+        vim.notify('Smear cursor ' .. (require('smear_cursor').enabled and 'enabled' or 'disabled'), vim.log.levels.INFO)
+      end, desc = 'Toggle Smear Cursor' },
     
     -- Word references (navigate between word occurrences)
     { ']]', function() require('snacks').words.jump(vim.v.count1) end, desc = 'Next word occurrence (snacks)', mode = { 'n', 't' } },
