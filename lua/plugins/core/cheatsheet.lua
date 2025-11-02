@@ -776,7 +776,7 @@ return {
             -- MINI.AI (TEXT OBJECTS)
             -- ============================================================
             -- Enhanced text objects with next/last support
-            { category = 'Text Objects', key = 'a/i + object', desc = 'Around/inside: w(word) s(sentence) p(paragraph) []{}<>() "\'\` t(tag)' },
+            { category = 'Text Objects', key = 'a/i + object', desc = "Around/inside: w(word) s(sentence) p(paragraph) []{}<>() \"'` t(tag)" },
             { category = 'Text Objects', key = 'an/in', desc = 'Around/inside next - an) goes to next ), cin changes inside next )' },
             { category = 'Text Objects', key = 'al/il', desc = 'Around/inside last - al" goes to previous ", vil selects inside last "' },
             
