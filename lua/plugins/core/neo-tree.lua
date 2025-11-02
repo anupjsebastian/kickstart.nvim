@@ -26,14 +26,12 @@ return {
       indent = {
         padding = 0,
       },
-      diagnostics = {
-        symbols = {
-          hint = '󰌶 ',
-          info = '󰋽 ',
-          warn = '󰀪 ',
-          error = '󰅚 ',
-        },
+      -- Modified indicator (always shows, space if not modified)
+      modified = {
+        symbol = '●',
+        highlight = 'NeoTreeModified',
       },
+      -- Git status symbols (no trailing spaces for compact display)
       git_status = {
         symbols = {
           added = '',
@@ -46,6 +44,36 @@ return {
           staged = '✓',
           conflict = '!',
         },
+        align = 'right',  -- Align git indicators to the right for consistency
+      },
+      -- Diagnostics (no trailing spaces for compact display)
+      diagnostics = {
+        symbols = {
+          hint = '󰌶',
+          info = '󰋽',
+          warn = '󰀪',
+          error = '󰅚',
+        },
+        highlights = {
+          hint = 'DiagnosticSignHint',
+          info = 'DiagnosticSignInfo',
+          warn = 'DiagnosticSignWarn',
+          error = 'DiagnosticSignError',
+        },
+      },
+      -- Icon (file type icon)
+      icon = {
+        folder_closed = '󰉋',
+        folder_open = '󰝰',
+        folder_empty = '󰉖',
+        folder_empty_open = '󰷏',
+        default = '',
+      },
+      -- Name component
+      name = {
+        trailing_slash = false,
+        use_git_status_colors = true,
+        highlight = 'NeoTreeFileName',
       },
     },
     
