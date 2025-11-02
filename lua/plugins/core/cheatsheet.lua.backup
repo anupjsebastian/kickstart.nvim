@@ -991,6 +991,625 @@ return {
 
           -- Create picker for categories
           pickers
+            -- ============================================================
+            -- VIM ESSENTIALS
+            -- ============================================================
+            { category = 'Vim: Motion', key = 'h/j/k/l', desc = 'Left/Down/Up/Right' },
+            { category = 'Vim: Motion', key = 'w/b/e', desc = 'Word forward/backward/end' },
+            { category = 'Vim: Motion', key = '0/$', desc = 'Start/end of line' },
+            { category = 'Vim: Motion', key = 'gg/G', desc = 'First/last line' },
+            { category = 'Vim: Motion', key = '{/}', desc = 'Previous/next paragraph' },
+            { category = 'Vim: Motion', key = '%', desc = 'Jump to matching bracket' },
+            { category = 'Vim: Motion', key = 'f/F{char}', desc = 'Find char forward/backward' },
+            { category = 'Vim: Motion', key = 't/T{char}', desc = 'Till char forward/backward' },
+            { category = 'Vim: Motion', key = ';/,', desc = 'Repeat f/t forward/backward' },
+            { category = 'Vim: Motion', key = '*/#', desc = 'Search word under cursor' },
+            { category = 'Vim: Motion', key = 'n/N', desc = 'Next/previous search result' },
+
+            { category = 'Vim: Editing', key = 'i/a', desc = 'Insert before/after cursor' },
+            { category = 'Vim: Editing', key = 'I/A', desc = 'Insert at line start/end' },
+            { category = 'Vim: Editing', key = 'o/O', desc = 'New line below/above' },
+            { category = 'Vim: Editing', key = 'x/X', desc = 'Delete char under/before cursor' },
+            { category = 'Vim: Editing', key = 'd{motion}', desc = 'Delete (dw, dd, d$)' },
+            { category = 'Vim: Editing', key = 'c{motion}', desc = 'Change (cw, cc, c$)' },
+            { category = 'Vim: Editing', key = 'y{motion}', desc = 'Yank/copy (yw, yy, y$)' },
+            { category = 'Vim: Editing', key = 'p/P', desc = 'Paste after/before cursor' },
+            { category = 'Vim: Editing', key = 'u/Ctrl-r', desc = 'Undo/redo' },
+            { category = 'Vim: Editing', key = '.', desc = 'Repeat last change' },
+            { category = 'Vim: Editing', key = 'r{char}', desc = 'Replace character' },
+            { category = 'Vim: Editing', key = 'J', desc = 'Join lines' },
+            { category = 'Vim: Editing', key = '~', desc = 'Toggle case' },
+            { category = 'Vim: Editing', key = '>>/<<', desc = 'Indent/unindent line' },
+            { category = 'Vim: Editing', key = '={motion}', desc = 'Auto-indent (==, =G)' },
+            { category = 'Vim: Editing', key = 'gU{motion}', desc = 'Uppercase (gUiw, gUU)' },
+            { category = 'Vim: Editing', key = 'gu{motion}', desc = 'Lowercase (guiw, guu)' },
+            { category = 'Vim: Editing', key = 'g~{motion}', desc = 'Toggle case (g~iw, g~~)' },
+            { category = 'Vim: Editing', key = 'gq{motion}', desc = 'Format text (gqip)' },
+            { category = 'Vim: Editing', key = 'gJ', desc = 'Join lines without space' },
+            { category = 'Vim: Editing', key = 'Ctrl-a/Ctrl-x', desc = 'Increment/decrement number' },
+
+            { category = 'Vim: Comments', key = 'gc{motion}', desc = 'Comment (gcc, gcap, gc}...)' },
+            { category = 'Vim: Comments', key = 'gbc', desc = 'Block comment' },
+
+            { category = 'Vim: Lines', key = 'dd', desc = 'Delete line' },
+            { category = 'Vim: Lines', key = 'yy', desc = 'Yank/copy line' },
+            { category = 'Vim: Lines', key = 'cc', desc = 'Change line' },
+            { category = 'Vim: Lines', key = 'D', desc = 'Delete to end of line' },
+            { category = 'Vim: Lines', key = 'C', desc = 'Change to end of line' },
+            { category = 'Vim: Lines', key = 'Y', desc = 'Yank line (like yy)' },
+            { category = 'Vim: Lines', key = 'S', desc = 'Substitute line (like cc)' },
+
+            { category = 'Vim: Visual', key = 'v', desc = 'Character visual mode' },
+            { category = 'Vim: Visual', key = 'V', desc = 'Line visual mode' },
+            { category = 'Vim: Visual', key = 'Ctrl-v', desc = 'Block visual mode' },
+            { category = 'Vim: Visual', key = 'gv', desc = 'Reselect last selection' },
+            { category = 'Vim: Visual', key = 'o', desc = 'Toggle cursor to other end' },
+            { category = 'Vim: Visual', key = 'y/d/c', desc = 'Yank/delete/change selection' },
+            { category = 'Vim: Visual', key = 'p', desc = 'Paste over selection (preserve register)' },
+            { category = 'Vim: Visual', key = ':norm {cmd}', desc = 'Run normal command on each line' },
+            { category = 'Vim: Visual', key = 'g Ctrl-a', desc = 'Create sequence (1,2,3... on selected lines)' },
+            { category = 'Vim: Visual', key = 'Ctrl-a/Ctrl-x', desc = 'Increment/decrement all numbers in selection' },
+
+            -- Common workflows
+            { category = 'Workflows: Multi-File', key = ':vimgrep /pattern/ **/*', desc = 'Search all files, populate quickfix' },
+            { category = 'Workflows: Multi-File', key = ':cdo s/old/new/g | update', desc = 'Replace across all quickfix files' },
+            { category = 'Workflows: Multi-File', key = ':bufdo %s/old/new/ge | w', desc = 'Replace in all open buffers' },
+            
+            { category = 'Workflows: Multi-Edit', key = 'qa{cmds}q', desc = 'Record macro to register a' },
+            { category = 'Workflows: Multi-Edit', key = '@a', desc = 'Execute macro a' },
+            { category = 'Workflows: Multi-Edit', key = '100@a', desc = 'Execute macro 100 times' },
+            { category = 'Workflows: Multi-Edit', key = 'Ctrl-v, select, I, type, Esc', desc = 'Multi-line insert' },
+            { category = 'Workflows: Multi-Edit', key = 'Ctrl-v, select, c, type, Esc', desc = 'Multi-line change' },
+            { category = 'Workflows: Multi-Edit', key = ':%norm @a', desc = 'Execute macro on all lines' },
+            
+            { category = 'Workflows: Navigate', key = 'gd → make changes → Ctrl-o', desc = 'Go to definition and return' },
+            { category = 'Workflows: Navigate', key = '/pattern → n → cgn → . . .', desc = 'Search and replace with visual feedback' },
+            { category = 'Workflows: Navigate', key = 'mx → navigate → `x', desc = 'Mark position, jump back later' },
+            
+            { category = 'Workflows: Refactor', key = '*→cgn→new text→Esc→n→.→n→.', desc = 'Rename symbol occurrences one-by-one' },
+            { category = 'Workflows: Refactor', key = ':%s/\\<old\\>/new/gc', desc = 'Interactive find-replace (confirm each)' },
+            
+            { category = 'Workflows: Git', key = ']c → stage hunk → ]c → stage', desc = 'Review and stage hunks one-by-one' },
+            { category = 'Workflows: Git', key = '<leader>gb → find line → <CR>', desc = 'Blame line, see commit details' },
+
+            { category = 'Vim: Search', key = '/{pattern}', desc = 'Search forward' },
+            { category = 'Vim: Search', key = '?{pattern}', desc = 'Search backward' },
+            { category = 'Vim: Search', key = 'n/N', desc = 'Next/previous match' },
+            { category = 'Vim: Search', key = '*/#', desc = 'Search word under cursor' },
+            { category = 'Vim: Search', key = 'g*/g#', desc = 'Search partial word match' },
+            { category = 'Vim: Search', key = ':noh', desc = 'Clear search highlight' },
+
+            { category = 'Vim: Replace', key = ':s/old/new/', desc = 'Replace first match in line' },
+            { category = 'Vim: Replace', key = ':s/old/new/g', desc = 'Replace all in line' },
+            { category = 'Vim: Replace', key = ':%s/old/new/g', desc = 'Replace in entire file' },
+            { category = 'Vim: Replace', key = ':%s/old/new/gc', desc = 'Replace with confirmation' },
+            { category = 'Vim: Replace', key = ":'<,'>s/old/new/g", desc = 'Replace in visual selection' },
+
+            { category = 'Vim: Macros', key = 'q{a-z}', desc = 'Start recording macro to register' },
+            { category = 'Vim: Macros', key = 'q', desc = 'Stop recording' },
+            { category = 'Vim: Macros', key = '@{a-z}', desc = 'Execute macro from register' },
+            { category = 'Vim: Macros', key = '@@', desc = 'Repeat last macro' },
+            { category = 'Vim: Macros', key = '{count}@{a-z}', desc = 'Execute macro N times' },
+
+            { category = 'Vim: Marks', key = 'm{a-z}', desc = 'Set mark (local to buffer)' },
+            { category = 'Vim: Marks', key = 'm{A-Z}', desc = 'Set mark (global across files)' },
+            { category = 'Vim: Marks', key = '`{mark}', desc = 'Jump to exact mark position' },
+            { category = 'Vim: Marks', key = "'{mark}", desc = 'Jump to mark line' },
+            { category = 'Vim: Marks', key = ':marks', desc = 'List all marks' },
+            { category = 'Vim: Marks', key = ':delmarks!', desc = 'Delete all marks' },
+
+            { category = 'Vim: Registers', key = '"{a-z}y', desc = 'Yank into named register' },
+            { category = 'Vim: Registers', key = '"{a-z}p', desc = 'Paste from named register' },
+            { category = 'Vim: Registers', key = ':reg', desc = 'Show all registers' },
+            { category = 'Vim: Registers', key = '"0p', desc = 'Paste last yank (not delete)' },
+            { category = 'Vim: Registers', key = '"+y', desc = 'Yank to system clipboard' },
+            { category = 'Vim: Registers', key = '"+p', desc = 'Paste from system clipboard' },
+
+            { category = 'Vim: Jumps', key = 'Ctrl-o', desc = 'Jump to older position' },
+            { category = 'Vim: Jumps', key = 'Ctrl-i', desc = 'Jump to newer position' },
+            { category = 'Vim: Jumps', key = ':jumps', desc = 'Show jump list' },
+            { category = 'Vim: Jumps', key = "''", desc = 'Jump to last position' },
+            { category = 'Vim: Jumps', key = '`.', desc = 'Jump to last change' },
+
+            { category = 'Vim: Windows', key = 'Ctrl-w s', desc = 'Split horizontal' },
+            { category = 'Vim: Windows', key = 'Ctrl-w v', desc = 'Split vertical' },
+            { category = 'Vim: Windows', key = 'Ctrl-w q', desc = 'Close window' },
+            { category = 'Vim: Windows', key = 'Ctrl-w h/j/k/l', desc = 'Navigate windows' },
+            { category = 'Vim: Windows', key = 'Ctrl-w =', desc = 'Equal window sizes' },
+            { category = 'Vim: Windows', key = 'Ctrl-w _', desc = 'Maximize height' },
+            { category = 'Vim: Windows', key = 'Ctrl-w |', desc = 'Maximize width' },
+
+            { category = 'Vim: Tabs', key = ':tabnew', desc = 'New tab' },
+            { category = 'Vim: Tabs', key = ':tabclose', desc = 'Close tab' },
+            { category = 'Vim: Tabs', key = 'gt/gT', desc = 'Next/previous tab' },
+            { category = 'Vim: Tabs', key = '{count}gt', desc = 'Go to tab number' },
+
+            { category = 'Vim: Buffers', key = ':ls', desc = 'List buffers' },
+            { category = 'Vim: Buffers', key = ':b{num}', desc = 'Switch to buffer number' },
+            { category = 'Vim: Buffers', key = ':bn/:bp', desc = 'Next/previous buffer' },
+            { category = 'Vim: Buffers', key = ':bd', desc = 'Delete buffer' },
+
+            { category = 'Vim: Folding', key = 'za', desc = 'Toggle fold' },
+            { category = 'Vim: Folding', key = 'zo/zc', desc = 'Open/close fold' },
+            { category = 'Vim: Folding', key = 'zM/zR', desc = 'Close/open all folds' },
+            { category = 'Vim: Folding', key = 'zj/zk', desc = 'Move to next/prev fold' },
+
+            { category = 'Vim: Spell', key = ']s/[s', desc = 'Next/previous spelling error' },
+            { category = 'Vim: Spell', key = 'z=', desc = 'Suggest corrections' },
+            { category = 'Vim: Spell', key = 'zg', desc = 'Add word to dictionary' },
+            { category = 'Vim: Spell', key = 'zug', desc = 'Remove word from dictionary' },
+
+            { category = 'Vim: Files', key = ':w', desc = 'Save file' },
+            { category = 'Vim: Files', key = ':q', desc = 'Quit' },
+            { category = 'Vim: Files', key = ':wq or :x', desc = 'Save and quit' },
+            { category = 'Vim: Files', key = ':q!', desc = 'Quit without saving' },
+            { category = 'Vim: Files', key = ':e {file}', desc = 'Edit file' },
+            { category = 'Vim: Files', key = ':saveas {file}', desc = 'Save as' },
+
+            { category = 'Vim: Command', key = ':', desc = 'Command-line mode' },
+            { category = 'Vim: Command', key = '!{cmd}', desc = 'Run shell command' },
+            { category = 'Vim: Command', key = ':r !{cmd}', desc = 'Insert command output' },
+            { category = 'Vim: Command', key = ':{range}!{cmd}', desc = 'Filter lines through command' },
+
+            -- ============================================================
+            -- LEADER KEY COMMANDS (<leader> = space)
+            -- ============================================================
+            { category = 'Leader: Core', key = '<leader>c', desc = 'Code actions menu' },
+            { category = 'Leader: Core', key = '<leader>s', desc = 'Search menu' },
+            { category = 'Leader: Core', key = '<leader>g', desc = 'Git menu' },
+            { category = 'Leader: Core', key = '<leader>t', desc = 'Toggle menu' },
+            { category = 'Leader: Core', key = '<leader>w', desc = 'Window menu' },
+            { category = 'Leader: Core', key = '<leader>b', desc = 'Buffer menu' },
+            { category = 'Leader: Core', key = '<leader>q', desc = 'Session menu' },
+
+            { category = 'Leader: Code', key = '<leader>ca', desc = 'Code action' },
+            { category = 'Leader: Code', key = '<leader>cr', desc = 'Rename symbol' },
+            { category = 'Leader: Code', key = '<leader>cf', desc = 'Format document' },
+            { category = 'Leader: Code', key = '<leader>cd', desc = 'Type definition' },
+
+            { category = 'Leader: Buffer: Open', key = '<leader>fn', desc = 'New file' },
+            { category = 'Leader: Buffer: Open', key = '<leader>ff', desc = 'Find files' },
+            { category = 'Leader: Buffer: Open', key = '<leader>fr', desc = 'Recent files' },
+            { category = 'Leader: Buffer: Open', key = '<leader>fg', desc = 'Git files' },
+
+            { category = 'Leader: Buffer: Switch', key = '<leader><leader>', desc = 'Switch buffer' },
+            { category = 'Leader: Buffer: Switch', key = '<leader>,', desc = 'Previous buffer' },
+            { category = 'Leader: Buffer: Switch', key = '<leader>bb', desc = 'Buffer picker' },
+            { category = 'Leader: Buffer: Switch', key = '<leader>bd', desc = 'Delete buffer' },
+            { category = 'Leader: Buffer: Switch', key = '<leader>bp', desc = 'Pin buffer' },
+
+            { category = 'Leader: Buffer: Close', key = '<leader>bd', desc = 'Delete current buffer' },
+            { category = 'Leader: Buffer: Close', key = '<leader>bD', desc = 'Delete all buffers' },
+            { category = 'Leader: Buffer: Close', key = '<leader>bo', desc = 'Delete other buffers' },
+
+            { category = 'Leader: Buffer: Info', key = '<leader>bi', desc = 'Buffer info' },
+            { category = 'Leader: Buffer: Info', key = '<leader>bI', desc = 'All buffers info' },
+
+            { category = 'Leader: Window', key = '<leader>w-', desc = 'Split below' },
+            { category = 'Leader: Window', key = '<leader>w|', desc = 'Split right' },
+            { category = 'Leader: Window', key = '<leader>wd', desc = 'Delete window' },
+
+            { category = 'Leader: Tab', key = '<leader><tab><tab>', desc = 'New tab' },
+            { category = 'Leader: Tab', key = '<leader><tab>d', desc = 'Close tab' },
+            { category = 'Leader: Tab', key = '<leader><tab>]', desc = 'Next tab' },
+            { category = 'Leader: Tab', key = '<leader><tab>[', desc = 'Previous tab' },
+
+            { category = 'Leader: Search', key = '<leader>/', desc = 'Grep search' },
+            { category = 'Leader: Search', key = '<leader>:', desc = 'Command history' },
+            { category = 'Leader: Search', key = '<leader>sb', desc = 'Buffer search' },
+            { category = 'Leader: Search', key = '<leader>sc', desc = 'Command cheatsheet' },
+            { category = 'Leader: Search', key = '<leader>sC', desc = 'Cheatsheet categories' },
+            { category = 'Leader: Search', key = '<leader>sd', desc = 'Document diagnostics' },
+            { category = 'Leader: Search', key = '<leader>sD', desc = 'Workspace diagnostics' },
+            { category = 'Leader: Search', key = '<leader>sg', desc = 'Grep search' },
+            { category = 'Leader: Search', key = '<leader>sh', desc = 'Help tags' },
+            { category = 'Leader: Search', key = '<leader>sk', desc = 'Keymaps' },
+            { category = 'Leader: Search', key = '<leader>sK', desc = 'All keymaps (which-key)' },
+            { category = 'Leader: Search', key = '<leader>sm', desc = 'Man pages' },
+            { category = 'Leader: Search', key = '<leader>sr', desc = 'Resume last picker' },
+            { category = 'Leader: Search', key = '<leader>ss', desc = 'Document symbols' },
+            { category = 'Leader: Search', key = '<leader>sS', desc = 'Workspace symbols' },
+            { category = 'Leader: Search', key = '<leader>sw', desc = 'Word under cursor' },
+
+            { category = 'Leader: Session', key = '<leader>qs', desc = 'Save session' },
+            { category = 'Leader: Session', key = '<leader>ql', desc = 'Load session' },
+            { category = 'Leader: Session', key = '<leader>qd', desc = 'Delete session' },
+
+            { category = 'Leader: UI', key = '<leader>uc', desc = 'Colorscheme picker' },
+            { category = 'Leader: UI', key = '<leader>uh', desc = 'Toggle inlay hints' },
+            { category = 'Leader: UI', key = '<leader>ul', desc = 'Toggle line numbers' },
+            { category = 'Leader: UI', key = '<leader>ur', desc = 'Toggle relative numbers' },
+            { category = 'Leader: UI', key = '<leader>us', desc = 'Toggle statusline' },
+
+            { category = 'Leader: Toggle', key = '<leader>td', desc = 'Toggle diagnostics (all)' },
+            { category = 'Leader: Toggle', key = '<leader>tv', desc = 'Toggle virtual text (inline errors)' },
+            { category = 'Leader: Toggle', key = '<leader>tr', desc = 'Toggle relative numbers' },
+            { category = 'Leader: Toggle', key = '<leader>ta', desc = 'Toggle Copilot' },
+
+            { category = 'Leader: Diagnostics', key = '<leader>xx', desc = 'Diagnostics list' },
+            { category = 'Leader: Diagnostics', key = '<leader>xX', desc = 'Buffer diagnostics' },
+            { category = 'Leader: Diagnostics', key = '<leader>xl', desc = 'Location list' },
+            { category = 'Leader: Diagnostics', key = '<leader>xq', desc = 'Quickfix list' },
+
+            -- ============================================================
+            -- QUICKFIX & LOCATION LIST
+            -- ============================================================
+            { category = 'Navigation: Quickfix', key = ':copen', desc = 'Open quickfix window' },
+            { category = 'Navigation: Quickfix', key = ':cclose', desc = 'Close quickfix window' },
+            { category = 'Navigation: Quickfix', key = ':cnext', desc = 'Next quickfix item' },
+            { category = 'Navigation: Quickfix', key = ':cprev', desc = 'Previous quickfix item' },
+            { category = 'Navigation: Quickfix', key = ':cfirst', desc = 'First quickfix item' },
+            { category = 'Navigation: Quickfix', key = ':clast', desc = 'Last quickfix item' },
+            { category = 'Navigation: Quickfix', key = ':cc {n}', desc = 'Jump to quickfix item N' },
+            { category = 'Navigation: Quickfix', key = ':cdo {cmd}', desc = 'Execute command on each quickfix entry' },
+            { category = 'Navigation: Quickfix', key = ':cfdo {cmd}', desc = 'Execute command on each file in quickfix' },
+            { category = 'Navigation: Quickfix', key = ':clist', desc = 'List all quickfix items' },
+            { category = 'Navigation: Quickfix', key = ':colder', desc = 'Go to older quickfix list' },
+            { category = 'Navigation: Quickfix', key = ':cnewer', desc = 'Go to newer quickfix list' },
+            { category = 'Navigation: Quickfix', key = ':cexpr []', desc = 'Clear quickfix list' },
+            { category = 'Navigation: Quickfix', key = ':caddexpr', desc = 'Add to quickfix list' },
+            { category = 'Navigation: Quickfix', key = ':grep {pattern}', desc = 'Grep and populate quickfix' },
+
+            { category = 'Navigation: Location List', key = ':lopen', desc = 'Open location list window' },
+            { category = 'Navigation: Location List', key = ':lclose', desc = 'Close location list window' },
+            { category = 'Navigation: Location List', key = ':lnext', desc = 'Next location item' },
+            { category = 'Navigation: Location List', key = ':lprev', desc = 'Previous location item' },
+            { category = 'Navigation: Location List', key = ':lfirst', desc = 'First location item' },
+            { category = 'Navigation: Location List', key = ':llast', desc = 'Last location item' },
+            { category = 'Navigation: Location List', key = ':ll {n}', desc = 'Jump to location item N' },
+            { category = 'Navigation: Location List', key = ':ldo {cmd}', desc = 'Execute command on each location entry' },
+            { category = 'Navigation: Location List', key = ':lfdo {cmd}', desc = 'Execute command on each file in location list' },
+            { category = 'Navigation: Location List', key = ':llist', desc = 'List all location items' },
+            { category = 'Navigation: Location List', key = ':lolder', desc = 'Go to older location list' },
+            { category = 'Navigation: Location List', key = ':lnewer', desc = 'Go to newer location list' },
+            { category = 'Navigation: Location List', key = ':lexpr []', desc = 'Clear location list' },
+            { category = 'Navigation: Location List', key = ':laddexpr', desc = 'Add to location list' },
+            { category = 'Navigation: Location List', key = ':lgrep {pattern}', desc = 'Grep and populate location list' },
+
+            -- ============================================================
+            -- COPILOT
+            -- ============================================================
+            { category = 'Copilot', key = '<Tab>', desc = 'Accept suggestion' },
+            { category = 'Copilot', key = 'Alt-]', desc = 'Next suggestion' },
+            { category = 'Copilot', key = 'Alt-[', desc = 'Previous suggestion' },
+            { category = 'Copilot', key = 'Ctrl-]', desc = 'Dismiss suggestion' },
+            { category = 'Copilot', key = '<leader>ta', desc = 'Toggle Copilot' },
+            { category = 'Copilot', key = ':Copilot status', desc = 'Check Copilot status' },
+            { category = 'Copilot', key = ':Copilot auth', desc = 'Authenticate Copilot' },
+            { category = 'Copilot', key = ':Copilot setup', desc = 'Setup Copilot' },
+            { category = 'Copilot', key = ':Copilot panel', desc = 'Open Copilot panel' },
+
+            -- ============================================================
+            -- EMMET
+            -- ============================================================
+            { category = 'Emmet', key = '<C-y>,', desc = 'Expand abbreviation (Insert mode)' },
+            { category = 'Emmet', key = '<C-y>d', desc = 'Balance tag outward' },
+            { category = 'Emmet', key = '<C-y>D', desc = 'Balance tag inward' },
+            { category = 'Emmet', key = '<C-y>n', desc = 'Next edit point' },
+            { category = 'Emmet', key = '<C-y>N', desc = 'Previous edit point' },
+            { category = 'Emmet', key = '<C-y>k', desc = 'Remove tag' },
+            { category = 'Emmet', key = '<C-y>j', desc = 'Split/join tag' },
+            { category = 'Emmet', key = '<C-y>/', desc = 'Toggle comment' },
+            { category = 'Emmet', key = '<C-y>a', desc = 'Make anchor from URL' },
+            { category = 'Emmet', key = '<C-y>A', desc = 'Make quoted text from URL' },
+
+            { category = 'Emmet: Patterns', key = 'div.container', desc = '<div class="container"></div>' },
+            { category = 'Emmet: Patterns', key = 'ul>li*3', desc = '<ul> with 3 <li> children' },
+            { category = 'Emmet: Patterns', key = 'div#header', desc = '<div id="header"></div>' },
+            { category = 'Emmet: Patterns', key = 'a[href=#]', desc = '<a href="#"></a>' },
+            { category = 'Emmet: Patterns', key = 'div{text}', desc = '<div>text</div>' },
+            { category = 'Emmet: Patterns', key = 'ul>li.item$*3', desc = '<li> with class item1, item2, item3' },
+            { category = 'Emmet: Patterns', key = 'div+p+span', desc = 'Siblings: div, p, span' },
+            { category = 'Emmet: Patterns', key = 'div>p>span', desc = 'Nested: div > p > span' },
+            { category = 'Emmet: Patterns', key = '(div>p)*3', desc = 'Group multiplication' },
+            { category = 'Emmet: Patterns', key = 'input:text', desc = '<input type="text" />' },
+            { category = 'Emmet: Patterns', key = 'button:submit', desc = '<button type="submit"></button>' },
+            { category = 'Emmet: Patterns', key = 'link:css', desc = '<link rel="stylesheet" href="style.css">' },
+            { category = 'Emmet: Patterns', key = 'script:src', desc = '<script src=""></script>' },
+            { category = 'Emmet: Patterns', key = 'img', desc = '<img src="" alt="" />' },
+            { category = 'Emmet: Patterns', key = 'table+', desc = 'Full table structure' },
+            { category = 'Emmet: Patterns', key = '!', desc = 'HTML5 boilerplate' },
+
+            -- ============================================================
+            -- GIT
+            -- ============================================================
+            { category = 'Git', key = '<leader>gg', desc = 'Lazygit' },
+            { category = 'Git', key = '<leader>gb', desc = 'Git blame line' },
+            { category = 'Git', key = '<leader>gf', desc = 'Lazygit current file' },
+            { category = 'Git', key = '<leader>gl', desc = 'Git log' },
+            { category = 'Git', key = '<leader>gL', desc = 'Git log (current file)' },
+            { category = 'Git', key = ']h', desc = 'Next git hunk' },
+            { category = 'Git', key = '[h', desc = 'Previous git hunk' },
+            { category = 'Git', key = '<leader>hs', desc = 'Stage hunk' },
+            { category = 'Git', key = '<leader>hu', desc = 'Undo stage hunk' },
+            { category = 'Git', key = '<leader>hS', desc = 'Stage buffer' },
+            { category = 'Git', key = '<leader>hp', desc = 'Preview hunk' },
+            { category = 'Git', key = '<leader>hr', desc = 'Reset hunk' },
+            { category = 'Git', key = '<leader>hR', desc = 'Reset buffer' },
+            { category = 'Git', key = '<leader>hd', desc = 'Diff against index' },
+            { category = 'Git', key = '<leader>hD', desc = 'Diff against last commit' },
+
+            { category = 'Git: Snacks', key = '<leader>gB', desc = 'Browse file (GitHub/GitLab)' },
+            { category = 'Git: Snacks', key = '<leader>gc', desc = 'Browse commits' },
+            { category = 'Git: Snacks', key = '<leader>gf', desc = 'Browse file history' },
+
+            -- ============================================================
+            -- LSP
+            -- ============================================================
+            { category = 'LSP', key = 'gd', desc = 'Go to definition' },
+            { category = 'LSP', key = 'gr', desc = 'Go to references' },
+            { category = 'LSP', key = 'gI', desc = 'Go to implementation' },
+            { category = 'LSP', key = 'gy', desc = 'Go to type definition' },
+            { category = 'LSP', key = 'gD', desc = 'Go to declaration' },
+            { category = 'LSP', key = 'K', desc = 'Hover documentation' },
+            { category = 'LSP', key = 'gK', desc = 'Signature help' },
+            { category = 'LSP', key = '<leader>ca', desc = 'Code action' },
+            { category = 'LSP', key = '<leader>cr', desc = 'Rename' },
+            { category = 'LSP', key = '<leader>cf', desc = 'Format' },
+            { category = 'LSP', key = ']d', desc = 'Next diagnostic' },
+            { category = 'LSP', key = '[d', desc = 'Previous diagnostic' },
+            { category = 'LSP', key = ']e', desc = 'Next error' },
+            { category = 'LSP', key = '[e', desc = 'Previous error' },
+            { category = 'LSP', key = ']w', desc = 'Next warning' },
+            { category = 'LSP', key = '[w', desc = 'Previous warning' },
+
+            -- ============================================================
+            -- DEBUG
+            -- ============================================================
+            { category = 'Debug', key = '<F5>', desc = 'Start/Continue debugging' },
+            { category = 'Debug', key = '<F10>', desc = 'Step over' },
+            { category = 'Debug', key = '<F11>', desc = 'Step into' },
+            { category = 'Debug', key = '<F12>', desc = 'Step out' },
+            { category = 'Debug', key = '<leader>db', desc = 'Toggle breakpoint' },
+            { category = 'Debug', key = '<leader>dB', desc = 'Set conditional breakpoint' },
+            { category = 'Debug', key = '<leader>dc', desc = 'Continue' },
+            { category = 'Debug', key = '<leader>dC', desc = 'Run to cursor' },
+            { category = 'Debug', key = '<leader>dg', desc = 'Go to line' },
+            { category = 'Debug', key = '<leader>di', desc = 'Step into' },
+            { category = 'Debug', key = '<leader>do', desc = 'Step out' },
+            { category = 'Debug', key = '<leader>dO', desc = 'Step over' },
+            { category = 'Debug', key = '<leader>dp', desc = 'Pause' },
+            { category = 'Debug', key = '<leader>dr', desc = 'Toggle REPL' },
+            { category = 'Debug', key = '<leader>ds', desc = 'Session' },
+            { category = 'Debug', key = '<leader>dt', desc = 'Terminate' },
+            { category = 'Debug', key = '<leader>dw', desc = 'Widgets' },
+
+            -- ============================================================
+            -- TELESCOPE
+            -- ============================================================
+            { category = 'Telescope', key = '<C-n>/<C-p>', desc = 'Next/previous item' },
+            { category = 'Telescope', key = '<C-j>/<C-k>', desc = 'Next/previous item (alt)' },
+            { category = 'Telescope', key = '<CR>', desc = 'Select item' },
+            { category = 'Telescope', key = '<C-x>', desc = 'Open in split' },
+            { category = 'Telescope', key = '<C-v>', desc = 'Open in vsplit' },
+            { category = 'Telescope', key = '<C-t>', desc = 'Open in tab' },
+            { category = 'Telescope', key = '<C-u>/<C-d>', desc = 'Scroll preview up/down' },
+            { category = 'Telescope', key = '<Tab>/<S-Tab>', desc = 'Toggle selection + next/prev' },
+            { category = 'Telescope', key = '<C-q>', desc = 'Send to quickfix' },
+            { category = 'Telescope', key = '<M-q>', desc = 'Send selected to quickfix' },
+
+            -- ============================================================
+            -- NEO-TREE
+            -- ============================================================
+            { category = 'Neo-tree', key = '<leader>e', desc = 'Toggle file explorer' },
+            { category = 'Neo-tree', key = '<leader>E', desc = 'Toggle explorer (floating)' },
+            { category = 'Neo-tree', key = '<CR>', desc = 'Open file/folder' },
+            { category = 'Neo-tree', key = 'l', desc = 'Open file/expand folder' },
+            { category = 'Neo-tree', key = 'h', desc = 'Close folder' },
+            { category = 'Neo-tree', key = 'a', desc = 'Add file/folder' },
+            { category = 'Neo-tree', key = 'd', desc = 'Delete' },
+            { category = 'Neo-tree', key = 'r', desc = 'Rename' },
+            { category = 'Neo-tree', key = 'y', desc = 'Copy to clipboard' },
+            { category = 'Neo-tree', key = 'x', desc = 'Cut to clipboard' },
+            { category = 'Neo-tree', key = 'p', desc = 'Paste from clipboard' },
+            { category = 'Neo-tree', key = 'R', desc = 'Refresh' },
+            { category = 'Neo-tree', key = 'q', desc = 'Close window' },
+            { category = 'Neo-tree', key = '?', desc = 'Show help' },
+
+            -- ============================================================
+            -- TEXT OBJECTS (mini.ai)
+            -- ============================================================
+            -- Default vim text objects
+            { category = 'Text Objects', key = 'iw/aw', desc = 'Inside/around word' },
+            { category = 'Text Objects', key = 'iW/aW', desc = 'Inside/around WORD (whitespace-delimited)' },
+            { category = 'Text Objects', key = 'is/as', desc = 'Inside/around sentence' },
+            { category = 'Text Objects', key = 'ip/ap', desc = 'Inside/around paragraph' },
+            { category = 'Text Objects', key = 'i(/a(', desc = 'Inside/around ( ) parentheses' },
+            { category = 'Text Objects', key = 'i[/a[', desc = 'Inside/around [ ] brackets' },
+            { category = 'Text Objects', key = 'i{/a{', desc = 'Inside/around { } braces' },
+            { category = 'Text Objects', key = 'i</a<', desc = 'Inside/around < > angle brackets' },
+            { category = 'Text Objects', key = 'i\'/a\'', desc = 'Inside/around \' \' single quotes' },
+            { category = 'Text Objects', key = 'i"/a"', desc = 'Inside/around " " double quotes' },
+            { category = 'Text Objects', key = 'i`/a`', desc = 'Inside/around ` ` backticks' },
+            { category = 'Text Objects', key = 'it/at', desc = 'Inside/around tag (HTML/XML)' },
+
+            -- Mini.ai enhanced text objects
+            { category = 'Text Objects', key = 'in/an', desc = 'Next text object - di)n deletes next parens' },
+            { category = 'Text Objects', key = 'il/al', desc = 'Last text object - ci]l changes last brackets' },
+            { category = 'Text Objects', key = 'in)/an)', desc = 'Next parentheses text object' },
+            { category = 'Text Objects', key = 'il(/al(', desc = 'Last parentheses text object' },
+            { category = 'Text Objects', key = 'in]/an]', desc = 'Next brackets text object' },
+            { category = 'Text Objects', key = 'il[/al[', desc = 'Last brackets text object' },
+            { category = 'Text Objects', key = 'in}/an}', desc = 'Next braces text object' },
+            { category = 'Text Objects', key = 'il{/al{', desc = 'Last braces text object' },
+            { category = 'Text Objects', key = "in'/an'", desc = 'Next single quoted text object' },
+            { category = 'Text Objects', key = "il'/al'", desc = 'Last single quoted text object' },
+            { category = 'Text Objects', key = 'in"/an"', desc = 'Next double quoted text object' },
+            { category = 'Text Objects', key = 'il"/al"', desc = 'Last double quoted text object' },
+            { category = 'Text Objects', key = 'in`/an`', desc = 'Next backtick text object' },
+            { category = 'Text Objects', key = 'il`/al`', desc = 'Last backtick text object' },
+            { category = 'Text Objects', key = 'int/ant', desc = 'Next tag text object' },
+            { category = 'Text Objects', key = 'ilt/alt', desc = 'Last tag text object' },
+            { category = 'Text Objects', key = 'vin?/van?', desc = 'Visual select next/around with search' },
+            
+            -- Function/call text objects (mini.ai)
+            { category = 'Text Objects', key = 'daf', desc = 'Delete around function call - includes name + ()' },
+            { category = 'Text Objects', key = 'cif', desc = 'Change inside function call - only arguments' },
+            { category = 'Text Objects', key = 'daa', desc = 'Delete around argument - including commas' },
+            { category = 'Text Objects', key = 'cia', desc = 'Change inside argument - current arg only' },
+
+            -- ============================================================
+            -- MINI.SURROUND (works with vim-repeat!)
+            -- ============================================================
+            -- Note: All surround operations are repeatable with . command
+            
+            -- Add surroundings (sa = surround add) [REPEATABLE]
+            { category = 'Surround', key = 'saiw"', desc = 'Surround word with " - then press . to repeat on next word' },
+            { category = 'Surround', key = 'sa2w)', desc = 'Surround 2 words with () - use . to repeat' },
+            { category = 'Surround', key = 'sap}', desc = 'Surround paragraph with {} - use . to repeat' },
+            { category = 'Surround', key = 'sa$]', desc = 'Surround to end of line with [] - use . to repeat' },
+            { category = 'Surround', key = 'saW<q>', desc = 'Surround WORD with <q> tag - use . to repeat' },
+            { category = 'Surround', key = 'saiw`', desc = 'Surround word with backticks (markdown code) - use . to repeat' },
+            
+            -- Delete surroundings (sd = surround delete) [REPEATABLE]
+            { category = 'Surround', key = 'sd"', desc = 'Delete surrounding " - use . to repeat on next quoted text' },
+            { category = 'Surround', key = 'sd)', desc = 'Delete surrounding () - use . to repeat' },
+            { category = 'Surround', key = 'sd}', desc = 'Delete surrounding {} - use . to repeat' },
+            { category = 'Surround', key = 'sd]', desc = 'Delete surrounding [] - use . to repeat' },
+            { category = 'Surround', key = 'sdt', desc = 'Delete surrounding tag (HTML/XML) - use . to repeat' },
+            { category = 'Surround', key = 'sd`', desc = 'Delete surrounding backticks - use . to repeat' },
+            { category = 'Surround', key = "sd'", desc = "Delete surrounding ' - use . to repeat" },
+            
+            -- Replace surroundings (sr = surround replace) [REPEATABLE]
+            { category = 'Surround', key = 'sr)"', desc = 'Replace () with " - use . to repeat on next ()' },
+            { category = 'Surround', key = 'sr"]', desc = 'Replace " with [] - use . to repeat' },
+            { category = 'Surround', key = 'sr\'"', desc = "Replace ' with \" - use . to repeat" },
+            { category = 'Surround', key = 'srt"', desc = 'Replace tag with " - use . to repeat' },
+            { category = 'Surround', key = 'sr)}', desc = 'Replace () with {} - use . to repeat' },
+            { category = 'Surround', key = 'sr{t', desc = 'Replace {} with tag - use . to repeat' },
+            { category = 'Surround', key = 'sr`"', desc = 'Replace backticks with " - use . to repeat' },
+            
+            -- Find surroundings (sf/sF = surround find) [NOT REPEATABLE - navigation only]
+            { category = 'Surround', key = 'sf"', desc = 'Jump to next " - highlight surrounding' },
+            { category = 'Surround', key = 'sF)', desc = 'Jump to previous () - highlight surrounding' },
+            { category = 'Surround', key = 'sf]', desc = 'Jump to next [] - highlight surrounding' },
+            { category = 'Surround', key = 'sF}', desc = 'Jump to previous {} - highlight surrounding' },
+            { category = 'Surround', key = 'sft', desc = 'Jump to next tag - highlight surrounding' },
+            { category = 'Surround', key = 'sFt', desc = 'Jump to previous tag - highlight surrounding' },
+            
+            -- Highlight surroundings (sh = surround highlight) [NOT REPEATABLE - visual feedback only]
+            { category = 'Surround', key = 'sh"', desc = 'Highlight " surroundings for 500ms' },
+            { category = 'Surround', key = 'sh)', desc = 'Highlight () surroundings for 500ms' },
+            { category = 'Surround', key = 'sh]', desc = 'Highlight [] surroundings for 500ms' },
+            { category = 'Surround', key = 'sh}', desc = 'Highlight {} surroundings for 500ms' },
+            { category = 'Surround', key = 'sht', desc = 'Highlight tag surroundings for 500ms' },
+            
+            -- Common workflows with repeat
+            { category = 'Surround', key = '*→sd"→n→.→n→.', desc = 'Search and remove quotes from all matches' },
+            { category = 'Surround', key = '/pattern→sr)\"→n→.→n→.', desc = 'Search and replace () with " in all matches' },
+            { category = 'Surround', key = 'vap→sa}', desc = 'Visual select paragraph and wrap in {}' },
+
+            -- ============================================================
+            -- FLUTTER
+            -- ============================================================
+            { category = 'Flutter', key = '<leader>Fd', desc = 'Open DevTools' },
+            { category = 'Flutter', key = '<leader>Fc', desc = 'Clear DevTools' },
+            { category = 'Flutter', key = '<leader>Fe', desc = 'Show emulators' },
+            { category = 'Flutter', key = '<leader>Fq', desc = 'Quit Flutter' },
+            { category = 'Flutter', key = '<leader>Fr', desc = 'Hot reload' },
+            { category = 'Flutter', key = '<leader>FR', desc = 'Hot restart' },
+            { category = 'Flutter', key = '<leader>Fl', desc = 'Show log' },
+            { category = 'Flutter', key = '<leader>Fs', desc = 'Run Flutter' },
+
+            -- ============================================================
+            -- RUST
+            -- ============================================================
+            { category = 'Rust', key = '<leader>rt', desc = 'Runnables (tests/main)' },
+            { category = 'Rust', key = '<leader>ra', desc = 'Code action' },
+            { category = 'Rust', key = '<leader>re', desc = 'Explain error' },
+            { category = 'Rust', key = '<leader>rd', desc = 'Debug target' },
+            { category = 'Rust', key = '<leader>rh', desc = 'Hover actions' },
+            { category = 'Rust', key = '<leader>rr', desc = 'Run (cargo run)' },
+
+            { category = 'Rust: Crates', key = '<leader>Cu', desc = 'Update crate' },
+            { category = 'Rust: Crates', key = '<leader>Ca', desc = 'Update all crates' },
+            { category = 'Rust: Crates', key = '<leader>CU', desc = 'Upgrade crate' },
+            { category = 'Rust: Crates', key = '<leader>CA', desc = 'Upgrade all crates' },
+
+            -- ============================================================
+            -- PYTHON
+            -- ============================================================
+            { category = 'Python', key = '<leader>pc', desc = 'Select Python interpreter' },
+            { category = 'Python', key = '<leader>pe', desc = 'Activate venv' },
+            { category = 'Python', key = '<leader>pd', desc = 'Deactivate venv' },
+
+            -- ============================================================
+            -- SVELTE
+            -- ============================================================
+            { category = 'Svelte', key = 'gd', desc = 'Go to definition' },
+            { category = 'Svelte', key = 'K', desc = 'Hover documentation' },
+            { category = 'Svelte', key = '<leader>ca', desc = 'Code action' },
+
+            -- ============================================================
+            -- WEB DEV (HTML/CSS/JS/TS)
+            -- ============================================================
+            { category = 'Web Dev', key = '<C-y>,', desc = 'Expand Emmet abbreviation' },
+            { category = 'Web Dev', key = '<leader>cf', desc = 'Format document (Prettier)' },
+            { category = 'Web Dev', key = 'gd', desc = 'Go to definition' },
+            { category = 'Web Dev', key = 'K', desc = 'Hover documentation' },
+
+            -- ============================================================
+            -- SNACKS
+            -- ============================================================
+            { category = 'Snacks: Notifier', key = '<leader>un', desc = 'Dismiss notifications' },
+            { category = 'Snacks: Notifier', key = '<leader>nh', desc = 'Notification history' },
+
+            { category = 'Snacks: Bufdelete', key = '<leader>bd', desc = 'Delete buffer (keeps window)' },
+            { category = 'Snacks: Bufdelete', key = '<leader>bD', desc = 'Delete all buffers' },
+            { category = 'Snacks: Bufdelete', key = '<leader>bo', desc = 'Delete other buffers' },
+
+            { category = 'Snacks: Lazygit', key = '<leader>gg', desc = 'Lazygit (root dir)' },
+            { category = 'Snacks: Lazygit', key = '<leader>gf', desc = 'Lazygit (current file)' },
+            { category = 'Snacks: Lazygit', key = '<leader>gl', desc = 'Lazygit log' },
+            { category = 'Snacks: Lazygit', key = '<leader>gL', desc = 'Lazygit log (current file)' },
+
+            { category = 'Snacks: Gitbrowse', key = '<leader>gB', desc = 'Open in browser (GitHub/GitLab)' },
+            { category = 'Snacks: Gitbrowse', key = '<leader>gY', desc = 'Copy permalink to clipboard' },
+
+            { category = 'Snacks: Rename', key = '<leader>cr', desc = 'Rename file + update imports' },
+
+            { category = 'Snacks: Terminal', key = '<C-/>', desc = 'Toggle terminal' },
+            { category = 'Snacks: Terminal', key = '<C-_>', desc = 'Toggle terminal (alt binding)' },
+
+            -- ============================================================
+            -- NAVIGATION SHORTCUTS
+            -- ============================================================
+            { category = 'Navigation: Args', key = ':args', desc = 'Show argument list' },
+            { category = 'Navigation: Args', key = ':next/:prev', desc = 'Next/previous file in args' },
+            { category = 'Navigation: Args', key = ':first/:last', desc = 'First/last file in args' },
+
+            { category = 'Navigation: Buffers', key = ':ls', desc = 'List buffers' },
+            { category = 'Navigation: Buffers', key = ':b {num}', desc = 'Switch to buffer number' },
+            { category = 'Navigation: Buffers', key = ':bn/:bp', desc = 'Next/previous buffer' },
+
+            { category = 'Navigation: Tags', key = 'Ctrl-]', desc = 'Jump to tag under cursor' },
+            { category = 'Navigation: Tags', key = 'g]', desc = 'List matching tags' },
+            { category = 'Navigation: Tags', key = 'Ctrl-t', desc = 'Jump back in tag stack' },
+
+            { category = 'Navigation: Git', key = ']c/[c', desc = 'Next/previous git change' },
+            { category = 'Navigation: Git', key = ']h/[h', desc = 'Next/previous git hunk' },
+
+            { category = 'Navigation: Diagnostics', key = ']d/[d', desc = 'Next/previous diagnostic' },
+            { category = 'Navigation: Diagnostics', key = ']e/[e', desc = 'Next/previous error' },
+            { category = 'Navigation: Diagnostics', key = ']w/[w', desc = 'Next/previous warning' },
+
+            { category = 'Navigation: Spelling', key = ']s/[s', desc = 'Next/previous spelling error' },
+          }
+
+          -- Extract unique categories
+          local categories_set = {}
+          for _, item in ipairs(cheatsheet) do
+            categories_set[item.category] = true
+          end
+          
+          local categories = {}
+          for cat in pairs(categories_set) do
+            table.insert(categories, cat)
+          end
+          table.sort(categories)
+
+          -- Create picker for categories
+          pickers
             .new({}, {
               prompt_title = 'Cheatsheet Categories',
               finder = finders.new_table {
