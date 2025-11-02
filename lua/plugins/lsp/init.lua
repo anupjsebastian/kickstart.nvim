@@ -245,12 +245,16 @@ return {
     cmd = { 'ConformInfo' },
     keys = {
       {
-        '<leader>f',
+        '<leader>cf',
         function()
-          require('conform').format { async = true, lsp_format = 'fallback' }
+          require('conform').format { 
+            async = true,           -- Don't block editor while formatting
+            lsp_format = 'fallback' -- Use LSP if no formatter configured
+          }
+          vim.notify('Buffer formatted', vim.log.levels.INFO)
         end,
-        mode = '',
-        desc = '[F]ormat buffer',
+        mode = { 'n', 'v' },
+        desc = 'Format buffer/selection',
       },
     },
     opts = {

@@ -193,8 +193,8 @@ return {
         },
 
         dev_tools = {
-          autostart = false, -- autostart devtools server if not detected
-          auto_open_browser = false, -- Automatically opens devtools in the browser
+          autostart = true, -- Don't autostart devtools server with flutter run
+          auto_open_browser = false, -- Don't automatically open browser on autostart
         },
 
         outline = {

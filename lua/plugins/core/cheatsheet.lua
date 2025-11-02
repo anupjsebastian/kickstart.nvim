@@ -206,10 +206,13 @@ return {
             -- LEADER KEYMAPS (CORE)
             -- ============================================================
             { category = 'Core: Quit', key = '<Space>Q', desc = 'Quit all' },
-            { category = 'Core: Quit', key = '<Space>q', desc = 'Toggle diagnostic quickfix' },
             { category = 'Core: Files', key = '\\', desc = 'Toggle Neo-tree' },
             { category = 'Core: Files', key = 'Esc', desc = 'Close floating windows or clear highlight' },
             { category = 'Core: Terminal', key = 'Esc Esc', desc = 'Exit terminal mode (in terminal)' },
+            
+            -- Code operations
+            { category = 'Code', key = '<Space>cq', desc = 'Toggle diagnostic quickfix' },
+            { category = 'Code', key = '<Space>cf', desc = 'Format buffer/selection (conform.nvim)' },
 
             -- ============================================================
             -- BUFFER WORKFLOW
@@ -373,6 +376,7 @@ return {
             { category = 'LSP', key = 'grn', desc = 'Rename symbol' },
             { category = 'LSP', key = 'gra', desc = 'Code action' },
             { category = 'LSP', key = '<Space>.', desc = 'Code action (VSCode-style)' },
+            { category = 'LSP', key = '<Space>cf', desc = 'Format buffer (conform.nvim)' },
             { category = 'LSP', key = 'gO', desc = 'Document symbols (Telescope)' },
             { category = 'LSP', key = 'gW', desc = 'Workspace symbols (Telescope)' },
             { category = 'LSP', key = '<Space>th', desc = 'Toggle inlay hints' },
@@ -561,6 +565,44 @@ return {
             { category = 'Snacks: Words', key = ']]', desc = 'Jump to next word occurrence' },
             { category = 'Snacks: Words', key = '[[', desc = 'Jump to previous word occurrence' },
             
+            -- ============================================================
+            -- BRACKET NAVIGATION OVERVIEW
+            -- ============================================================
+            -- Vim has several "lists" for navigation. Use ] and [ to jump:
+            --
+            -- BUFFERS - Files you have opened (:ls to view)
+            --   ]b/[b - Next/Previous buffer (like browser tabs)
+            --   ]B/[B - Last/First buffer (jump to ends)
+            --
+            -- QUICKFIX - Global list shared across windows (:copen to view)
+            --   What fills it: :grep, :make, :vimgrep, Telescope send to QF
+            --   ]q/[q - Next/Previous file with results (:cnfile/:cpfile)
+            --   ]Q/[Q - Last/First item in list (:clast/:cfirst)
+            --   Use: Find all TODOs, compile errors, search results
+            --
+            -- LOCATION LIST - Per-window list (:lopen to view)
+            --   What fills it: LSP references, :lvimgrep, location-specific searches
+            --   ]l/[l - Next/Previous file with results (:lnfile/:lpfile)
+            --   ]L/[L - Last/First item in list (:llast/:lfirst)
+            --   Use: LSP find references, buffer-specific searches
+            --
+            -- TAGS - Jump stack for definitions (Ctrl-] creates entries)
+            --   What fills it: ctags, LSP go-to-definition, :tag commands
+            --   ]t/[t - Next/Previous tag match (:tnext/:tprev)
+            --   ]T/[T - Last/First tag in stack (:tlast/:tfirst)
+            --   Use: Navigate multiple definitions of same symbol
+            --
+            -- ARGUMENTS - Files passed to nvim at startup (:args to view)
+            --   ]a/[a - Next/Previous file in argument list
+            --   ]A/[A - Last/First file in argument list
+            --
+            -- KEY DIFFERENCES:
+            -- • Quickfix = global (all windows share it)
+            -- • Location = local (each window has its own)
+            -- • lowercase (]q, ]l) = jump to next FILE (cnfile, lnfile)
+            -- • uppercase (]Q, ]L) = jump to last ITEM (clast, llast)
+            -- ============================================================
+            
             -- Bracket Navigation: Argument List (files passed to nvim on startup)
             { category = 'Navigation: Args', key = ']a', desc = 'Next arg (:next)' },
             { category = 'Navigation: Args', key = '[a', desc = 'Previous arg (:prev)' },
@@ -568,28 +610,28 @@ return {
             { category = 'Navigation: Args', key = '[A', desc = 'First arg (:first)' },
             
             -- Bracket Navigation: Buffer List (all opened files in session)
-            { category = 'Navigation: Buffers', key = ']b', desc = 'Next buffer (:bnext)' },
-            { category = 'Navigation: Buffers', key = '[b', desc = 'Previous buffer (:bprev)' },
-            { category = 'Navigation: Buffers', key = ']B', desc = 'Last buffer (:blast)' },
-            { category = 'Navigation: Buffers', key = '[B', desc = 'First buffer (:bfirst)' },
+            { category = 'Navigation: Buffers', key = ']b', desc = 'Next buffer (:bnext - cycle to next open file)' },
+            { category = 'Navigation: Buffers', key = '[b', desc = 'Previous buffer (:bprev - cycle to previous open file)' },
+            { category = 'Navigation: Buffers', key = ']B', desc = 'Last buffer (:blast - jump to last open file)' },
+            { category = 'Navigation: Buffers', key = '[B', desc = 'First buffer (:bfirst - jump to first open file)' },
             
-            -- Bracket Navigation: Location List (LSP locations, grep results)
-            { category = 'Navigation: Location List', key = ']l', desc = 'Next location (:lnext)' },
-            { category = 'Navigation: Location List', key = '[l', desc = 'Previous location (:lprev)' },
-            { category = 'Navigation: Location List', key = ']L', desc = 'Last location (:llast)' },
-            { category = 'Navigation: Location List', key = '[L', desc = 'First location (:lfirst)' },
+            -- Bracket Navigation: Location List (window-local list for LSP, :lvimgrep)
+            { category = 'Navigation: Location List', key = ']l', desc = 'Next location (:lnfile - jump to next file in location list)' },
+            { category = 'Navigation: Location List', key = '[l', desc = 'Previous location (:lpfile - jump to previous file in location list)' },
+            { category = 'Navigation: Location List', key = ']L', desc = 'Last location (:llast - jump to last item)' },
+            { category = 'Navigation: Location List', key = '[L', desc = 'First location (:lfirst - jump to first item)' },
             
-            -- Bracket Navigation: Quickfix List (search results, compile errors)
-            { category = 'Navigation: Quickfix', key = ']q', desc = 'Next quickfix (:cnext) or Trouble item' },
-            { category = 'Navigation: Quickfix', key = '[q', desc = 'Previous quickfix (:cprev) or Trouble item' },
-            { category = 'Navigation: Quickfix', key = ']Q', desc = 'Last quickfix (:clast)' },
-            { category = 'Navigation: Quickfix', key = '[Q', desc = 'First quickfix (:cfirst)' },
+            -- Bracket Navigation: Quickfix List (global list for :grep, :make, :vimgrep)
+            { category = 'Navigation: Quickfix', key = ']q', desc = 'Next quickfix (:cnfile - jump to next file in quickfix)' },
+            { category = 'Navigation: Quickfix', key = '[q', desc = 'Previous quickfix (:cpfile - jump to previous file in quickfix)' },
+            { category = 'Navigation: Quickfix', key = ']Q', desc = 'Last quickfix (:clast - jump to last item)' },
+            { category = 'Navigation: Quickfix', key = '[Q', desc = 'First quickfix (:cfirst - jump to first item)' },
             
-            -- Bracket Navigation: Tags (ctags, jump to definitions)
-            { category = 'Navigation: Tags', key = ']t', desc = 'Next tag (:tnext)' },
-            { category = 'Navigation: Tags', key = '[t', desc = 'Previous tag (:tprev)' },
-            { category = 'Navigation: Tags', key = ']T', desc = 'Last tag (:tlast)' },
-            { category = 'Navigation: Tags', key = '[T', desc = 'First tag (:tfirst)' },
+            -- Bracket Navigation: Tags (ctags stack for definition jumps)
+            { category = 'Navigation: Tags', key = ']t', desc = 'Next tag (:tnext - next matching tag in stack)' },
+            { category = 'Navigation: Tags', key = '[t', desc = 'Previous tag (:tprev - previous matching tag)' },
+            { category = 'Navigation: Tags', key = ']T', desc = 'Last tag (:tlast - last tag in stack)' },
+            { category = 'Navigation: Tags', key = '[T', desc = 'First tag (:tfirst - first tag in stack)' },
             
             -- Bracket Navigation: Git & Diagnostics
             { category = 'Navigation: Git', key = ']c', desc = 'Next git change (gitsigns)' },

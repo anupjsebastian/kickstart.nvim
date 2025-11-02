@@ -310,6 +310,7 @@ return {
         -- Core groups with icons
         { '<leader>b', group = '󰊄 Buffer' },
         { '<leader>c', group = '󰘦 Code' },
+        { '<leader>cq', desc = '󰁨 Toggle Diagnostic Quickfix' },
         { '<leader>d', group = '󰃤 Debug' },
         { '<leader>f', group = '󱓞 Flutter' }, -- Only visible in Dart files
         { '<leader>g', group = '󰊢 Git' },
@@ -319,14 +320,13 @@ return {
         { '<leader>r', group = '󱘗 Rust' }, -- Only visible in Rust files
         { '<leader>s', group = '󰍉 Search' },
         { '<leader>S', group = '󱂬 Session' },
-        { '<leader>t', group = '󰔡 Toggle' },
+        { '<leader>t', group = '󰔡 Toggle Options' },
         { '<leader>u', group = '󰙵 UI' },
         { '<leader>v', group = '󰡄 Svelte' }, -- Only visible in Svelte files
         { '<leader>w', group = '󰖲 Window' },
         { '<leader>x', group = '󱖫 Diagnostics' },
         
         -- Special standalone keymaps (not part of a group)
-        { '<leader>q', desc = '󰁨 Toggle Diagnostic Quickfix' },
         { '<leader>Q', desc = '󰗼 Quit All' },
         { '<leader>/', desc = '󰱼 Fuzzy Search in Buffer' },
         { '<leader><leader>', desc = '󰈙 Find Buffers' },
@@ -353,25 +353,25 @@ return {
         { ']A', desc = '󰈔 Last Arg (:last)' },
         { '[A', desc = '󰈔 First Arg (:first)' },
         
-        -- Buffer navigation (opened files)
+        -- Buffer navigation (opened files in buffer list)
         { ']b', desc = '󰊄 Next Buffer (:bnext)' },
         { '[b', desc = '󰊄 Prev Buffer (:bprev)' },
         { ']B', desc = '󰊄 Last Buffer (:blast)' },
         { '[B', desc = '󰊄 First Buffer (:bfirst)' },
         
-        -- Location list navigation (LSP locations, grep results)
-        { ']l', desc = '󱖫 Next Location (:lnext)' },
-        { '[l', desc = '󱖫 Prev Location (:lprev)' },
+        -- Location list navigation (window-local list: LSP locations, :lvimgrep results)
+        { ']l', desc = '󱖫 Next Location (:lnfile)' },
+        { '[l', desc = '󱖫 Prev Location (:lpfile)' },
         { ']L', desc = '󱖫 Last Location (:llast)' },
         { '[L', desc = '󱖫 First Location (:lfirst)' },
         
-        -- Quickfix list navigation (search results, errors)
-        { ']q', desc = '󰁨 Next Quickfix (:cnext)' },
-        { '[q', desc = '󰁨 Prev Quickfix (:cprev)' },
+        -- Quickfix list navigation (global list: :grep results, :make errors, :vimgrep)
+        { ']q', desc = '󰁨 Next Quickfix (:cnfile)' },
+        { '[q', desc = '󰁨 Prev Quickfix (:cpfile)' },
         { ']Q', desc = '󰁨 Last Quickfix (:clast)' },
         { '[Q', desc = '󰁨 First Quickfix (:cfirst)' },
         
-        -- Tag navigation (ctags, jump to definition)
+        -- Tag navigation (ctags stack: :tjump results, definition jumps)
         { ']t', desc = '󰓹 Next Tag (:tnext)' },
         { '[t', desc = '󰓹 Prev Tag (:tprev)' },
         { ']T', desc = '󰓹 Last Tag (:tlast)' },

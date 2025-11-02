@@ -176,8 +176,11 @@ vim.keymap.set('n', '<Esc>', function()
   end
 end, { silent = true, desc = 'Close floating window or clear highlight' })
 
--- Diagnostic keymaps - Toggle quickfix list (works in normal buffers and quickfix itself)
-vim.keymap.set('n', '<leader>q', function()
+-- ========================================================================
+-- CODE OPERATIONS (<leader>c)
+-- ========================================================================
+-- Diagnostic quickfix toggle (works in normal buffers and quickfix itself)
+vim.keymap.set('n', '<leader>cq', function()
   -- Don't work in special buffers except quickfix/loclist and terminal
   local buftype = vim.bo.buftype
   if buftype ~= "" and buftype ~= "terminal" and buftype ~= "quickfix" then
@@ -240,47 +243,71 @@ vim.keymap.set('n', '<leader>fo', function()
 end, { desc = 'Toggle outline (Dart only)' })
 
 -- ========================================================================
--- GLOBAL FLUTTER COMMANDS (available in any buffer when app is running)
+-- GLOBAL FLUTTER COMMANDS (work from any buffer)
+-- ========================================================================
+-- Commands always execute - notifications indicate if app is detected running
+-- This prevents false negatives from buffer detection issues
 -- ========================================================================
 -- Helper function to check if Flutter app is running
+-- Checks multiple patterns since buffer names/states may vary over time
 local function is_flutter_running()
-  -- Check if FlutterLog buffer exists and is loaded
   for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-    local name = vim.api.nvim_buf_get_name(buf)
-    if name:match('__Flutter_') and vim.api.nvim_buf_is_loaded(buf) then
-      return true
+    -- Check if buffer exists (valid and not wiped)
+    if vim.api.nvim_buf_is_valid(buf) then
+      local name = vim.api.nvim_buf_get_name(buf)
+      -- Match various Flutter buffer patterns
+      -- __Flutter_* = flutter-tools.nvim output buffers
+      -- *Flutter Run* = alternative Flutter output buffer names
+      if name:match('__Flutter') or name:match('Flutter.*Run') then
+        return true
+      end
+      
+      -- Also check buffer filetype for Flutter log buffers
+      local ok, ft = pcall(vim.api.nvim_buf_get_option, buf, 'filetype')
+      if ok and ft == 'log' then
+        -- Check if this is a Flutter log by looking at buffer content
+        local lines = vim.api.nvim_buf_get_lines(buf, 0, 5, false)
+        for _, line in ipairs(lines) do
+          if line:match('Flutter') or line:match('flutter') then
+            return true
+          end
+        end
+      end
     end
   end
   return false
 end
 
--- Hot reload with status check
+-- Hot reload - always execute, notification based on detection
 vim.keymap.set('n', '<leader>fh', function()
-  if is_flutter_running() then
-    vim.cmd('FlutterReload')
+  local running = is_flutter_running()
+  vim.cmd('FlutterReload')
+  if running then
     vim.notify('󱓞 Hot reload triggered', vim.log.levels.INFO)
   else
-    vim.notify('󱓞 No Flutter app running', vim.log.levels.INFO)
+    vim.notify('󱓞 Hot reload sent (no running app detected, will work if app is running)', vim.log.levels.WARN)
   end
 end, { desc = 'Flutter: Hot reload' })
 
--- Hot restart with status check
+-- Hot restart - always execute, notification based on detection
 vim.keymap.set('n', '<leader>fR', function()
-  if is_flutter_running() then
-    vim.cmd('FlutterRestart')
+  local running = is_flutter_running()
+  vim.cmd('FlutterRestart')
+  if running then
     vim.notify('󱓞 Hot restart triggered', vim.log.levels.INFO)
   else
-    vim.notify('󱓞 No Flutter app running', vim.log.levels.INFO)
+    vim.notify('󱓞 Hot restart sent (no running app detected, will work if app is running)', vim.log.levels.WARN)
   end
 end, { desc = 'Flutter: Hot restart' })
 
--- Quit with status check
+-- Quit - always execute, notification based on detection
 vim.keymap.set('n', '<leader>fq', function()
-  if is_flutter_running() then
-    vim.cmd('FlutterQuit')
+  local running = is_flutter_running()
+  vim.cmd('FlutterQuit')
+  if running then
     vim.notify('󱓞 Flutter app stopped', vim.log.levels.INFO)
   else
-    vim.notify('󱓞 No Flutter app running', vim.log.levels.INFO)
+    vim.notify('󱓞 Quit command sent (no running app detected)', vim.log.levels.WARN)
   end
 end, { desc = 'Flutter: Quit app' })
 
@@ -290,13 +317,34 @@ vim.keymap.set('n', '<leader>fL', function()
   vim.notify('󱓞 Toggled Flutter logs', vim.log.levels.INFO)
 end, { desc = 'Flutter: Toggle logs' })
 
--- DevTools with status check
+-- DevTools - open in default browser with URL notification
 vim.keymap.set('n', '<leader>ft', function()
-  if is_flutter_running() then
-    vim.cmd('FlutterDevTools')
+  local running = is_flutter_running()
+  vim.cmd('FlutterOpenDevTools')
+  
+  -- Try to find and display the DevTools URL
+  vim.defer_fn(function()
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+      if vim.api.nvim_buf_is_valid(buf) then
+        local name = vim.api.nvim_buf_get_name(buf)
+        if name:match('__Flutter') or name:match('Flutter.*Run') then
+          local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+          for _, line in ipairs(lines) do
+            local url = line:match('(http://[^%s]+)')
+            if url and url:match('devtools') then
+              vim.notify(string.format('󱓞 DevTools: %s', url), vim.log.levels.INFO)
+              return
+            end
+          end
+        end
+      end
+    end
+  end, 500)
+  
+  if running then
     vim.notify('󱓞 Opening DevTools...', vim.log.levels.INFO)
   else
-    vim.notify('󱓞 Start Flutter app first to use DevTools', vim.log.levels.INFO)
+    vim.notify('󱓞 DevTools command sent (start Flutter app first if not running)', vim.log.levels.WARN)
   end
 end, { desc = 'Flutter: Start DevTools' })
 
