@@ -314,7 +314,7 @@ return {
         { '<leader>f', group = '󱓞 Flutter' }, -- Only visible in Dart files
         { '<leader>g', group = '󰊢 Git' },
         { '<leader>h', group = '󰊢 Git Hunk', mode = { 'n', 'v' } },
-        { '<leader>o', group = '󰖟 Browser' },
+        { '<leader>o', group = '󰖟 Browser' }, -- Only visible in HTML/CSS/JS/TS/Svelte files
         { '<leader>p', group = '󰌠 Python' }, -- Only visible in Python files
         { '<leader>r', group = '󱘗 Rust' }, -- Only visible in Rust files
         { '<leader>s', group = '󰍉 Search' },

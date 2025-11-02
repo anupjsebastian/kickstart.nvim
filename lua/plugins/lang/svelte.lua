@@ -163,4 +163,74 @@ return {
       })
     end,
   },
+
+  -- ========================================================================
+  -- WEB DEVELOPMENT KEYMAPS (HTML/CSS/JS/TS)
+  -- ========================================================================
+  -- Browser preview keymaps for web files
+  -- ========================================================================
+  {
+    'nvim-lua/plenary.nvim',
+    ft = { 'html', 'css', 'javascript', 'typescript', 'svelte' },
+    config = function()
+      -- Helper function to open file in specific browser
+      local function open_in_browser(browser)
+        local filetype = vim.bo.filetype
+        local filepath = vim.fn.expand('%:p')
+        
+        if filetype == 'html' then
+          local cmd
+          if browser then
+            cmd = string.format('open -a "%s" "%s"', browser, filepath)
+          else
+            cmd = string.format('open "%s"', filepath)
+          end
+          vim.fn.system(cmd)
+          local browser_name = browser or 'default browser'
+          vim.notify('Opened in ' .. browser_name .. ': ' .. vim.fn.expand('%:t'), vim.log.levels.INFO)
+        else
+          -- For Svelte/JS/TS, suggest starting a dev server
+          vim.notify('For ' .. filetype .. ' files, start your dev server (npm run dev) and open http://localhost', vim.log.levels.INFO)
+        end
+      end
+
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = { 'html', 'css', 'javascript', 'typescript', 'svelte' },
+        callback = function(event)
+          local bufnr = event.buf
+
+          -- Register which-key group for Browser
+          require('which-key').add {
+            { '<leader>o', group = '󰖟 browser', buffer = bufnr },
+          }
+
+          -- Open in default browser
+          vim.keymap.set('n', '<leader>od', function()
+            open_in_browser(nil)
+          end, { buffer = bufnr, desc = 'Open in default browser' })
+
+          -- Open in Chrome
+          vim.keymap.set('n', '<leader>oc', function()
+            open_in_browser('Google Chrome')
+          end, { buffer = bufnr, desc = 'Open in Chrome' })
+
+          -- Open in Safari
+          vim.keymap.set('n', '<leader>os', function()
+            open_in_browser('Safari')
+          end, { buffer = bufnr, desc = 'Open in Safari' })
+
+          -- Open in Firefox
+          vim.keymap.set('n', '<leader>of', function()
+            open_in_browser('Firefox')
+          end, { buffer = bufnr, desc = 'Open in Firefox' })
+
+          -- Start live-server in terminal split
+          vim.keymap.set('n', '<leader>ol', function()
+            vim.cmd('split | terminal live-server')
+            vim.notify('Live server started. Press Ctrl+C to stop.', vim.log.levels.INFO)
+          end, { buffer = bufnr, desc = 'Start live-server in split' })
+        end,
+      })
+    end,
+  },
 }
