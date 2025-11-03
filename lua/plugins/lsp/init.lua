@@ -25,15 +25,6 @@ return {
       'saghen/blink.cmp',
     },
     config = function()
-      -- Check if blink.cmp is available
-      local blink_ok = pcall(require, 'blink.cmp')
-      if not blink_ok then
-        vim.defer_fn(function()
-          require('lazy').load({ plugins = { 'nvim-lspconfig' } })
-        end, 1000)
-        return
-      end
-      
       -- LSP UI Enhancements - Better hover, signature help, and borders
       vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, {
         border = 'rounded',
@@ -131,8 +122,16 @@ return {
         end,
       })
 
-      -- Get capabilities from blink.cmp
-      local capabilities = require('blink.cmp').get_lsp_capabilities()
+      -- Get LSP capabilities with blink.cmp enhancements (with fallback)
+      local capabilities = vim.lsp.protocol.make_client_capabilities()
+      
+      -- Try to enhance with blink capabilities if available
+      local blink_ok, blink = pcall(require, 'blink.cmp')
+      if blink_ok then
+        capabilities = blink.get_lsp_capabilities(capabilities)
+      else
+        vim.notify('blink.cmp not available, using vanilla LSP capabilities', vim.log.levels.WARN)
+      end
 
       -- General LSP servers (lua_ls for Neovim config, pyright for Python)
       local servers = {
@@ -249,7 +248,8 @@ return {
         function()
           require('conform').format { 
             async = true,           -- Don't block editor while formatting
-            lsp_format = 'fallback' -- Use LSP if no formatter configured
+            lsp_format = 'fallback', -- Use LSP if no formatter configured
+            notify_on_error = true,  -- Show errors on manual format
           }
           vim.notify('Buffer formatted', vim.log.levels.INFO)
         end,
@@ -258,7 +258,7 @@ return {
       },
     },
     opts = {
-      notify_on_error = false,
+      notify_on_error = false, -- Don't show errors on auto-save
       format_on_save = function(bufnr)
         local disable_filetypes = { c = true, cpp = true }
         local lsp_format_opt
@@ -274,6 +274,12 @@ return {
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        sh = { 'shfmt' },
+        bash = { 'shfmt' },
+        yaml = { 'prettier' },
+        toml = { 'taplo' },
+        json = { 'prettier' },
+        markdown = { 'prettier' },
       },
     },
   },

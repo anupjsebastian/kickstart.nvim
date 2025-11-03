@@ -69,12 +69,14 @@
 -- │  └─ Debug - F5/F10/F11/F12, <Space>db/dB/dc/di/do/dO/dt/dr/dl/dC/du/de
 --
 -- ┌─ LANGUAGE-SPECIFIC (Auto-loaded by filetype)
--- │  ├─ Flutter - <Space>lfr/lfR/lfh/lfq/lfd/lfe/lfo/lft/lfa/lfD/lfL/lfc/lfl, <Space>.
--- │  ├─ Rust - <Space>lrh/lra/lre/lrC/lrp/lrj/lrr/lrd/lrm
+-- │  ├─ Flutter - <Space>lfr/lfh/lfR/lfq/lfd/lfe/lfo/lft/lfc/lfa/lfD/lfL/lfl, <Space>.
+-- │  ├─ Rust (buffer-local: .rs) - <Space>lrh/lra/lre/lrC/lrp/lrj/lrr/lrd/lrm
+-- │  ├─ Rust: Cargo (GLOBAL) - <Space>lrb/lrR/lrt/lrk/lrl/lrf/lrx/lrA/lrX/lrU/lrD
 -- │  ├─ Rust: Crates - <Space>lrct/lrcr/lrcv/lrcf/lrcd/lrcu/lrca/lrcU/lrcA/lrce/lrcE/lrcH/lrcR/lrcD/lrcC
--- │  ├─ Python - <Space>lpr/lpR/lpX/lpa/lpA/lpd/lpu/lpv/lpt/lpc/lpl (+ lpx/lpe/lpT/lpi/lpf in files)
--- │  ├─ Svelte - <Space>lsf/lsl/lst/lso, Ctrl-e,
--- │  └─ Web Dev - <Space>lhd/lhc/lhs/lhf/lhl, Ctrl-e,
+-- │  ├─ Python (GLOBAL) - <Space>lpr/lpR/lpC/lpS/lpX/lpi/lpa/lpA/lpu/lpe/lpv/lpt/lpc/lpl
+-- │  ├─ Svelte/JS/TS (buffer) - <Space>lsf/lsl/lso
+-- │  ├─ Web Dev (GLOBAL) - <Space>lsr/lsb/lsp/lsc/lse/lsT/lsi/lsa/lsA/lsx/lsu/lst
+-- │  └─ HTML/CSS (GLOBAL) - <Space>lho/lhb/lhl
 --
 -- ┌─ PLUGINS (UI, Navigation, Editing)
 -- │  ├─ Telescope - Ctrl-j/k, Ctrl-d/u, Ctrl-n/p, Enter, Ctrl-x/v/t, Ctrl-c/q, Tab, Ctrl-q, ?
@@ -105,8 +107,11 @@
 --
 -- ========================================================================
 
--- Comprehensive keymap data (defined once, reused by multiple pickers)
-local cheatsheet = {
+-- Lazy-loaded cheatsheet data generator
+-- This function is only called when you press <leader>sc or <leader>sC
+-- Prevents allocating a massive table at startup (huge performance win!)
+local function get_cheatsheet_data()
+  return {
             -- ============================================================
             -- VIM ESSENTIALS
             -- ============================================================
@@ -592,22 +597,22 @@ local cheatsheet = {
             -- FLUTTER (DART FILES)
             -- ============================================================
             { category = 'Flutter', key = '<Space>lfr', desc = 'Run app (Dart files)' },
-            { category = 'Flutter', key = '<Space>lfR', desc = 'Hot restart (any buffer)' },
             { category = 'Flutter', key = '<Space>lfh', desc = 'Hot reload (any buffer)' },
+            { category = 'Flutter', key = '<Space>lfR', desc = 'Hot restart (any buffer)' },
             { category = 'Flutter', key = '<Space>lfq', desc = 'Quit app (any buffer)' },
             { category = 'Flutter', key = '<Space>lfd', desc = 'Select device (any buffer)' },
             { category = 'Flutter', key = '<Space>lfe', desc = 'Launch emulator (any buffer)' },
             { category = 'Flutter', key = '<Space>lfo', desc = 'Toggle outline (Dart files)' },
             { category = 'Flutter', key = '<Space>lft', desc = 'Start DevTools (any buffer)' },
+            { category = 'Flutter', key = '<Space>lfc', desc = 'Copy DevTools URL (any buffer)' },
             { category = 'Flutter', key = '<Space>lfa', desc = 'Attach to app (Dart files)' },
             { category = 'Flutter', key = '<Space>lfD', desc = 'Detach from app (Dart files)' },
             { category = 'Flutter', key = '<Space>lfL', desc = 'Toggle logs (any buffer)' },
-            { category = 'Flutter', key = '<Space>lfc', desc = 'Copy profiler URL (Dart files)' },
             { category = 'Flutter', key = '<Space>lfl', desc = 'Restart LSP (Dart files)' },
             { category = 'Flutter', key = '<Space>. or gra', desc = 'Code actions (Cmd+.)' },
 
             -- ============================================================
-            -- RUST (RUST FILES)
+            -- RUST (BUFFER-LOCAL: .rs files only - rustaceanvim commands)
             -- ============================================================
             { category = 'Rust', key = '<Space>lrh', desc = 'Hover actions' },
             { category = 'Rust', key = '<Space>lra', desc = 'Code actions' },
@@ -618,6 +623,21 @@ local cheatsheet = {
             { category = 'Rust', key = '<Space>lrr', desc = 'Runnables' },
             { category = 'Rust', key = '<Space>lrd', desc = 'Debuggables' },
             { category = 'Rust', key = '<Space>lrm', desc = 'Expand macro' },
+
+            -- ============================================================
+            -- RUST CARGO WORKFLOW (GLOBAL - available in all buffers)
+            -- ============================================================
+            { category = 'Rust: Cargo', key = '<Space>lrb', desc = 'Build project (cargo build)' },
+            { category = 'Rust: Cargo', key = '<Space>lrR', desc = 'Run project (cargo run)' },
+            { category = 'Rust: Cargo', key = '<Space>lrt', desc = 'Test project (cargo test)' },
+            { category = 'Rust: Cargo', key = '<Space>lrk', desc = 'Check project (cargo check - fast)' },
+            { category = 'Rust: Cargo', key = '<Space>lrl', desc = 'Lint with Clippy (cargo clippy)' },
+            { category = 'Rust: Cargo', key = '<Space>lrf', desc = 'Format code (cargo fmt)' },
+            { category = 'Rust: Cargo', key = '<Space>lrx', desc = 'Clean artifacts (cargo clean)' },
+            { category = 'Rust: Cargo', key = '<Space>lrA', desc = 'Add dependency (cargo add + prompt)' },
+            { category = 'Rust: Cargo', key = '<Space>lrX', desc = 'Remove dependency (cargo remove + prompt)' },
+            { category = 'Rust: Cargo', key = '<Space>lrU', desc = 'Update dependencies (cargo update)' },
+            { category = 'Rust: Cargo', key = '<Space>lrD', desc = 'Build & open docs (cargo doc --open)' },
 
             -- ============================================================
             -- RUST CRATES (CARGO.TOML)
@@ -641,45 +661,54 @@ local cheatsheet = {
             { category = 'Rust: Crates', key = '<Space>lrcC', desc = 'Open crates.io' },
 
             -- ============================================================
-            -- PYTHON (GLOBALLY ACCESSIBLE)
+            -- PYTHON (GLOBAL - available in all buffers)
             -- ============================================================
-            -- Global commands (available from anywhere)
-            { category = 'Python', key = '<Space>lpr', desc = 'Run custom command or current file (new tab)' },
-            { category = 'Python', key = '<Space>lpR', desc = 'Set/Edit run command (saves with session, ESC to cancel)' },
-            { category = 'Python', key = '<Space>lpX', desc = 'Clear/Reset custom run command (back to default)' },
-            { category = 'Python', key = '<Space>lpa', desc = 'Add package (uv add + prompt)' },
-            { category = 'Python', key = '<Space>lpA', desc = 'Add dev package (uv add --dev + prompt)' },
-            { category = 'Python', key = '<Space>lpd', desc = 'Remove package (uv remove + prompt)' },
-            { category = 'Python', key = '<Space>lpu', desc = 'Sync packages (uv sync, shows success/fail)' },
-            { category = 'Python', key = '<Space>lpv', desc = 'Show venv info (auto-detects .venv)' },
-            { category = 'Python', key = '<Space>lpt', desc = 'Run all tests (pytest, new tab)' },
-            { category = 'Python', key = '<Space>lpc', desc = 'Run tests with coverage (new tab)' },
-            { category = 'Python', key = '<Space>lpl', desc = 'Restart pyright LSP' },
-            -- Buffer-local commands (only in Python files)
-            { category = 'Python', key = '<Space>lpx', desc = 'Run current file with args (buffer-local)' },
-            { category = 'Python', key = '<Space>lpe', desc = 'Activate .venv manually (buffer-local)' },
-            { category = 'Python', key = '<Space>lpT', desc = 'Run current test file (buffer-local)' },
-            { category = 'Python', key = '<Space>lpi', desc = 'Organize imports with ruff (buffer-local)' },
-            { category = 'Python', key = '<Space>lpf', desc = 'Format code with ruff (buffer-local)' },
+            { category = 'Python', key = '<Space>lpr', desc = 'Run current file (uses custom command if set)' },
+            { category = 'Python', key = '<Space>lpR', desc = 'Set custom run command (e.g., uvicorn main:app)' },
+            { category = 'Python', key = '<Space>lpC', desc = 'Clear custom run command (reset to default)' },
+            { category = 'Python', key = '<Space>lpS', desc = 'Open Python Shell (REPL)' },
+            { category = 'Python', key = '<Space>lpX', desc = 'Execute visual selection (Python code)' },
+            { category = 'Python', key = '<Space>lpi', desc = 'Initialize project (uv init)' },
+            { category = 'Python', key = '<Space>lpa', desc = 'Add dependency (uv add)' },
+            { category = 'Python', key = '<Space>lpA', desc = 'Remove dependency (uv remove)' },
+            { category = 'Python', key = '<Space>lpu', desc = 'Sync dependencies (uv sync)' },
+            { category = 'Python', key = '<Space>lpe', desc = 'Reload environment & LSP (after package changes)' },
+            { category = 'Python', key = '<Space>lpv', desc = 'View installed packages' },
+            { category = 'Python', key = '<Space>lpt', desc = 'Run tests (pytest)' },
+            { category = 'Python', key = '<Space>lpc', desc = 'Check code style (ruff check)' },
+            { category = 'Python', key = '<Space>lpl', desc = 'Lint and fix (ruff check --fix)' },
 
             -- ============================================================
-            -- SVELTE (SVELTE FILES)
+            -- SVELTE/JS/TS (BUFFER-LOCAL: LSP & FORMATTING)
             -- ============================================================
-            { category = 'Svelte', key = '<Space>lsf', desc = 'Format with prettier' },
-            { category = 'Svelte', key = '<Space>lsl', desc = 'Restart Svelte LSP' },
-            { category = 'Svelte', key = '<Space>lst', desc = 'Restart TypeScript LSP (ts_ls)' },
-            { category = 'Svelte', key = '<Space>lso', desc = 'Open component in split' },
-            { category = 'Svelte', key = 'Ctrl-e,', desc = 'Expand Emmet abbreviation' },
+            { category = 'Svelte/JS/TS', key = '<Space>lsf', desc = 'Format with prettier (Svelte only)' },
+            { category = 'Svelte/JS/TS', key = '<Space>lsl', desc = 'Restart Svelte LSP (Svelte only)' },
+            { category = 'Svelte/JS/TS', key = '<Space>lso', desc = 'Open component in split (Svelte only)' },
+            { category = 'Svelte/JS/TS', key = 'Ctrl-e,', desc = 'Expand Emmet abbreviation' },
 
             -- ============================================================
-            -- WEB DEVELOPMENT (HTML/CSS/JS)
+            -- WEB DEV WORKFLOW (GLOBAL: SVELTE/JS/TS)
             -- ============================================================
-            { category = 'Web Dev', key = '<Space>lhd', desc = 'Open in default browser' },
-            { category = 'Web Dev', key = '<Space>lhc', desc = 'Open in Chrome' },
-            { category = 'Web Dev', key = '<Space>lhs', desc = 'Open in Safari' },
-            { category = 'Web Dev', key = '<Space>lhf', desc = 'Open in Firefox' },
-            { category = 'Web Dev', key = '<Space>lhl', desc = 'Start live-server' },
-            { category = 'Web Dev', key = 'Ctrl-e,', desc = 'Expand Emmet abbreviation' },
+            { category = 'Web Dev: Workflow', key = '<Space>lsr', desc = 'Run dev server (bun run dev)' },
+            { category = 'Web Dev: Workflow', key = '<Space>lsb', desc = 'Build project (bun run build)' },
+            { category = 'Web Dev: Workflow', key = '<Space>lsp', desc = 'Preview build (bun run preview)' },
+            { category = 'Web Dev: Workflow', key = '<Space>lsc', desc = 'Type check (bun run check)' },
+            { category = 'Web Dev: Workflow', key = '<Space>lse', desc = 'Lint (bun run lint)' },
+            { category = 'Web Dev: Workflow', key = '<Space>lsT', desc = 'Run tests (bun test)' },
+            { category = 'Web Dev: Workflow', key = '<Space>lsi', desc = 'Install deps (bun install)' },
+            { category = 'Web Dev: Workflow', key = '<Space>lsa', desc = 'Add package (bun add + prompt)' },
+            { category = 'Web Dev: Workflow', key = '<Space>lsA', desc = 'Add dev package (bun add -d + prompt)' },
+            { category = 'Web Dev: Workflow', key = '<Space>lsx', desc = 'Remove package (bun remove + prompt)' },
+            { category = 'Web Dev: Workflow', key = '<Space>lsu', desc = 'Update deps (bun update)' },
+            { category = 'Web Dev: Workflow', key = '<Space>lst', desc = 'Restart TypeScript LSP' },
+
+            -- ============================================================
+            -- HTML/CSS (GLOBAL)
+            -- ============================================================
+            { category = 'HTML/CSS', key = '<Space>lho', desc = 'Open in preferred browser (HTML files only)' },
+            { category = 'HTML/CSS', key = '<Space>lhb', desc = 'Set browser preference (menu, persists with session)' },
+            { category = 'HTML/CSS', key = '<Space>lhl', desc = 'Start live-server (auto-reload in preferred browser)' },
+            { category = 'HTML/CSS', key = 'Ctrl-e,', desc = 'Expand Emmet abbreviation' },
 
             -- ============================================================
             -- TELESCOPE (INSIDE TELESCOPE)
@@ -931,6 +960,7 @@ local cheatsheet = {
             { category = 'Surround', key = 'viwsa"', desc = 'Visual select word, then surround with " - use . after viw' },
             { category = 'Surround', key = 'vipsa)', desc = 'Visual select paragraph, then surround with ()' },
           }
+end
 
 return {
   -- Enhanced cheatsheet with custom data
@@ -940,6 +970,8 @@ return {
       {
         '<leader>sc',
         function()
+          -- Load cheatsheet data on-demand
+          local cheatsheet = get_cheatsheet_data()
           -- Create a custom cheatsheet picker
           local pickers = require 'telescope.pickers'
           local finders = require 'telescope.finders'
@@ -984,6 +1016,9 @@ return {
       {
         '<leader>sC',
         function()
+          -- Load cheatsheet data on-demand
+          local cheatsheet = get_cheatsheet_data()
+          
           -- Create category browser
           local pickers = require 'telescope.pickers'
           local finders = require 'telescope.finders'

@@ -21,6 +21,9 @@
 -- Usage: Just open a .svelte file and these plugins will automatically load!
 -- ========================================================================
 
+-- Load Web Dev/Svelte keymaps immediately (not buffer-local, always available)
+require('keymaps.svelte')
+
 return {
   -- ========================================================================
   -- SVELTE LSP - Language Server Protocol for Svelte
@@ -121,110 +124,66 @@ return {
   },
 
   -- ========================================================================
-  -- SVELTE-SPECIFIC KEYMAPS
+  -- SVELTE-SPECIFIC KEYMAPS (Buffer-local only)
   -- ========================================================================
-  -- Additional Svelte-specific settings and keymaps
+  -- Svelte-specific formatting and LSP commands
+  -- NOTE: Build/test/package commands are now GLOBAL in keymaps.lua
+  -- This allows you to run them from logs, terminals, etc.
   -- ========================================================================
   {
     'nvim-lua/plenary.nvim',
-    ft = 'svelte',
+    ft = { 'svelte', 'javascript', 'typescript' },
     config = function()
       vim.api.nvim_create_autocmd('FileType', {
-        pattern = 'svelte',
+        pattern = { 'svelte', 'javascript', 'typescript' },
         callback = function(event)
           local bufnr = event.buf
+          local filetype = vim.bo[bufnr].filetype
 
           -- NOTE: The <leader>ls group is registered globally in editor.lua
+          -- NOTE: Most <leader>ls commands (build, test, etc.) are now global in keymaps.lua
 
-          -- Format with Prettier
-          vim.keymap.set('n', '<leader>lsf', function()
-            require('conform').format { formatters = { 'prettier' } }
-          end, { buffer = bufnr, desc = 'Format with prettier' })
+          -- Format with Prettier (only for Svelte)
+          if filetype == 'svelte' then
+            vim.keymap.set('n', '<leader>lsf', function()
+              require('conform').format { formatters = { 'prettier' } }
+            end, { buffer = bufnr, desc = 'Format with prettier' })
 
-          -- Restart Svelte LSP
-          vim.keymap.set('n', '<leader>lsl', function()
-            vim.cmd 'LspRestart svelte'
-          end, { buffer = bufnr, desc = 'Restart LSP' })
+            -- Restart Svelte LSP
+            vim.keymap.set('n', '<leader>lsl', function()
+              vim.cmd 'LspRestart svelte'
+            end, { buffer = bufnr, desc = 'Restart Svelte LSP' })
 
-          -- Restart TypeScript LSP (often needed in Svelte projects)
-          vim.keymap.set('n', '<leader>lst', function()
-            vim.cmd 'LspRestart ts_ls'
-          end, { buffer = bufnr, desc = 'Restart TypeScript LSP' })
-
-          -- Open component in split
-          vim.keymap.set('n', '<leader>lso', function()
-            local word = vim.fn.expand '<cfile>'
-            vim.cmd('split ' .. word)
-          end, { buffer = bufnr, desc = 'Open component in split' })
+            -- Open component in split
+            vim.keymap.set('n', '<leader>lso', function()
+              local word = vim.fn.expand '<cfile>'
+              vim.cmd('split ' .. word)
+            end, { buffer = bufnr, desc = 'Open component in split' })
+          end
         end,
       })
     end,
   },
 
   -- ========================================================================
-  -- WEB DEVELOPMENT KEYMAPS (HTML/CSS/JS/TS)
+  -- HTML/CSS KEYMAPS (Buffer-local only)
   -- ========================================================================
-  -- Browser preview keymaps for web files
+  -- NOTE: Most HTML/CSS commands are now GLOBAL in keymaps.lua
+  -- This allows you to start/stop live-server from logs, terminals, etc.
+  -- This section only keeps Emmet (buffer-specific)
   -- ========================================================================
   {
     'nvim-lua/plenary.nvim',
-    ft = { 'html', 'css', 'javascript', 'typescript', 'svelte' },
+    ft = { 'html', 'css' },
     config = function()
-      -- Helper function to open file in specific browser
-      local function open_in_browser(browser)
-        local filetype = vim.bo.filetype
-        local filepath = vim.fn.expand('%:p')
-        
-        if filetype == 'html' then
-          local cmd
-          if browser then
-            cmd = string.format('open -a "%s" "%s"', browser, filepath)
-          else
-            cmd = string.format('open "%s"', filepath)
-          end
-          vim.fn.system(cmd)
-          local browser_name = browser or 'default browser'
-          vim.notify('Opened in ' .. browser_name .. ': ' .. vim.fn.expand('%:t'), vim.log.levels.INFO)
-        else
-          -- For Svelte/JS/TS, suggest starting a dev server
-          vim.notify('For ' .. filetype .. ' files, start your dev server (npm run dev) and open http://localhost', vim.log.levels.INFO)
-        end
+      -- Initialize browser preference (defaults to Google Chrome, persists with session)
+      if not vim.g.html_browser_preference then
+        vim.g.html_browser_preference = 'Google Chrome'
       end
-
-      vim.api.nvim_create_autocmd('FileType', {
-        pattern = { 'html', 'css', 'javascript', 'typescript', 'svelte' },
-        callback = function(event)
-          local bufnr = event.buf
-
-          -- NOTE: The <leader>lh group is registered globally in editor.lua
-
-          -- Open in default browser
-          vim.keymap.set('n', '<leader>lhd', function()
-            open_in_browser(nil)
-          end, { buffer = bufnr, desc = 'Open in default browser' })
-
-          -- Open in Chrome
-          vim.keymap.set('n', '<leader>lhc', function()
-            open_in_browser('Google Chrome')
-          end, { buffer = bufnr, desc = 'Open in Chrome' })
-
-          -- Open in Safari
-          vim.keymap.set('n', '<leader>lhs', function()
-            open_in_browser('Safari')
-          end, { buffer = bufnr, desc = 'Open in Safari' })
-
-          -- Open in Firefox
-          vim.keymap.set('n', '<leader>lhf', function()
-            open_in_browser('Firefox')
-          end, { buffer = bufnr, desc = 'Open in Firefox' })
-
-          -- Start live-server in terminal split
-          vim.keymap.set('n', '<leader>lhl', function()
-            vim.cmd('split | terminal live-server')
-            vim.notify('Live server started. Press Ctrl+C to stop.', vim.log.levels.INFO)
-          end, { buffer = bufnr, desc = 'Start live-server in split' })
-        end,
-      })
+      
+      -- Note: Browser commands (<leader>lho, <leader>lhb, <leader>lhl) are now global in keymaps.lua
+      -- This allows you to start/stop live-server from any buffer (terminals, logs, etc.)
     end,
   },
 }
+

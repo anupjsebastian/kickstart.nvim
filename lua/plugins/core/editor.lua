@@ -13,9 +13,10 @@ return {
   {
     'NMAC427/guess-indent.nvim',
     opts = {
-      -- Exclude Dart files - dart-vim-plugin handles indentation better
+      -- Exclude files with special indentation rules
       filetype_exclude = {
-        'dart',
+        'dart',     -- dart-vim-plugin handles indentation better
+        'markdown', -- Markdown has special indentation (lists, code blocks)
       },
     },
   },
@@ -39,6 +40,11 @@ return {
     config = function()
       require('telescope').setup {
         defaults = {
+          -- Cleaner path display (truncate long paths)
+          path_display = { 'truncate' },
+          -- Show dynamic preview titles
+          dynamic_preview_title = true,
+          
           mappings = {
             i = {
               -- Navigation (consistent with Neo-tree)
@@ -314,7 +320,7 @@ return {
         { '<leader>d', group = '󰃤 Debug' },
         { '<leader>g', group = '󰊢 Git' },
         { '<leader>h', group = '󰊢 Git Hunk', mode = { 'n', 'v' } },
-        { '<leader>l', group = '󰗀 Language' }, -- Global language menu
+        { '<leader>l', group = '󰗀 Language Tools' }, -- Global language menu
         { '<leader>lf', group = '󱓞 Flutter' }, -- Flutter commands (globally accessible)
         { '<leader>lp', group = '󰌠 Python' }, -- Python commands (globally accessible)
         { '<leader>lr', group = '󱘗 Rust' }, -- Rust commands (globally accessible)

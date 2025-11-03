@@ -1,6 +1,9 @@
 -- Rust Development Configuration
 -- Loaded only for Rust files (*.rs)
 
+-- Load Rust/Cargo keymaps immediately (not buffer-local, always available)
+require('keymaps.rust')
+
 return {
   -- Rust Tools - Enhanced rust-analyzer integration
   {
@@ -12,6 +15,11 @@ return {
       server = {
         on_attach = function(client, bufnr)
           -- NOTE: The <leader>lr group is registered globally in editor.lua
+          -- NOTE: Cargo workflow commands are defined GLOBALLY in:
+          --       lua/config/keymaps.lua (after Python section)
+          --
+          -- This makes cargo commands available from any buffer (terminals, logs)
+          -- Commands below are rustaceanvim-specific and remain buffer-local
 
           -- Hover actions
           vim.keymap.set('n', '<leader>lrh', function()
@@ -263,4 +271,5 @@ return {
       }
     end,
   },
+
 }

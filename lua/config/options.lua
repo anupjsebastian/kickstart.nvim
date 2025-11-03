@@ -15,16 +15,24 @@ vim.g.have_nerd_font = true
 -- Add fnm's Node.js to PATH so Neovim can find it
 -- This is required for GitHub Copilot and other Node.js based plugins
 -- Uses fnm's alias resolution to always point to the default/latest version
+--
+-- NOTE: This only sets up Node.js for plugins. For web development tooling,
+-- we use bun (see lua/plugins/lang/svelte.lua for bun commands).
+--
 local home = vim.env.HOME
 local fnm_node_path = home .. '/.local/share/fnm/aliases/default/bin'
 -- Fallback: also add the fnm multishell path if it exists
 local fnm_multishell = home .. '/.local/state/fnm_multishells'
-if vim.fn.isdirectory(fnm_node_path) == 1 then
-  vim.env.PATH = fnm_node_path .. ':' .. vim.env.PATH
-elseif vim.fn.isdirectory(fnm_multishell) == 1 then
-  -- If multishell is being used, fnm will handle it via shell integration
-  -- We just need to ensure the PATH includes typical fnm locations
-  vim.env.PATH = home .. '/.local/share/fnm:' .. vim.env.PATH
+
+-- Only prepend PATH if node isn't already available
+if vim.fn.executable('node') == 0 then
+  if vim.fn.isdirectory(fnm_node_path) == 1 then
+    vim.env.PATH = fnm_node_path .. ':' .. vim.env.PATH
+  elseif vim.fn.isdirectory(fnm_multishell) == 1 then
+    -- If multishell is being used, fnm will handle it via shell integration
+    -- We just need to ensure the PATH includes typical fnm locations
+    vim.env.PATH = home .. '/.local/share/fnm:' .. vim.env.PATH
+  end
 end
 
 -- Make line numbers default
@@ -113,6 +121,12 @@ vim.o.confirm = true
 -- FOLDING CONFIGURATION - For Flutter widgets and code blocks
 -- ========================================================================
 -- Enable folding based on Treesitter (for Flutter widgets, functions, etc.)
+-- 
+-- NOTE: This is the GLOBAL folding configuration.
+-- Language-specific configs (e.g., flutter.lua) may override these settings
+-- with autocmds for specific filetypes. The language-specific settings take
+-- precedence when you open files of that type.
+-- 
 vim.o.foldmethod = 'expr'
 vim.o.foldexpr = 'nvim_treesitter#foldexpr()'
 

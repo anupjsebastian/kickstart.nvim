@@ -56,7 +56,8 @@ return {
     auto_session_create_enabled = true, -- Auto-create session on first save
     
     -- Ensure global variables are saved (for custom run commands, etc.)
-    sessionoptions = 'buffers,curdir,folds,help,tabpages,winsize,globals',
+    -- NOTE: Removed 'buffers' to prevent terminal/log buffers from persisting
+    sessionoptions = 'curdir,folds,help,tabpages,winsize,globals',
     
     -- Hooks to run before/after session save/restore
     pre_save_cmds = {
@@ -67,6 +68,13 @@ return {
       function()
         if vim.g.python_run_command then
           return [[lua vim.g.python_run_command = ]] .. string.format('%q', vim.g.python_run_command)
+        end
+        return ''
+      end,
+      -- Explicitly save HTML/CSS browser preference
+      function()
+        if vim.g.html_browser_preference then
+          return [[lua vim.g.html_browser_preference = ]] .. string.format('%q', vim.g.html_browser_preference)
         end
         return ''
       end,

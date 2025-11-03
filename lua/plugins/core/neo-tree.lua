@@ -10,7 +10,7 @@ return {
     'MunifTanjim/nui.nvim',
     's1n7ax/nvim-window-picker', -- Required for split_with_window_picker
   },
-  lazy = false,
+  cmd = 'Neotree', -- Lazy-load on command
   keys = {
     { '\\', ':Neotree reveal<CR>', desc = 'NeoTree reveal', silent = true },
   },
@@ -154,8 +154,9 @@ return {
     
     -- Add custom commands for Telescope integration
     commands = {
-      telescope_find_root = function(state)
+      telescope_find_root = function(_state)
         -- Always search from the root of the workspace
+        -- _state parameter available but not needed for root search
         require('telescope.builtin').find_files {
           cwd = vim.fn.getcwd(),
         }

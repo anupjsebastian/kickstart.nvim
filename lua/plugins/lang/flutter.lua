@@ -18,6 +18,9 @@
 -- early to ensure they're available when core plugins need them.
 -- ========================================================================
 
+-- Load Flutter keymaps immediately (not buffer-local, always available)
+require('keymaps.flutter')
+
 return {
   -- ============================================================================
   -- FLUTTER & DART DEVELOPMENT ENVIRONMENT
@@ -125,16 +128,19 @@ return {
               change = 2, -- 2 = Incremental (less prone to errors than full sync)
             })
             
-            -- Filter out didChange error notifications (they're harmless during snippet expansion)
-            -- We'll use an autocmd to do this after noice.nvim is loaded
+            -- Filter out dartls didChange error notifications (they're harmless during snippet expansion)
+            -- Only suppress this specific error from dartls, not all notifications
             vim.api.nvim_create_autocmd('User', {
               pattern = 'VeryLazy',
               once = true,
               callback = function()
                 local notify = vim.notify
                 vim.notify = function(msg, level, opts)
-                  if type(msg) == 'string' and msg:match('textDocument/didChange') then
-                    return -- Suppress this specific error
+                  -- Only suppress dartls textDocument/didChange errors
+                  if type(msg) == 'string' 
+                     and msg:match('textDocument/didChange') 
+                     and (msg:match('dartls') or vim.bo.filetype == 'dart') then
+                    return -- Suppress this specific error from dartls only
                   end
                   notify(msg, level, opts)
                 end
@@ -193,8 +199,8 @@ return {
         },
 
         dev_tools = {
-          autostart = true, -- Don't autostart devtools server with flutter run
-          auto_open_browser = false, -- Don't automatically open browser on autostart
+          autostart = true, -- Autostart devtools server with flutter run
+          auto_open_browser = false, -- Don't automatically open browser
         },
 
         outline = {
@@ -315,6 +321,11 @@ return {
       -- ========================================================================
       -- Set fold method to use Treesitter for Flutter widgets
       -- Using multiple autocmds to ensure it sticks (some plugins override it)
+      -- 
+      -- NOTE: These settings OVERRIDE the global folding config in options.lua
+      -- for Dart files specifically. The autocmd runs after buffer load, so these
+      -- settings take precedence for *.dart files.
+      -- 
       local fold_augroup = vim.api.nvim_create_augroup('DartFolding', { clear = true })
       
       vim.api.nvim_create_autocmd({ 'BufRead', 'BufEnter', 'BufWinEnter' }, {
@@ -363,8 +374,8 @@ return {
           -- Flutter run - only available in Dart files
           -- WORKFLOW: 
           --   1. First time: <leader>lfd to select device (global keymap)
-          --   2. Then: <leader>lfr to run (Dart only)
-          --   3. Use <leader>lfh (reload), <leader>lfq (quit) from anywhere
+          --   2. Then: <leader>lfr to start/run (Dart only)
+          --   3. Use <leader>lfh (reload), <leader>lfR (restart), <leader>lfq (quit) from anywhere
           vim.keymap.set('n', '<leader>lfr', '<cmd>FlutterRun<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Run app' }))
 
           -- Code Actions (Cmd+. equivalent) - wrap, remove, extract widgets, etc.
@@ -405,3 +416,4 @@ return {
     end,
   },
 }
+
