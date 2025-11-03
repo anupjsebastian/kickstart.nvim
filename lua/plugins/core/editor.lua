@@ -321,12 +321,11 @@ return {
         { '<leader>g', group = '󰊢 Git' },
         { '<leader>h', group = '󰊢 Git Hunk', mode = { 'n', 'v' } },
         { '<leader>l', group = '󰗀 Language Tools' }, -- Global language menu
-        { '<leader>lf', group = '󱓞 Flutter' }, -- Flutter commands (globally accessible)
+        { '<leader>lf', group = ' Flutter' }, -- Flutter commands (globally accessible)
         { '<leader>lp', group = '󰌠 Python' }, -- Python commands (globally accessible)
         { '<leader>lr', group = '󱘗 Rust' }, -- Rust commands (globally accessible)
-        { '<leader>ls', group = '󰡄 Svelte' }, -- Svelte commands (globally accessible)
-        { '<leader>lh', group = '󰖟 HTML/Browser' }, -- HTML/Browser commands (globally accessible)
-        { '<leader>o', group = '󰖟 Browser' },
+        { '<leader>ls', group = ' Svelte' }, -- Svelte commands (globally accessible)
+        { '<leader>lh', group = ' HTML/CSS' }, -- HTML/CSS commands (globally accessible)
         { '<leader>s', group = '󰍉 Search' },
         { '<leader>S', group = '󱂬 Session' },
         { '<leader>t', group = '󰔡 Toggle Options' },

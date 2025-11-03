@@ -192,10 +192,44 @@ local function get_cheatsheet_data()
             -- ============================================================
             -- COMMON WORKFLOWS & PATTERNS
             -- ============================================================
-            -- Multi-file search and replace
-            { category = 'Workflow: Multi-File', key = '<Space>sg → Ctrl-q', desc = 'Grep → send to quickfix' },
-            { category = 'Workflow: Multi-File', key = ':cdo s/old/new/g | update', desc = 'Replace in all quickfix files' },
-            { category = 'Workflow: Multi-File', key = ':cfdo %s/old/new/g | update', desc = 'Replace per file (faster)' },
+            -- Multi-file search (project-wide)
+            { category = 'Workflow: Multi-File Search', key = '<leader>/', desc = 'Live grep - search all files in project' },
+            { category = 'Workflow: Multi-File Search', key = '<leader>sg', desc = 'Live grep - search all files (alt)' },
+            { category = 'Workflow: Multi-File Search', key = '<leader>sw', desc = 'Search word under cursor across project' },
+            { category = 'Workflow: Multi-File Search', key = '<leader>/ → Ctrl-q', desc = 'Grep search → send results to quickfix' },
+            { category = 'Workflow: Multi-File Search', key = '<leader>sw → Ctrl-q', desc = 'Word search → send to quickfix' },
+            { category = 'Workflow: Multi-File Search', key = ':vimgrep /pattern/ **/*', desc = 'Vim native grep (all files)' },
+            { category = 'Workflow: Multi-File Search', key = ':vimgrep /pattern/ **/*.js', desc = 'Grep specific file types' },
+            
+            -- Multi-file replace (no confirmation)
+            { category = 'Workflow: Multi-File Replace', key = '<leader>/ → Ctrl-q → :cdo s/old/new/g | update', desc = '1. Grep → 2. Quickfix → 3. Replace all' },
+            { category = 'Workflow: Multi-File Replace', key = '<leader>sw → Ctrl-q → :cfdo %s/old/new/g | update', desc = 'Word search → Replace per file (faster)' },
+            { category = 'Workflow: Multi-File Replace', key = ':vimgrep /old/ ** | cdo s/old/new/g | update', desc = 'One-liner: grep + replace all' },
+            { category = 'Workflow: Multi-File Replace', key = ':bufdo %s/old/new/ge | update', desc = 'Replace in all open buffers (e=no error)' },
+            
+            -- Multi-file replace (with confirmation)
+            { category = 'Workflow: Multi-File Replace', key = '<leader>/ → Ctrl-q → :cdo s/old/new/gc | update', desc = 'Grep → Replace with confirmation (each match)' },
+            { category = 'Workflow: Multi-File Replace', key = '<leader>/ → Ctrl-q → :cfdo %s/old/new/gc | update', desc = 'Grep → Confirm once per file' },
+            { category = 'Workflow: Multi-File Replace', key = ':vimgrep /old/ ** | cdo s/old/new/gc | update', desc = 'Grep + confirm each replacement' },
+            
+            -- Interactive multi-file replace workflow
+            { category = 'Workflow: Multi-File Replace', key = '*cgn{new}<Esc> → ]q → .', desc = 'Change next → jump to next match → repeat' },
+            { category = 'Workflow: Multi-File Replace', key = '<leader>sw → ]q → cgn{new}<Esc> → ]q → .', desc = 'Search → jump → change → repeat (visual feedback)' },
+            { category = 'Workflow: Multi-File Replace', key = ':cdo normal! @a | update', desc = 'Run macro on all quickfix entries' },
+            
+            -- Quickfix navigation for multi-file operations
+            { category = 'Workflow: Multi-File Replace', key = ':copen', desc = 'Open quickfix window (review before replace)' },
+            { category = 'Workflow: Multi-File Replace', key = ']q / [q', desc = 'Jump next/prev quickfix result' },
+            { category = 'Workflow: Multi-File Replace', key = ':cnext / :cprev', desc = 'Next/prev quickfix (command form)' },
+            { category = 'Workflow: Multi-File Replace', key = ':clist', desc = 'List all quickfix results' },
+            
+            -- Replace command reference
+            { category = 'Workflow: Multi-File Replace', key = ':cdo', desc = 'Execute command on each quickfix ENTRY' },
+            { category = 'Workflow: Multi-File Replace', key = ':cfdo', desc = 'Execute command on each quickfix FILE (faster)' },
+            { category = 'Workflow: Multi-File Replace', key = ':bufdo', desc = 'Execute command on each open BUFFER' },
+            { category = 'Workflow: Multi-File Replace', key = '| update', desc = 'Chain: save after each replacement' },
+            { category = 'Workflow: Multi-File Replace', key = '/gc', desc = 'Flag: confirm each replacement (y/n/a/q/l)' },
+            { category = 'Workflow: Multi-File Replace', key = '/ge', desc = 'Flag: no error if pattern not found' },
             
             -- Multi-cursor simulation
             { category = 'Workflow: Multi-Edit', key = '*cgn{text}<Esc>', desc = 'Change next occurrence, then . to repeat' },
