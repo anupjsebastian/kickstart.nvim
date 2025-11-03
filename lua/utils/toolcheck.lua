@@ -76,4 +76,21 @@ function M.check_cargo()
   return true
 end
 
+-- Check if flutter is installed (for Flutter/Dart)
+function M.check_flutter()
+  if vim.fn.executable('flutter') == 0 then
+    vim.notify(
+      '❌ flutter not found!\n\n' ..
+      'Install with Homebrew (recommended):\n' ..
+      '  brew install --cask flutter\n\n' ..
+      'Or from official site: https://docs.flutter.dev/get-started/install\n' ..
+      '  Download Flutter SDK and add to PATH\n\n' ..
+      'Flutter is Google\'s UI toolkit for building natively compiled applications.',
+      vim.log.levels.ERROR
+    )
+    return false
+  end
+  return true
+end
+
 return M

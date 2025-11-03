@@ -69,7 +69,7 @@
 -- │  └─ Debug - F5/F10/F11/F12, <Space>db/dB/dc/di/do/dO/dt/dr/dl/dC/du/de
 --
 -- ┌─ LANGUAGE-SPECIFIC (Auto-loaded by filetype)
--- │  ├─ Flutter - <Space>lfr/lfh/lfR/lfq/lfd/lfe/lfo/lft/lfc/lfa/lfD/lfL/lfl, <Space>.
+-- │  ├─ Flutter - <Space>lfr/lfh/lfR/lfq/lfa/lfd/lfe/lft/lfi/lfD/lfC/lfp/lfb/lfT/lfl, <Space>.
 -- │  ├─ Rust (buffer-local: .rs) - <Space>lrh/lra/lre/lrC/lrp/lrj/lrr/lrd/lrm
 -- │  ├─ Rust: Cargo (GLOBAL) - <Space>lrb/lrR/lrt/lrk/lrl/lrf/lrx/lrA/lrX/lrU/lrD
 -- │  ├─ Rust: Crates - <Space>lrct/lrcr/lrcv/lrcf/lrcd/lrcu/lrca/lrcU/lrcA/lrce/lrcE/lrcH/lrcR/lrcD/lrcC
@@ -628,22 +628,33 @@ local function get_cheatsheet_data()
             { category = 'Debug', key = '<Space>de', desc = 'Eval expression' },
 
             -- ============================================================
-            -- FLUTTER (DART FILES)
+            -- FLUTTER (TERMINAL-BASED WORKFLOW)
             -- ============================================================
-            { category = 'Flutter', key = '<Space>lfr', desc = 'Run app (Dart files)' },
-            { category = 'Flutter', key = '<Space>lfh', desc = 'Hot reload (any buffer)' },
-            { category = 'Flutter', key = '<Space>lfR', desc = 'Hot restart (any buffer)' },
-            { category = 'Flutter', key = '<Space>lfq', desc = 'Quit app (any buffer)' },
-            { category = 'Flutter', key = '<Space>lfd', desc = 'Select device (any buffer)' },
-            { category = 'Flutter', key = '<Space>lfe', desc = 'Launch emulator (any buffer)' },
-            { category = 'Flutter', key = '<Space>lfo', desc = 'Toggle outline (Dart files)' },
-            { category = 'Flutter', key = '<Space>lft', desc = 'Start DevTools (any buffer)' },
-            { category = 'Flutter', key = '<Space>lfc', desc = 'Copy DevTools URL (any buffer)' },
-            { category = 'Flutter', key = '<Space>lfa', desc = 'Attach to app (Dart files)' },
-            { category = 'Flutter', key = '<Space>lfD', desc = 'Detach from app (Dart files)' },
-            { category = 'Flutter', key = '<Space>lfL', desc = 'Toggle logs (any buffer)' },
-            { category = 'Flutter', key = '<Space>lfl', desc = 'Restart LSP (Dart files)' },
-            { category = 'Flutter', key = '<Space>. or gra', desc = 'Code actions (Cmd+.)' },
+            -- Development
+            { category = 'Flutter', key = '<Space>lfr', desc = 'Run app (select device if needed)' },
+            { category = 'Flutter', key = '<Space>lfh', desc = 'Hot reload (works from anywhere)' },
+            { category = 'Flutter', key = '<Space>lfR', desc = 'Hot restart (works from anywhere)' },
+            { category = 'Flutter', key = '<Space>lfq', desc = 'Quit app (works from anywhere)' },
+            { category = 'Flutter', key = '<Space>lfa', desc = 'Toggle auto-reload on save' },
+            
+            -- Device Management
+            { category = 'Flutter', key = '<Space>lfd', desc = 'Select device (attached only, no wireless)' },
+            { category = 'Flutter', key = '<Space>lfe', desc = 'Launch emulator' },
+            
+            -- DevTools
+            { category = 'Flutter', key = '<Space>lft', desc = 'Open DevTools (sends v command)' },
+            
+            -- Project Commands
+            { category = 'Flutter', key = '<Space>lfi', desc = 'Init Flutter project (with confirmation)' },
+            { category = 'Flutter', key = '<Space>lfD', desc = 'Flutter doctor' },
+            { category = 'Flutter', key = '<Space>lfC', desc = 'Flutter clean' },
+            { category = 'Flutter', key = '<Space>lfp', desc = 'Flutter pub get' },
+            { category = 'Flutter', key = '<Space>lfb', desc = 'Flutter build (select target)' },
+            { category = 'Flutter', key = '<Space>lfT', desc = 'Flutter test' },
+            
+            -- LSP & Code Actions
+            { category = 'Flutter', key = '<Space>lfl', desc = 'Restart LSP' },
+            { category = 'Flutter', key = '<Space>. or gra', desc = 'Code actions (Cmd+.) - Dart files' },
 
             -- ============================================================
             -- RUST (BUFFER-LOCAL: .rs files only - rustaceanvim commands)

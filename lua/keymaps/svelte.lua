@@ -10,6 +10,8 @@ local toolcheck = require('utils.toolcheck')
 -- Helper function to run terminal commands with "Press ENTER to close" prompt
 local function run_terminal_cmd(cmd)
   vim.cmd('tabnew')
+  local bufnr = vim.api.nvim_get_current_buf()
+  
   -- Wrap command to show exit status and wait for Enter, then close buffer
   local wrapped_cmd = string.format(
     '%s; echo "\n---"; if [ $? -eq 0 ]; then echo "✓ Command completed successfully"; else echo "✗ Command failed with exit code $?"; fi; echo "Press ENTER to close"; read; exit',
@@ -17,18 +19,23 @@ local function run_terminal_cmd(cmd)
   )
   local job_id = vim.fn.termopen({ 'zsh', '-c', wrapped_cmd })
   
-  -- Auto-enter insert mode when job finishes
+  -- Auto-close terminal when job finishes
   vim.api.nvim_create_autocmd('TermClose', {
-    buffer = 0,
+    buffer = bufnr,
     once = true,
     callback = function()
+      -- Show persistent notification
+      vim.notify('✓ Web dev command completed - Press ENTER to close terminal', vim.log.levels.INFO, {
+        title = 'Svelte/Bun',
+        timeout = false,
+      })
       vim.cmd('bdelete!')
     end,
   })
   
   -- Start in insert mode after a delay (let command run first)
   vim.defer_fn(function()
-    if vim.api.nvim_get_current_buf() == vim.fn.bufnr('%') then
+    if vim.api.nvim_get_current_buf() == bufnr then
       vim.cmd('startinsert')
     end
   end, 100)

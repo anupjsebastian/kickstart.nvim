@@ -191,15 +191,15 @@ return {
           enabled = true, -- Show closing tags for widgets
         },
 
+        -- DISABLED: We use terminal commands instead of plugin-managed dev log
         dev_log = {
-          enabled = true,
-          notify_errors = false, -- Don't show error notifications for log buffer issues
-          open_cmd = 'tabedit', -- Open logs in a new tab
-          focus_on_open = false, -- Don't auto-focus the log window
+          enabled = false, -- Don't create __FLUTTER_DEV_LOG__ buffer
+          notify_errors = false,
         },
 
+        -- DISABLED: We manage DevTools manually with browser selection
         dev_tools = {
-          autostart = true, -- Autostart devtools server with flutter run
+          autostart = false, -- Don't autostart devtools server
           auto_open_browser = false, -- Don't automatically open browser
         },
 
@@ -210,7 +210,7 @@ return {
 
         debugger = {
           enabled = true, -- Enable Flutter debugger integration
-          run_via_dap = true, -- Use DAP for debugging
+          run_via_dap = false, -- Don't intercept flutter run (we use terminal commands)
           -- if empty dap will not stop on any exceptions, otherwise it will stop on those specified
           -- see |:help dap.set_exception_breakpoints()| for more info
           exception_breakpoints = {},
@@ -361,42 +361,18 @@ return {
       -- ========================================================================
       -- FLUTTER-SPECIFIC KEYMAPS (Dart files only)
       -- ========================================================================
-      -- These keymaps are only for Dart files (code actions, run)
-      -- Global Flutter commands (reload, quit, logs, devices) are in lua/config/keymaps.lua
+      -- Buffer-local keymaps for Dart files (code actions)
+      -- Global Flutter commands (run, reload, quit, devices) are in lua/keymaps/flutter.lua
       -- ========================================================================
       vim.api.nvim_create_autocmd('FileType', {
         pattern = 'dart',
         callback = function(event)
           local opts = { buffer = true, silent = true }
 
-          -- NOTE: The <leader>lf group is registered globally in editor.lua
-
-          -- Flutter run - only available in Dart files
-          -- WORKFLOW: 
-          --   1. First time: <leader>lfd to select device (global keymap)
-          --   2. Then: <leader>lfr to start/run (Dart only)
-          --   3. Use <leader>lfh (reload), <leader>lfR (restart), <leader>lfq (quit) from anywhere
-          vim.keymap.set('n', '<leader>lfr', '<cmd>FlutterRun<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Run app' }))
-
           -- Code Actions (Cmd+. equivalent) - wrap, remove, extract widgets, etc.
           -- Note: 'gra' is already defined globally in lua/plugins/lsp/init.lua for all languages
           vim.keymap.set('n', '<leader>.', vim.lsp.buf.code_action, vim.tbl_extend('force', opts, { desc = 'Flutter: Code actions (Cmd+.)' }))
           vim.keymap.set('v', '<leader>.', vim.lsp.buf.code_action, vim.tbl_extend('force', opts, { desc = 'Flutter: Code actions (Cmd+.)' }))
-
-          -- Attach/Detach - Dart specific
-          vim.keymap.set('n', '<leader>lfa', '<cmd>FlutterAttach<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Attach to app' }))
-          vim.keymap.set('n', '<leader>lfD', '<cmd>FlutterDetach<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Detach from app' }))
-          
-          -- LSP restart - Dart specific
-          vim.keymap.set('n', '<leader>lfl', '<cmd>FlutterLspRestart<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Restart LSP' }))
-          
-          -- Copy profiler URL - Dart specific
-          vim.keymap.set(
-            'n',
-            '<leader>lfc',
-            '<cmd>FlutterCopyProfilerUrl<cr>',
-            vim.tbl_extend('force', opts, { desc = 'Flutter: Copy profiler URL' })
-          )
         end,
       })
     end,
@@ -416,4 +392,3 @@ return {
     end,
   },
 }
-
