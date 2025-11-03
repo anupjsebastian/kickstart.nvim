@@ -129,17 +129,6 @@ vim.keymap.set('n', '<leader>lpu', function()
   vim.notify('🔄 Updating Python dependencies with uv...', vim.log.levels.INFO)
 end, { desc = 'Python: Update deps (uv sync)' })
 
-
-
--- Update Python dependencies with uv
-vim.keymap.set('n', '<leader>lpu', function()
-  if not toolcheck.check_uv() then
-    return
-  end
-  run_terminal_cmd('uv sync')
-  vim.notify('🔄 Updating Python dependencies with uv...', vim.log.levels.INFO)
-end, { desc = 'Python: Update deps (uv sync)' })
-
 -- Reload Python environment and LSP (after adding/removing packages)
 vim.keymap.set('n', '<leader>lpe', function()
   -- Restart LSP clients for Python files
