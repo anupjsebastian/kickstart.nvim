@@ -36,7 +36,17 @@ local function run_terminal_cmd(cmd)
   end, 100)
 end
 
--- NOTE: The <leader>lp group is registered globally in editor.lua
+-- Auto-reload Python project files when they change externally
+-- This handles: uv add/remove from terminal, manual edits, git operations, etc.
+vim.api.nvim_create_autocmd('FileChangedShellPost', {
+  pattern = { 'pyproject.toml', 'uv.lock', 'requirements*.txt', 'setup.py', 'setup.cfg' },
+  callback = function(args)
+    local filename = vim.fn.fnamemodify(args.file, ':t')
+    vim.notify('📦 ' .. filename .. ' updated automatically', vim.log.levels.INFO)
+  end,
+  desc = 'Auto-reload Python project files when changed externally',
+})
+
 -- NOTE: The <leader>lp group is registered globally in editor.lua
 
 -- Initialize new Python project with uv
