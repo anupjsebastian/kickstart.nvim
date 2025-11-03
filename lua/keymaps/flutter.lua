@@ -330,7 +330,14 @@ vim.api.nvim_create_autocmd('BufWritePost', {
     if vim.g.flutter_auto_reload ~= false then
       local chan = find_flutter_terminal()
       if chan then
-        vim.api.nvim_chan_send(chan, 'r')
+        -- Use pcall to gracefully handle if channel closed between check and send
+        local ok, err = pcall(vim.api.nvim_chan_send, chan, 'r')
+        if not ok then
+          -- Channel closed, clear global state
+          vim.g.flutter_terminal_chan = nil
+          vim.g.flutter_terminal_buf = nil
+          vim.g.flutter_terminal_tab = nil
+        end
         -- No notification for auto-reload (silent)
       end
     end
