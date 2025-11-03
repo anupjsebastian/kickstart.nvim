@@ -180,52 +180,12 @@ local function start_flutter_run(device_id)
       vim.g.flutter_terminal_chan = nil
       vim.g.flutter_terminal_buf = nil
       vim.g.flutter_terminal_tab = nil
-
-      -- Show exit message
+      
+      -- Close buffer automatically after exit
       vim.schedule(function()
-        if not vim.api.nvim_buf_is_valid(bufnr) then
-          return
+        if vim.api.nvim_buf_is_valid(bufnr) then
+          vim.cmd('bdelete! ' .. bufnr)
         end
-        
-        local exit_msg = exit_code == 0 and '✓ Flutter app exited successfully' or '✗ Flutter app exited with code ' .. exit_code
-        
-        -- Try to append message to terminal buffer
-        pcall(vim.api.nvim_buf_set_option, bufnr, 'modifiable', true)
-        pcall(vim.api.nvim_buf_set_option, bufnr, 'readonly', false)
-        local line_count = vim.api.nvim_buf_line_count(bufnr)
-        pcall(vim.api.nvim_buf_set_lines, bufnr, line_count, line_count, false, {
-          '',
-          '---',
-          exit_msg,
-          'Press i then ENTER to close this window',
-        })
-        
-        -- Show persistent notification that stays until buffer closes
-        local notif_id = vim.notify(exit_msg .. ' - Press i then ENTER to close terminal', vim.log.levels.INFO, {
-          timeout = false, -- Don't auto-dismiss
-          title = 'Flutter',
-        })
-        
-        -- Set up keymap for ENTER in terminal mode to close buffer
-        pcall(vim.api.nvim_buf_set_keymap, bufnr, 't', '<CR>', '', {
-          callback = function()
-            if vim.api.nvim_buf_is_valid(bufnr) then
-              vim.cmd('bdelete! ' .. bufnr)
-            end
-          end,
-          noremap = true,
-          silent = true,
-        })
-        
-        -- Also dismiss notification when buffer is deleted
-        vim.api.nvim_create_autocmd('BufDelete', {
-          buffer = bufnr,
-          once = true,
-          callback = function()
-            -- Notification will auto-dismiss when buffer closes
-            -- (nvim-notify handles this automatically, no need to manually dismiss)
-          end,
-        })
       end)
     end,
   })
