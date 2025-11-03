@@ -441,22 +441,22 @@ local function get_cheatsheet_data()
             { category = 'Tab', key = ':tabnew', desc = 'New tab (command)' },
 
             -- ============================================================
-            -- SEARCH (TELESCOPE)
+            -- TELESCOPE SEARCH
             -- ============================================================
-            { category = 'Search', key = '<Space>sh', desc = 'Help' },
-            { category = 'Search', key = '<Space>sk', desc = 'Keymaps' },
-            { category = 'Search', key = '<Space>sf', desc = 'Files' },
-            { category = 'Search', key = '<Space>ss', desc = 'Select Telescope' },
-            { category = 'Search', key = '<Space>sw', desc = 'Current word' },
-            { category = 'Search', key = '<Space>sg', desc = 'Grep' },
-            { category = 'Search', key = '<Space>sd', desc = 'Diagnostics' },
-            { category = 'Search', key = '<Space>sr', desc = 'Resume' },
-            { category = 'Search', key = '<Space>s.', desc = 'Recent files' },
-            { category = 'Search', key = '<Space>s/', desc = 'In open files' },
-            { category = 'Search', key = '<Space>sn', desc = 'Neovim config' },
-            { category = 'Search', key = '<Space>sc', desc = 'Cheatsheet (this!)' },
-            { category = 'Search', key = '<Space>sK', desc = 'All keymaps (which-key)' },
-            { category = 'Search', key = '<Space>/', desc = 'Fuzzy find in buffer' },
+            { category = 'Telescope: Search', key = '<Space>sh', desc = 'Help' },
+            { category = 'Telescope: Search', key = '<Space>sk', desc = 'Keymaps' },
+            { category = 'Telescope: Search', key = '<Space>sf', desc = 'Files' },
+            { category = 'Telescope: Search', key = '<Space>ss', desc = 'Select Telescope' },
+            { category = 'Telescope: Search', key = '<Space>sw', desc = 'Current word' },
+            { category = 'Telescope: Search', key = '<Space>sg', desc = 'Grep' },
+            { category = 'Telescope: Search', key = '<Space>sd', desc = 'Diagnostics' },
+            { category = 'Telescope: Search', key = '<Space>sr', desc = 'Resume' },
+            { category = 'Telescope: Search', key = '<Space>s.', desc = 'Recent files' },
+            { category = 'Telescope: Search', key = '<Space>s/', desc = 'In open files' },
+            { category = 'Telescope: Search', key = '<Space>sn', desc = 'Neovim config' },
+            { category = 'Telescope: Search', key = '<Space>sc', desc = 'Cheatsheet (this!)' },
+            { category = 'Telescope: Search', key = '<Space>sK', desc = 'All keymaps (which-key)' },
+            { category = 'Telescope: Search', key = '<Space>/', desc = 'Fuzzy find in buffer' },
 
             -- ============================================================
             -- SESSION (Auto-saves on exit, manual restore)
@@ -1112,6 +1112,7 @@ return {
               sorter = conf.generic_sorter {},
               previewer = previewers.new_buffer_previewer {
                 title = 'Details',
+                keep_last_buf = false,
                 define_preview = function(self, entry)
                   local lines = {
                     '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
@@ -1168,6 +1169,11 @@ return {
 
           -- Forward declaration for recursive call
           local open_category_browser
+          
+          -- Cache for display list (built once per session for performance)
+          local display_list_cache = nil
+          local categories_set_cache = nil
+          local category_counts_cache = nil
 
           -- Define comprehensive 3-level hierarchical category groups
           local category_groups = {
@@ -1269,7 +1275,7 @@ return {
               subgroups = {
                 {
                   name = 'Search Tools',
-                  categories = {'Search', 'Telescope'}
+                  categories = {'Telescope: Search', 'Telescope'}
                 },
                 {
                   name = 'Quickfix & Location Lists',
@@ -1337,17 +1343,26 @@ return {
             }
           }
 
-          -- Extract unique categories from cheatsheet
-          local categories_set = {}
-          local category_counts = {}
-          for _, item in ipairs(cheatsheet) do
-            categories_set[item.category] = true
-            category_counts[item.category] = (category_counts[item.category] or 0) + 1
-          end
+          -- Extract unique categories from cheatsheet and build display list (cached)
+          local categories_set, category_counts, display_list
+          
+          if display_list_cache then
+            -- Use cached values
+            categories_set = categories_set_cache
+            category_counts = category_counts_cache
+            display_list = display_list_cache
+          else
+            -- Build from scratch and cache
+            categories_set = {}
+            category_counts = {}
+            for _, item in ipairs(cheatsheet) do
+              categories_set[item.category] = true
+              category_counts[item.category] = (category_counts[item.category] or 0) + 1
+            end
 
-          -- Build hierarchical 3-level display list
-          local display_list = {}
-          for _, group in ipairs(category_groups) do
+            -- Build hierarchical 3-level display list
+            display_list = {}
+            for _, group in ipairs(category_groups) do
             local group_count = 0
             local group_has_items = false
             
@@ -1464,6 +1479,12 @@ return {
               })
             end
           end
+          
+            -- Cache the results for future calls
+            display_list_cache = display_list
+            categories_set_cache = categories_set
+            category_counts_cache = category_counts
+          end
 
           -- Function to open category browser (allows recursive call)
           open_category_browser = function()
@@ -1491,6 +1512,14 @@ return {
               },
               previewer = previewers.new_buffer_previewer {
                 title = 'Preview',
+                -- Don't keep preview buffers around - clean up immediately
+                keep_last_buf = false,
+                teardown = function(self)
+                  -- Force cleanup of preview buffer
+                  if self.state and self.state.bufnr and vim.api.nvim_buf_is_valid(self.state.bufnr) then
+                    pcall(vim.api.nvim_buf_delete, self.state.bufnr, { force = true })
+                  end
+                end,
                 define_preview = function(self, entry)
                   local item = entry.value
                   local lines = {}
@@ -1713,6 +1742,7 @@ return {
                       sorter = conf.generic_sorter {},
                       previewer = previewers.new_buffer_previewer {
                         title = 'Details (Ctrl-b: Back)',
+                        keep_last_buf = false,
                         define_preview = function(self, entry)
                           local lines = {
                             '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',

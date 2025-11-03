@@ -143,6 +143,14 @@ vim.api.nvim_create_autocmd('BufReadPost', {
 
 -- Close floating windows with Escape from anywhere
 vim.keymap.set('n', '<Esc>', function()
+  -- Check if we're in Telescope (prompt buffer) - close it directly
+  local buftype = vim.bo.buftype
+  if buftype == 'prompt' then
+    -- Close Telescope directly without feeding keys
+    local ok = pcall(require('telescope.actions').close, vim.api.nvim_get_current_buf())
+    if ok then return end
+  end
+  
   -- Get current window and check if it's floating
   local current_win = vim.api.nvim_get_current_win()
   local current_config = vim.api.nvim_win_get_config(current_win)
