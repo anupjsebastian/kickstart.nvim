@@ -581,13 +581,13 @@ local function get_cheatsheet_data()
             { category = 'Git', key = '[c or [h', desc = 'Previous git change/hunk (gitsigns)' },
             
             -- ============================================================
-            -- GIT (SNACKS)
+            -- GITHUB (SNACKS)
             -- ============================================================
-            { category = 'Git: Snacks', key = '<Space>gb', desc = 'Git browse (open in web)' },
-            { category = 'Git: Snacks', key = '<Space>gB', desc = 'Git blame line' },
-            { category = 'Git: Snacks', key = '<Space>gH', desc = 'GitHub CLI' },
-            { category = 'Git: Snacks', key = '<Space>gI', desc = 'GitHub issues' },
-            { category = 'Git: Snacks', key = '<Space>gP', desc = 'GitHub PRs' },
+            { category = 'GitHub', key = '<Space>gb', desc = 'Git browse (open in web)' },
+            { category = 'GitHub', key = '<Space>gB', desc = 'Git blame line' },
+            { category = 'GitHub', key = '<Space>gH', desc = 'GitHub CLI' },
+            { category = 'GitHub', key = '<Space>gI', desc = 'GitHub issues' },
+            { category = 'GitHub', key = '<Space>gP', desc = 'GitHub PRs' },
 
             -- ============================================================
             -- LSP (ALL LANGUAGES)
@@ -725,28 +725,28 @@ local function get_cheatsheet_data()
             { category = 'Python', key = '<Space>lpl', desc = 'Lint and fix (ruff check --fix)' },
 
             -- ============================================================
-            -- SVELTE/JS/TS (BUFFER-LOCAL: LSP & FORMATTING)
+            -- JAVASCRIPT/TYPESCRIPT (BUFFER-LOCAL: LSP & FORMATTING)
             -- ============================================================
-            { category = 'Svelte/JS/TS', key = '<Space>lsf', desc = 'Format with prettier (Svelte only)' },
-            { category = 'Svelte/JS/TS', key = '<Space>lsl', desc = 'Restart Svelte LSP (Svelte only)' },
-            { category = 'Svelte/JS/TS', key = '<Space>lso', desc = 'Open component in split (Svelte only)' },
-            { category = 'Svelte/JS/TS', key = 'Ctrl-e,', desc = 'Expand Emmet abbreviation' },
+            { category = 'JavaScript/TypeScript', key = '<Space>lsf', desc = 'Format with prettier (Svelte only)' },
+            { category = 'JavaScript/TypeScript', key = '<Space>lsl', desc = 'Restart Svelte LSP (Svelte only)' },
+            { category = 'JavaScript/TypeScript', key = '<Space>lso', desc = 'Open component in split (Svelte only)' },
+            { category = 'JavaScript/TypeScript', key = 'Ctrl-e,', desc = 'Expand Emmet abbreviation' },
 
             -- ============================================================
-            -- WEB DEV WORKFLOW (GLOBAL: SVELTE/JS/TS)
+            -- JAVASCRIPT/TYPESCRIPT WORKFLOW (GLOBAL: SVELTE/JS/TS)
             -- ============================================================
-            { category = 'Web Dev: Workflow', key = '<Space>lsr', desc = 'Run dev server (bun run dev)' },
-            { category = 'Web Dev: Workflow', key = '<Space>lsb', desc = 'Build project (bun run build)' },
-            { category = 'Web Dev: Workflow', key = '<Space>lsp', desc = 'Preview build (bun run preview)' },
-            { category = 'Web Dev: Workflow', key = '<Space>lsc', desc = 'Type check (bun run check)' },
-            { category = 'Web Dev: Workflow', key = '<Space>lse', desc = 'Lint (bun run lint)' },
-            { category = 'Web Dev: Workflow', key = '<Space>lsT', desc = 'Run tests (bun test)' },
-            { category = 'Web Dev: Workflow', key = '<Space>lsi', desc = 'Install deps (bun install)' },
-            { category = 'Web Dev: Workflow', key = '<Space>lsa', desc = 'Add package (bun add + prompt)' },
-            { category = 'Web Dev: Workflow', key = '<Space>lsA', desc = 'Add dev package (bun add -d + prompt)' },
-            { category = 'Web Dev: Workflow', key = '<Space>lsx', desc = 'Remove package (bun remove + prompt)' },
-            { category = 'Web Dev: Workflow', key = '<Space>lsu', desc = 'Update deps (bun update)' },
-            { category = 'Web Dev: Workflow', key = '<Space>lst', desc = 'Restart TypeScript LSP' },
+            { category = 'JavaScript/TypeScript', key = '<Space>lsr', desc = 'Run dev server (bun run dev)' },
+            { category = 'JavaScript/TypeScript', key = '<Space>lsb', desc = 'Build project (bun run build)' },
+            { category = 'JavaScript/TypeScript', key = '<Space>lsp', desc = 'Preview build (bun run preview)' },
+            { category = 'JavaScript/TypeScript', key = '<Space>lsc', desc = 'Type check (bun run check)' },
+            { category = 'JavaScript/TypeScript', key = '<Space>lse', desc = 'Lint (bun run lint)' },
+            { category = 'JavaScript/TypeScript', key = '<Space>lsT', desc = 'Run tests (bun test)' },
+            { category = 'JavaScript/TypeScript', key = '<Space>lsi', desc = 'Install deps (bun install)' },
+            { category = 'JavaScript/TypeScript', key = '<Space>lsa', desc = 'Add package (bun add + prompt)' },
+            { category = 'JavaScript/TypeScript', key = '<Space>lsA', desc = 'Add dev package (bun add -d + prompt)' },
+            { category = 'JavaScript/TypeScript', key = '<Space>lsx', desc = 'Remove package (bun remove + prompt)' },
+            { category = 'JavaScript/TypeScript', key = '<Space>lsu', desc = 'Update deps (bun update)' },
+            { category = 'JavaScript/TypeScript', key = '<Space>lst', desc = 'Restart TypeScript LSP' },
 
             -- ============================================================
             -- HTML/CSS (GLOBAL)
@@ -812,30 +812,30 @@ local function get_cheatsheet_data()
             -- SNACKS.NVIM (QOL FEATURES)
             -- ============================================================
             -- Dashboard (startup screen)
-            { category = 'Snacks: Dashboard', key = 'f', desc = 'Find File (dashboard)' },
-            { category = 'Snacks: Dashboard', key = 'n', desc = 'New File (dashboard)' },
-            { category = 'Snacks: Dashboard', key = 'g', desc = 'Find Text (dashboard)' },
-            { category = 'Snacks: Dashboard', key = 'r', desc = 'Recent Files (dashboard)' },
-            { category = 'Snacks: Dashboard', key = 'c', desc = 'Config (dashboard)' },
-            { category = 'Snacks: Dashboard', key = 's', desc = 'Restore Session (dashboard)' },
-            { category = 'Snacks: Dashboard', key = 'l', desc = 'Lazy (dashboard)' },
-            { category = 'Snacks: Dashboard', key = 'q', desc = 'Quit (dashboard)' },
+            { category = 'Dashboard', key = 'f', desc = 'Find File (dashboard)' },
+            { category = 'Dashboard', key = 'n', desc = 'New File (dashboard)' },
+            { category = 'Dashboard', key = 'g', desc = 'Find Text (dashboard)' },
+            { category = 'Dashboard', key = 'r', desc = 'Recent Files (dashboard)' },
+            { category = 'Dashboard', key = 'c', desc = 'Config (dashboard)' },
+            { category = 'Dashboard', key = 's', desc = 'Restore Session (dashboard)' },
+            { category = 'Dashboard', key = 'l', desc = 'Lazy (dashboard)' },
+            { category = 'Dashboard', key = 'q', desc = 'Quit (dashboard)' },
             
             -- Buffers
-            { category = 'Snacks: Buffers', key = '<Space>bd', desc = 'Delete buffer (smart)' },
-            { category = 'Snacks: Buffers', key = '<Space>bo', desc = 'Delete other buffers' },
+            { category = 'Buffer', key = '<Space>bd', desc = 'Delete buffer (smart)' },
+            { category = 'Buffer', key = '<Space>bo', desc = 'Delete other buffers' },
             
             -- Files
-            { category = 'Snacks: Files', key = '<Space>cR', desc = 'Rename file (LSP-aware)' },
+            { category = 'File Operations', key = '<Space>cR', desc = 'Rename file (LSP-aware)' },
             
             -- Scratch buffers
-            { category = 'Snacks: Scratch', key = '<Space>bS', desc = 'Toggle scratch buffer' },
-            { category = 'Snacks: Scratch', key = '<Space>bs', desc = 'Select scratch buffer' },
-            { category = 'Snacks: Scratch', key = 'Enter (in scratch)', desc = 'Execute Lua line' },
+            { category = 'Scratch Buffers', key = '<Space>bS', desc = 'Toggle scratch buffer' },
+            { category = 'Scratch Buffers', key = '<Space>bs', desc = 'Select scratch buffer' },
+            { category = 'Scratch Buffers', key = 'Enter (in scratch)', desc = 'Execute Lua line' },
             
             -- Word references
-            { category = 'Snacks: Words', key = ']]', desc = 'Jump to next word occurrence' },
-            { category = 'Snacks: Words', key = '[[', desc = 'Jump to previous word occurrence' },
+            { category = 'Word Navigation', key = ']]', desc = 'Jump to next word occurrence' },
+            { category = 'Word Navigation', key = '[[', desc = 'Jump to previous word occurrence' },
             
             -- ============================================================
             -- BRACKET NAVIGATION OVERVIEW
@@ -918,22 +918,22 @@ local function get_cheatsheet_data()
             { category = 'Navigation: Spelling', key = '[s', desc = 'Previous misspelled word (spell)' },
             
             -- Git
-            { category = 'Snacks: Git', key = '<Space>gb', desc = 'Git browse (open in web)' },
-            { category = 'Snacks: Git', key = '<Space>gB', desc = 'Git blame line' },
-            { category = 'Snacks: Git', key = '<Space>gH', desc = 'GitHub' },
-            { category = 'Snacks: Git', key = '<Space>gI', desc = 'GitHub issues' },
-            { category = 'Snacks: Git', key = '<Space>gP', desc = 'GitHub PRs' },
+            { category = 'GitHub', key = '<Space>gb', desc = 'Git browse (open in web)' },
+            { category = 'GitHub', key = '<Space>gB', desc = 'Git blame line' },
+            { category = 'GitHub', key = '<Space>gH', desc = 'GitHub' },
+            { category = 'GitHub', key = '<Space>gI', desc = 'GitHub issues' },
+            { category = 'GitHub', key = '<Space>gP', desc = 'GitHub PRs' },
             
             -- Notifications
-            { category = 'Snacks: Notify', key = '<Space>un', desc = 'Dismiss all notifications' },
-            { category = 'Snacks: Notify', key = '<Space>uh', desc = 'Notification history' },
+            { category = 'Notifications', key = '<Space>un', desc = 'Dismiss all notifications' },
+            { category = 'Notifications', key = '<Space>uh', desc = 'Notification history' },
             
             -- Toggles
-            { category = 'Snacks: Toggle', key = '<Space>td', desc = 'Toggle diagnostics' },
-            { category = 'Snacks: Toggle', key = '<Space>tl', desc = 'Toggle line numbers' },
-            { category = 'Snacks: Toggle', key = '<Space>ts', desc = 'Toggle smooth scroll' },
-            { category = 'Snacks: Toggle', key = '<Space>tw', desc = 'Toggle word highlights' },
-            { category = 'Snacks: Toggle', key = '<Space>ti', desc = 'Toggle indent guides' },
+            { category = 'Toggles', key = '<Space>td', desc = 'Toggle diagnostics' },
+            { category = 'Toggles', key = '<Space>tl', desc = 'Toggle line numbers' },
+            { category = 'Toggles', key = '<Space>ts', desc = 'Toggle smooth scroll' },
+            { category = 'Toggles', key = '<Space>tw', desc = 'Toggle word highlights' },
+            { category = 'Toggles', key = '<Space>ti', desc = 'Toggle indent guides' },
 
             -- ============================================================
             -- CODE ACTIONS
@@ -1024,6 +1024,70 @@ return {
           local conf = require('telescope.config').values
           local actions = require 'telescope.actions'
           local action_state = require 'telescope.actions.state'
+          local entry_display = require 'telescope.pickers.entry_display'
+          local previewers = require 'telescope.previewers'
+
+          -- Calculate dynamic column widths with min/max constraints
+          local function calculate_column_widths(data)
+            local cat_max = 0
+            local key_max = 0
+            
+            for _, item in ipairs(data) do
+              cat_max = math.max(cat_max, vim.fn.strdisplaywidth(item.category))
+              key_max = math.max(key_max, vim.fn.strdisplaywidth(item.key))
+            end
+            
+            -- Apply min/max constraints (increased max for wider screens)
+            local cat_width = math.min(math.max(cat_max + 2, 20), 45)  -- increased from 35 to 45
+            local key_width = math.min(math.max(key_max + 2, 18), 40)  -- increased from 30 to 40
+            
+            return cat_width, key_width
+          end
+          
+          local cat_width, key_width = calculate_column_widths(cheatsheet)
+          
+          -- Create displayer for formatted columns with dynamic widths
+          local displayer = entry_display.create {
+            separator = ' │ ',
+            items = {
+              { width = cat_width }, -- category (dynamic)
+              { width = key_width }, -- key (dynamic)
+              { remaining = true }, -- description (takes remaining space)
+            },
+          }
+
+          -- Calculate smart window size based on available space
+          local function get_smart_dimensions()
+            local ui = vim.api.nvim_list_uis()[1]
+            if not ui then
+              return 0.85, 0.85
+            end
+            
+            local screen_width = ui.width
+            local screen_height = ui.height
+            
+            -- Use more space on wider screens for better readability
+            local width_ratio
+            if screen_width > 200 then
+              width_ratio = 0.90  -- use 90% of screen width on wide screens
+            elseif screen_width > 160 then
+              width_ratio = 0.85
+            else
+              width_ratio = 0.95 -- narrower screens get more space
+            end
+            
+            -- For tall screens (>40 rows), don't take full height
+            local height_ratio
+            if screen_height > 50 then
+              height_ratio = math.min(40 / screen_height, 0.85)
+            else
+              height_ratio = 0.90
+            end
+            
+            return width_ratio, height_ratio
+          end
+          
+          local width_ratio, height_ratio = get_smart_dimensions()
 
           -- Create picker
           pickers
@@ -1034,12 +1098,40 @@ return {
                 entry_maker = function(entry)
                   return {
                     value = entry,
-                    display = string.format('%-20s %-25s %s', entry.category, entry.key, entry.desc),
+                    display = function()
+                      return displayer {
+                        entry.category,
+                        entry.key,
+                        entry.desc,
+                      }
+                    end,
                     ordinal = entry.category .. ' ' .. entry.key .. ' ' .. entry.desc,
                   }
                 end,
               },
               sorter = conf.generic_sorter {},
+              previewer = previewers.new_buffer_previewer {
+                title = 'Details',
+                define_preview = function(self, entry)
+                  local lines = {
+                    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+                    '  Category: ' .. entry.value.category,
+                    '  Keymap:   ' .. entry.value.key,
+                    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+                    '',
+                    'Description:',
+                    '  ' .. entry.value.desc,
+                  }
+                  vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, lines)
+                  vim.api.nvim_buf_set_option(self.state.bufnr, 'filetype', 'markdown')
+                end,
+              },
+              layout_strategy = 'horizontal',
+              layout_config = {
+                width = width_ratio,
+                height = height_ratio,
+                preview_width = 0.50,
+              },
               attach_mappings = function(prompt_bufnr, map)
                 actions.select_default:replace(function()
                   actions.close(prompt_bufnr)
@@ -1071,55 +1163,595 @@ return {
           local conf = require('telescope.config').values
           local actions = require 'telescope.actions'
           local action_state = require 'telescope.actions.state'
+          local entry_display = require 'telescope.pickers.entry_display'
+          local previewers = require 'telescope.previewers'
 
-          -- Extract unique categories from the shared cheatsheet
+          -- Forward declaration for recursive call
+          local open_category_browser
+
+          -- Define comprehensive 3-level hierarchical category groups
+          local category_groups = {
+            {
+              name = '📝 Vim Essentials',
+              icon = '📝',
+              subgroups = {
+                {
+                  name = 'Core Editing',
+                  categories = {'Vim: Motion', 'Vim: Editing', 'Vim: Visual', 'Text Objects'}
+                },
+                {
+                  name = 'Advanced Editing',
+                  categories = {'Vim: Comments', 'Vim: Lines', 'Vim: Macros', 'Vim: Registers', 'Vim: Marks', 'Surround'}
+                },
+                {
+                  name = 'Search & Replace',
+                  categories = {'Vim: Search', 'Vim: Replace'}
+                },
+                {
+                  name = 'File Management',
+                  categories = {'Vim: Files', 'Vim: Buffers', 'Vim: Windows', 'Vim: Tabs', 'Vim: Folding', 'Vim: Spell', 'Vim: Command', 'Vim: Jumps'}
+                }
+              }
+            },
+            {
+              name = '� Languages & Frameworks',
+              icon = '�',
+              subgroups = {
+                {
+                  name = 'Python',
+                  categories = {'Python'}
+                },
+                {
+                  name = 'Rust',
+                  categories = {'Rust', 'Rust: Cargo', 'Rust: Crates'}
+                },
+                {
+                  name = 'Flutter/Dart',
+                  categories = {'Flutter'}
+                },
+                {
+                  name = 'JavaScript/TypeScript',
+                  categories = {'JavaScript/TypeScript', 'Svelte/JS/TS', 'Web Dev: Workflow'}
+                },
+                {
+                  name = 'HTML/CSS',
+                  categories = {'HTML/CSS', 'Emmet', 'Emmet: Patterns'}
+                }
+              }
+            },
+            {
+              name = '🔧 LSP & Development',
+              icon = '🔧',
+              subgroups = {
+                {
+                  name = 'LSP Operations',
+                  categories = {'LSP'}
+                },
+                {
+                  name = 'Code Actions',
+                  categories = {'Code'}
+                },
+                {
+                  name = 'Debugging',
+                  categories = {'Debug'}
+                },
+                {
+                  name = 'Diagnostics',
+                  categories = {'Diagnostics'}
+                }
+              }
+            },
+            {
+              name = '�️  File & Project',
+              icon = '�️',
+              subgroups = {
+                {
+                  name = 'Buffer Operations',
+                  categories = {'Buffer: Open', 'Buffer: Switch', 'Buffer: Close', 'Buffer: Info', 'Buffer'}
+                },
+                {
+                  name = 'File Explorer',
+                  categories = {'Neo-tree'}
+                },
+                {
+                  name = 'Window & Tab Management',
+                  categories = {'Window', 'Tab'}
+                },
+                {
+                  name = 'Sessions',
+                  categories = {'Session'}
+                }
+              }
+            },
+            {
+              name = '🔍 Search & Navigation',
+              icon = '�',
+              subgroups = {
+                {
+                  name = 'Search Tools',
+                  categories = {'Search', 'Telescope'}
+                },
+                {
+                  name = 'Quickfix & Location Lists',
+                  categories = {'Quickfix', 'Location List'}
+                },
+                {
+                  name = 'Bracket Navigation',
+                  categories = {
+                    'Navigation: Args', 'Navigation: Buffers', 'Navigation: Location List',
+                    'Navigation: Quickfix', 'Navigation: Tags', 'Navigation: Git',
+                    'Navigation: Diagnostics', 'Navigation: Spelling'
+                  }
+                }
+              }
+            },
+            {
+              name = '� Workflows',
+              icon = '�',
+              subgroups = {
+                {
+                  name = 'Multi-File Operations',
+                  categories = {'Workflow: Multi-File Search', 'Workflow: Multi-File Replace', 'Workflow: Multi-Edit'}
+                },
+                {
+                  name = 'Code Operations',
+                  categories = {'Workflow: Navigate', 'Workflow: Refactor', 'Workflow: Git'}
+                }
+              }
+            },
+            {
+              name = '🎨 UI & Interface',
+              icon = '🎨',
+              subgroups = {
+                {
+                  name = 'UI Controls',
+                  categories = {'UI', 'Core: Files', 'Core: Quit', 'Core: Terminal'}
+                },
+                {
+                  name = 'Toggles & Settings',
+                  categories = {'Toggle', 'Toggles'}
+                },
+                {
+                  name = 'Notifications',
+                  categories = {'Notifications'}
+                }
+              }
+            },
+            {
+              name = '🛠️  Tools & Plugins',
+              icon = '🛠️',
+              subgroups = {
+                {
+                  name = 'Git & GitHub',
+                  categories = {'Git', 'GitHub', 'Git: Snacks'}
+                },
+                {
+                  name = 'AI Tools',
+                  categories = {'Copilot'}
+                },
+                {
+                  name = 'Utilities',
+                  categories = {'Dashboard', 'File Operations', 'Scratch Buffers', 'Word Navigation'}
+                }
+              }
+            }
+          }
+
+          -- Extract unique categories from cheatsheet
           local categories_set = {}
+          local category_counts = {}
           for _, item in ipairs(cheatsheet) do
             categories_set[item.category] = true
+            category_counts[item.category] = (category_counts[item.category] or 0) + 1
+          end
+
+          -- Build hierarchical 3-level display list
+          local display_list = {}
+          for _, group in ipairs(category_groups) do
+            local group_count = 0
+            local group_has_items = false
+            
+            -- Calculate total count for this group
+            for _, subgroup in ipairs(group.subgroups or {}) do
+              for _, cat in ipairs(subgroup.categories) do
+                if categories_set[cat] then
+                  group_count = group_count + (category_counts[cat] or 0)
+                  group_has_items = true
+                end
+              end
+            end
+            
+            -- Add group header if it has items
+            if group_has_items then
+              table.insert(display_list, {
+                type = 'group',
+                name = group.name,
+                icon = group.icon,
+                count = group_count,
+                display_name = string.format('%s  [%d]', group.name, group_count),
+                subgroups = group.subgroups  -- Pass subgroups for selection
+              })
+              
+              -- Add subgroups and their categories
+              for _, subgroup in ipairs(group.subgroups or {}) do
+                local subgroup_count = 0
+                local subgroup_categories = {}
+                
+                -- Count items in this subgroup
+                for _, cat in ipairs(subgroup.categories) do
+                  if categories_set[cat] then
+                    subgroup_count = subgroup_count + (category_counts[cat] or 0)
+                    table.insert(subgroup_categories, cat)
+                  end
+                end
+                
+                -- Add subgroup header if it has categories
+                if subgroup_count > 0 then
+                  table.insert(display_list, {
+                    type = 'subgroup',
+                    name = subgroup.name,
+                    count = subgroup_count,
+                    display_name = string.format('  ├─ %s  [%d]', subgroup.name, subgroup_count),
+                    parent_group = group.name,
+                    categories = subgroup_categories  -- Pass categories for selection
+                  })
+                  
+                  -- Add categories in this subgroup
+                  for _, cat in ipairs(subgroup_categories) do
+                    table.insert(display_list, {
+                      type = 'category',
+                      name = cat,
+                      count = category_counts[cat] or 0,
+                      display_name = string.format('    │  ├─ %-30s [%d]', cat, category_counts[cat] or 0),
+                      parent_subgroup = subgroup.name,
+                      parent_group = group.name
+                    })
+                  end
+                end
+              end
+              
+              -- Add spacing between groups
+              table.insert(display_list, {
+                type = 'separator',
+                display_name = ''
+              })
+            end
           end
           
-          local categories = {}
+          -- Add any uncategorized items
+          local uncategorized = {}
           for cat in pairs(categories_set) do
-            table.insert(categories, cat)
+            local found = false
+            for _, group in ipairs(category_groups) do
+              for _, subgroup in ipairs(group.subgroups or {}) do
+                for _, group_cat in ipairs(subgroup.categories) do
+                  if group_cat == cat then
+                    found = true
+                    break
+                  end
+                end
+                if found then break end
+              end
+              if found then break end
+            end
+            if not found then
+              table.insert(uncategorized, cat)
+            end
           end
-          table.sort(categories)
+          
+          if #uncategorized > 0 then
+            table.sort(uncategorized)
+            local uncategorized_count = 0
+            for _, cat in ipairs(uncategorized) do
+              uncategorized_count = uncategorized_count + (category_counts[cat] or 0)
+            end
+            
+            table.insert(display_list, {
+              type = 'group',
+              name = '📦 Other',
+              icon = '📦',
+              count = uncategorized_count,
+              display_name = string.format('📦 Other  [%d]', uncategorized_count)
+            })
+            
+            for _, cat in ipairs(uncategorized) do
+              table.insert(display_list, {
+                type = 'category',
+                name = cat,
+                count = category_counts[cat] or 0,
+                display_name = string.format('  ├─ %-35s [%d]', cat, category_counts[cat] or 0),
+                parent_group = '📦 Other'
+              })
+            end
+          end
 
-          -- Create picker for categories
-          pickers
-            .new({}, {
-              prompt_title = 'Cheatsheet Categories',
-              finder = finders.new_table {
-                results = categories,
+          -- Function to open category browser (allows recursive call)
+          open_category_browser = function()
+            -- Create picker for hierarchical categories
+            pickers
+              .new({}, {
+                prompt_title = '📚 Cheatsheet Categories (Organized)',
+                finder = finders.new_table {
+                  results = display_list,
+                  entry_maker = function(entry)
+                    return {
+                      value = entry,
+                      display = entry.display_name,
+                      ordinal = entry.display_name,
+                    }
+                  end,
+                },
+                sorter = conf.generic_sorter {},
+              sorting_strategy = 'ascending', -- Display top to bottom
+              layout_strategy = 'horizontal',
+              layout_config = {
+                width = 0.90,
+                height = 0.85,
+                preview_width = 0.50,
               },
-              sorter = conf.generic_sorter {},
+              previewer = previewers.new_buffer_previewer {
+                title = 'Preview',
+                define_preview = function(self, entry)
+                  local item = entry.value
+                  local lines = {}
+                  
+                  -- Skip preview for separators
+                  if item.type == 'separator' then
+                    table.insert(lines, '')
+                    table.insert(lines, '  (Empty line for spacing)')
+                    vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, lines)
+                    return
+                  end
+                  
+                  if item.type == 'group' then
+                    -- Preview for group: show all subgroups and categories
+                    table.insert(lines, '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+                    table.insert(lines, string.format('  %s', item.name))
+                    table.insert(lines, string.format('  Total Keymaps: %d', item.count))
+                    table.insert(lines, '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+                    table.insert(lines, '')
+                    table.insert(lines, 'Press ENTER to view all keymaps in this group')
+                    table.insert(lines, '')
+                    table.insert(lines, 'Subgroups in this group:')
+                    table.insert(lines, '')
+                    
+                    -- Find all subgroups in this group
+                    for _, list_item in ipairs(display_list) do
+                      if list_item.type == 'subgroup' and list_item.parent_group == item.name then
+                        table.insert(lines, string.format('  • %-30s [%d keymaps]', list_item.name, list_item.count))
+                      end
+                    end
+                  elseif item.type == 'subgroup' then
+                    -- Preview for subgroup: show categories and sample keymaps
+                    table.insert(lines, '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+                    table.insert(lines, string.format('  Subgroup: %s', item.name))
+                    table.insert(lines, string.format('  Total Keymaps: %d', item.count))
+                    table.insert(lines, '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+                    table.insert(lines, '')
+                    table.insert(lines, 'Press ENTER to view all keymaps in this subgroup')
+                    table.insert(lines, '')
+                    table.insert(lines, 'Categories:')
+                    table.insert(lines, '')
+                    
+                    -- Show categories in this subgroup
+                    for _, list_item in ipairs(display_list) do
+                      if list_item.type == 'category' and list_item.parent_subgroup == item.name then
+                        table.insert(lines, string.format('  • %-30s [%d keymaps]', list_item.name, list_item.count))
+                      end
+                    end
+                    
+                  elseif item.type == 'category' then
+                    -- Preview for category: show sample keymaps
+                    table.insert(lines, '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+                    table.insert(lines, string.format('  Category: %s', item.name))
+                    table.insert(lines, string.format('  Keymaps: %d', item.count))
+                    table.insert(lines, '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+                    table.insert(lines, '')
+                    table.insert(lines, 'Press ENTER to view these keymaps')
+                    table.insert(lines, '')
+                    table.insert(lines, 'Sample keymaps:')
+                    table.insert(lines, '')
+                    
+                    -- Show first 10 keymaps from this category
+                    local count = 0
+                    for _, cs_item in ipairs(cheatsheet) do
+                      if cs_item.category == item.name and count < 10 then
+                        table.insert(lines, string.format('  %-25s  %s', cs_item.key, cs_item.desc))
+                        count = count + 1
+                      end
+                    end
+                    
+                    if item.count > 10 then
+                      table.insert(lines, '')
+                      table.insert(lines, string.format('  ... and %d more keymaps', item.count - 10))
+                    end
+                  end
+                  
+                  vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, lines)
+                  vim.api.nvim_buf_set_option(self.state.bufnr, 'filetype', 'markdown')
+                end,
+              },
+              layout_strategy = 'horizontal',
+              layout_config = {
+                width = 0.90,
+                height = 0.85,
+                preview_width = 0.50,
+              },
               attach_mappings = function(prompt_bufnr)
                 actions.select_default:replace(function()
                   local selection = action_state.get_selected_entry()
+                  
+                  -- Check if selection exists
+                  if not selection or not selection.value then
+                    vim.notify('No item selected', vim.log.levels.WARN)
+                    return
+                  end
+                  
+                  local item = selection.value
+                  
+                  -- Skip separators with feedback
+                  if item.type == 'separator' then
+                    vim.notify('Cannot select empty lines - choose a category or group', vim.log.levels.INFO)
+                    return
+                  end
+                  
                   actions.close(prompt_bufnr)
                   
-                  -- Filter cheatsheet by selected category
+                  -- Filter cheatsheet by selection
                   local filtered = {}
-                  for _, item in ipairs(cheatsheet) do
-                    if item.category == selection[1] then
-                      table.insert(filtered, item)
+                  if item.type == 'group' then
+                    -- Filter by all categories in this group (all subgroups)
+                    for _, cs_item in ipairs(cheatsheet) do
+                      for _, list_item in ipairs(display_list) do
+                        if list_item.type == 'category' and list_item.parent_group == item.name then
+                          if cs_item.category == list_item.name then
+                            table.insert(filtered, cs_item)
+                            break
+                          end
+                        end
+                      end
                     end
+                  elseif item.type == 'subgroup' then
+                    -- Filter by all categories in this subgroup
+                    for _, cs_item in ipairs(cheatsheet) do
+                      for _, list_item in ipairs(display_list) do
+                        if list_item.type == 'category' and list_item.parent_subgroup == item.name then
+                          if cs_item.category == list_item.name then
+                            table.insert(filtered, cs_item)
+                            break
+                          end
+                        end
+                      end
+                    end
+                  else -- item.type == 'category'
+                    -- Filter by specific category
+                    for _, cs_item in ipairs(cheatsheet) do
+                      if cs_item.category == item.name then
+                        table.insert(filtered, cs_item)
+                      end
+                    end
+                  end
+                  
+                  -- Calculate dynamic column width for filtered view
+                  local function calculate_key_width(data)
+                    local key_max = 0
+                    for _, item in ipairs(data) do
+                      key_max = math.max(key_max, vim.fn.strdisplaywidth(item.key))
+                    end
+                    return math.min(math.max(key_max + 2, 18), 32)
+                  end
+                  
+                  local key_width = calculate_key_width(filtered)
+                  
+                  -- Create displayer for filtered view with dynamic width
+                  local filtered_displayer = entry_display.create {
+                    separator = ' │ ',
+                    items = {
+                      { width = key_width }, -- key (dynamic)
+                      { remaining = true }, -- description
+                    },
+                  }
+                  
+                  -- Calculate smart window size
+                  local function get_smart_dimensions()
+                    local ui = vim.api.nvim_list_uis()[1]
+                    if not ui then
+                      return 0.85, 0.85
+                    end
+                    
+                    local screen_width = ui.width
+                    local screen_height = ui.height
+                    
+                    local width_ratio
+                    if screen_width > 200 then
+                      width_ratio = math.min(160 / screen_width, 0.85)
+                    elseif screen_width > 160 then
+                      width_ratio = 0.80
+                    else
+                      width_ratio = 0.95
+                    end
+                    
+                    local height_ratio
+                    if screen_height > 50 then
+                      height_ratio = math.min(40 / screen_height, 0.85)
+                    else
+                      height_ratio = 0.90
+                    end
+                    
+                    return width_ratio, height_ratio
+                  end
+                  
+                  local width_ratio, height_ratio = get_smart_dimensions()
+                  
+                  -- Determine title based on selection type
+                  local title
+                  if item.type == 'group' then
+                    title = string.format('%s (%d keymaps)', item.name, #filtered)
+                  else
+                    title = string.format('Cheatsheet: %s (%d keymaps)', item.name, #filtered)
                   end
                   
                   -- Open main cheatsheet picker with filtered results
                   pickers
                     .new({}, {
-                      prompt_title = 'Cheatsheet: ' .. selection[1],
+                      prompt_title = title,
                       finder = finders.new_table {
                         results = filtered,
                         entry_maker = function(entry)
                           return {
                             value = entry,
-                            display = string.format('%-20s | %s', entry.key, entry.desc),
+                            display = function()
+                              return filtered_displayer {
+                                entry.key,
+                                entry.desc,
+                              }
+                            end,
                             ordinal = entry.key .. ' ' .. entry.desc,
                           }
                         end,
                       },
                       sorter = conf.generic_sorter {},
+                      previewer = previewers.new_buffer_previewer {
+                        title = 'Details (Ctrl-b: Back)',
+                        define_preview = function(self, entry)
+                          local lines = {
+                            '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+                            '  Category: ' .. entry.value.category,
+                            '  Keymap:   ' .. entry.value.key,
+                            '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+                            '',
+                            'Description:',
+                            '  ' .. entry.value.desc,
+                            '',
+                            '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+                            '  Tip: Press Ctrl-b to go back to categories',
+                          }
+                          vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, lines)
+                          vim.api.nvim_buf_set_option(self.state.bufnr, 'filetype', 'markdown')
+                        end,
+                      },
+                      layout_strategy = 'horizontal',
+                      layout_config = {
+                        width = width_ratio,
+                        height = height_ratio,
+                        preview_width = 0.50,
+                      },
+                      attach_mappings = function(filtered_prompt_bufnr, map)
+                        -- Add Ctrl-b to go back to category browser
+                        map('i', '<C-b>', function()
+                          actions.close(filtered_prompt_bufnr)
+                          vim.schedule(function()
+                            open_category_browser()
+                          end)
+                        end)
+                        map('n', '<C-b>', function()
+                          actions.close(filtered_prompt_bufnr)
+                          vim.schedule(function()
+                            open_category_browser()
+                          end)
+                        end)
+                        return true
+                      end,
                     })
                     :find()
                 end)
@@ -1127,6 +1759,10 @@ return {
               end,
             })
             :find()
+          end -- end of open_category_browser function
+          
+          -- Open the category browser initially
+          open_category_browser()
         end,
         desc = 'Cheatsheet Categories (Browse)',
       },
