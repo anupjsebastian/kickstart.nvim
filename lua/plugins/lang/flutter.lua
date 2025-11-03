@@ -358,12 +358,14 @@ return {
         callback = function(event)
           local opts = { buffer = true, silent = true }
 
+          -- NOTE: The <leader>lf group is registered globally in editor.lua
+
           -- Flutter run - only available in Dart files
           -- WORKFLOW: 
-          --   1. First time: <leader>fd to select device (global keymap)
-          --   2. Then: <leader>fr to run (Dart only)
-          --   3. Use <leader>fh (reload), <leader>fq (quit) from anywhere
-          vim.keymap.set('n', '<leader>fr', '<cmd>FlutterRun<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Run app' }))
+          --   1. First time: <leader>lfd to select device (global keymap)
+          --   2. Then: <leader>lfr to run (Dart only)
+          --   3. Use <leader>lfh (reload), <leader>lfq (quit) from anywhere
+          vim.keymap.set('n', '<leader>lfr', '<cmd>FlutterRun<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Run app' }))
 
           -- Code Actions (Cmd+. equivalent) - wrap, remove, extract widgets, etc.
           -- Note: 'gra' is already defined globally in lua/plugins/lsp/init.lua for all languages
@@ -371,24 +373,19 @@ return {
           vim.keymap.set('v', '<leader>.', vim.lsp.buf.code_action, vim.tbl_extend('force', opts, { desc = 'Flutter: Code actions (Cmd+.)' }))
 
           -- Attach/Detach - Dart specific
-          vim.keymap.set('n', '<leader>fa', '<cmd>FlutterAttach<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Attach to app' }))
-          vim.keymap.set('n', '<leader>fD', '<cmd>FlutterDetach<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Detach from app' }))
+          vim.keymap.set('n', '<leader>lfa', '<cmd>FlutterAttach<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Attach to app' }))
+          vim.keymap.set('n', '<leader>lfD', '<cmd>FlutterDetach<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Detach from app' }))
           
           -- LSP restart - Dart specific
-          vim.keymap.set('n', '<leader>fl', '<cmd>FlutterLspRestart<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Restart LSP' }))
+          vim.keymap.set('n', '<leader>lfl', '<cmd>FlutterLspRestart<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Restart LSP' }))
           
           -- Copy profiler URL - Dart specific
           vim.keymap.set(
             'n',
-            '<leader>fc',
+            '<leader>lfc',
             '<cmd>FlutterCopyProfilerUrl<cr>',
             vim.tbl_extend('force', opts, { desc = 'Flutter: Copy profiler URL' })
           )
-
-          -- Register which-key group for Flutter
-          require('which-key').add {
-            { '<leader>f', group = ' flutter', mode = 'n', buffer = event.buf },
-          }
         end,
       })
     end,

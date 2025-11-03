@@ -74,7 +74,9 @@ return {
   -- ========================================================================
   -- PYTHON-SPECIFIC KEYMAPS
   -- ========================================================================
-  -- Python-specific keymaps that are available only in Python files
+  -- Python-specific keymaps that are available globally (not buffer-local)
+  -- This allows access to Python commands from logs, debuggers, etc.
+  -- NOTE: The <leader>lp group is registered globally in editor.lua
   -- ========================================================================
   {
     'nvim-lua/plenary.nvim', -- Dummy dependency to create a lazy spec
@@ -85,24 +87,62 @@ return {
         callback = function(event)
           local bufnr = event.buf
 
-          -- Register which-key group for Python
-          require('which-key').add {
-            { '<leader>p', group = ' python', buffer = bufnr },
-          }
-
-          -- Run current file
-          vim.keymap.set('n', '<leader>pr', function()
+          -- ====================================================================
+          -- RUNNING & EXECUTION
+          -- ====================================================================
+          -- Run current file with python
+          vim.keymap.set('n', '<leader>lpr', function()
             vim.cmd('!python3 %')
           end, { buffer = bufnr, desc = 'Run file' })
 
+          -- Run with uv
+          vim.keymap.set('n', '<leader>lpR', function()
+            vim.cmd('!uv run %')
+          end, { buffer = bufnr, desc = 'Run file (uv run)' })
+
           -- Run with arguments
-          vim.keymap.set('n', '<leader>pR', function()
+          vim.keymap.set('n', '<leader>lpx', function()
             local args = vim.fn.input 'Arguments: '
             vim.cmd('!python3 % ' .. args)
           end, { buffer = bufnr, desc = 'Run with args' })
 
-          -- Select virtual environment (activate .venv)
-          vim.keymap.set('n', '<leader>pe', function()
+          -- ====================================================================
+          -- PACKAGE MANAGEMENT (UV)
+          -- ====================================================================
+          -- Add package
+          vim.keymap.set('n', '<leader>lpa', function()
+            local pkg = vim.fn.input 'Package to add: '
+            if pkg ~= '' then
+              vim.cmd('!uv add ' .. pkg)
+            end
+          end, { buffer = bufnr, desc = 'Add package (uv)' })
+
+          -- Add dev package
+          vim.keymap.set('n', '<leader>lpA', function()
+            local pkg = vim.fn.input 'Dev package to add: '
+            if pkg ~= '' then
+              vim.cmd('!uv add --dev ' .. pkg)
+            end
+          end, { buffer = bufnr, desc = 'Add dev package (uv)' })
+
+          -- Remove package
+          vim.keymap.set('n', '<leader>lpd', function()
+            local pkg = vim.fn.input 'Package to remove: '
+            if pkg ~= '' then
+              vim.cmd('!uv remove ' .. pkg)
+            end
+          end, { buffer = bufnr, desc = 'Remove package (uv)' })
+
+          -- Update/sync packages
+          vim.keymap.set('n', '<leader>lpu', function()
+            vim.cmd('!uv sync')
+          end, { buffer = bufnr, desc = 'Sync packages (uv)' })
+
+          -- ====================================================================
+          -- VIRTUAL ENVIRONMENT
+          -- ====================================================================
+          -- Select/activate virtual environment
+          vim.keymap.set('n', '<leader>lpe', function()
             local venv = vim.fn.getcwd() .. '/.venv/bin/python'
             if vim.loop.fs_stat(venv) then
               vim.env.VIRTUAL_ENV = vim.fn.getcwd() .. '/.venv'
@@ -114,18 +154,46 @@ return {
             end
           end, { buffer = bufnr, desc = 'Activate .venv' })
 
+          -- Show virtual environment info
+          vim.keymap.set('n', '<leader>lpv', function()
+            local venv = vim.env.VIRTUAL_ENV or 'No venv active'
+            local python = vim.fn.system('which python3'):gsub('\n', '')
+            vim.notify(string.format('Venv: %s\nPython: %s', venv, python), vim.log.levels.INFO)
+          end, { buffer = bufnr, desc = 'Show venv info' })
+
+          -- ====================================================================
+          -- TESTING
+          -- ====================================================================
+          -- Run all tests with pytest
+          vim.keymap.set('n', '<leader>lpt', function()
+            vim.cmd('!uv run pytest')
+          end, { buffer = bufnr, desc = 'Run tests (pytest)' })
+
+          -- Run current test file
+          vim.keymap.set('n', '<leader>lpT', function()
+            vim.cmd('!uv run pytest %')
+          end, { buffer = bufnr, desc = 'Run current test file' })
+
+          -- Run tests with coverage
+          vim.keymap.set('n', '<leader>lpc', function()
+            vim.cmd('!uv run pytest --cov')
+          end, { buffer = bufnr, desc = 'Run tests with coverage' })
+
+          -- ====================================================================
+          -- LSP & FORMATTING
+          -- ====================================================================
           -- Restart Python LSP
-          vim.keymap.set('n', '<leader>pl', function()
+          vim.keymap.set('n', '<leader>lpl', function()
             vim.cmd 'LspRestart pyright'
           end, { buffer = bufnr, desc = 'Restart LSP' })
 
           -- Import organization (via Ruff)
-          vim.keymap.set('n', '<leader>pi', function()
+          vim.keymap.set('n', '<leader>lpi', function()
             require('conform').format { formatters = { 'ruff_organize_imports' } }
           end, { buffer = bufnr, desc = 'Organize imports' })
 
           -- Format with Ruff
-          vim.keymap.set('n', '<leader>pf', function()
+          vim.keymap.set('n', '<leader>lpf', function()
             require('conform').format { formatters = { 'ruff_format' } }
           end, { buffer = bufnr, desc = 'Format code' })
         end,

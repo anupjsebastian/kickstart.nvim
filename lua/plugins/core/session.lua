@@ -55,9 +55,21 @@ return {
     auto_session_enable_last_session = false, -- Don't restore last session if not in a project
     auto_session_create_enabled = true, -- Auto-create session on first save
     
+    -- Ensure global variables are saved (for custom run commands, etc.)
+    sessionoptions = 'buffers,curdir,folds,help,tabpages,winsize,globals',
+    
     -- Hooks to run before/after session save/restore
     pre_save_cmds = {
       'Neotree close', -- Close Neo-tree before saving session
+    },
+    save_extra_cmds = {
+      -- Explicitly save custom Python run command
+      function()
+        if vim.g.python_run_command then
+          return [[lua vim.g.python_run_command = ]] .. string.format('%q', vim.g.python_run_command)
+        end
+        return ''
+      end,
     },
     post_restore_cmds = {
       'DeleteNoNameBuffers', -- Clean up unnamed buffers after session restore

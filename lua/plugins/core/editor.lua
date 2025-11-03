@@ -312,17 +312,19 @@ return {
         { '<leader>c', group = '󰘦 Code' },
         { '<leader>cq', desc = '󰁨 Toggle Diagnostic Quickfix' },
         { '<leader>d', group = '󰃤 Debug' },
-        { '<leader>f', group = '󱓞 Flutter' }, -- Only visible in Dart files
         { '<leader>g', group = '󰊢 Git' },
         { '<leader>h', group = '󰊢 Git Hunk', mode = { 'n', 'v' } },
-        { '<leader>o', group = '󰖟 Browser' }, -- Only visible in HTML/CSS/JS/TS/Svelte files
-        { '<leader>p', group = '󰌠 Python' }, -- Only visible in Python files
-        { '<leader>r', group = '󱘗 Rust' }, -- Only visible in Rust files
+        { '<leader>l', group = '󰗀 Language' }, -- Global language menu
+        { '<leader>lf', group = '󱓞 Flutter' }, -- Flutter commands (globally accessible)
+        { '<leader>lp', group = '󰌠 Python' }, -- Python commands (globally accessible)
+        { '<leader>lr', group = '󱘗 Rust' }, -- Rust commands (globally accessible)
+        { '<leader>ls', group = '󰡄 Svelte' }, -- Svelte commands (globally accessible)
+        { '<leader>lh', group = '󰖟 HTML/Browser' }, -- HTML/Browser commands (globally accessible)
+        { '<leader>o', group = '󰖟 Browser' },
         { '<leader>s', group = '󰍉 Search' },
         { '<leader>S', group = '󱂬 Session' },
         { '<leader>t', group = '󰔡 Toggle Options' },
         { '<leader>u', group = '󰙵 UI' },
-        { '<leader>v', group = '󰡄 Svelte' }, -- Only visible in Svelte files
         { '<leader>w', group = '󰖲 Window' },
         { '<leader>x', group = '󱖫 Diagnostics' },
         

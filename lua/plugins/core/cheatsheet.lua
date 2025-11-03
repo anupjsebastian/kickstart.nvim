@@ -51,7 +51,7 @@
 -- │  ├─ Buffer: Close - <Space>bd/bD/bu/bo
 -- │  ├─ Buffer: Info - Ctrl-g, <Space>sn
 -- │  ├─ Window - <Space>ww/wc/ws/wv/wm/w=, Ctrl-h/j/k/l
--- │  ├─ Tab - <Space>wn/wo/w]/w[/wf/wL, gt/gT
+-- │  ├─ Tab - <Space>wn/wo/w]/w[/w>/w</wf/wL, gt/gT
 -- │  ├─ Search - <Space>sh/sk/sf/ss/sw/sg/sd/sr/s./s//sn/sc/sK, <Space>/
 -- │  ├─ Session - <Space>Ss/Sr/Sd/Sf (save/restore/delete/find)
 -- │  ├─ UI - <Space>ul/um/ui/uI/un/uh (lazy/mason/inspect/history)
@@ -69,12 +69,12 @@
 -- │  └─ Debug - F5/F10/F11/F12, <Space>db/dB/dc/di/do/dO/dt/dr/dl/dC/du/de
 --
 -- ┌─ LANGUAGE-SPECIFIC (Auto-loaded by filetype)
--- │  ├─ Flutter - <Space>fr/fR/fh/fq/fd/fe/fo/ft/fa/fD/fL/fc/fl, <Space>.
--- │  ├─ Rust - <Space>rh/ra/re/rC/rp/rj/rr/rd/rm
--- │  ├─ Rust: Crates - <Space>rct/rcr/rcv/rcf/rcd/rcu/rca/rcU/rcA/rce/rcE/rcH/rcR/rcD/rcC
--- │  ├─ Python - <Space>pr/pR/pe/pl/pi/pf
--- │  ├─ Svelte - <Space>vf/vl/vt/vo, Ctrl-e,
--- │  └─ Web Dev - <Space>od/oc/os/of/ol, Ctrl-e,
+-- │  ├─ Flutter - <Space>lfr/lfR/lfh/lfq/lfd/lfe/lfo/lft/lfa/lfD/lfL/lfc/lfl, <Space>.
+-- │  ├─ Rust - <Space>lrh/lra/lre/lrC/lrp/lrj/lrr/lrd/lrm
+-- │  ├─ Rust: Crates - <Space>lrct/lrcr/lrcv/lrcf/lrcd/lrcu/lrca/lrcU/lrcA/lrce/lrcE/lrcH/lrcR/lrcD/lrcC
+-- │  ├─ Python - <Space>lpr/lpR/lpX/lpa/lpA/lpd/lpu/lpv/lpt/lpc/lpl (+ lpx/lpe/lpT/lpi/lpf in files)
+-- │  ├─ Svelte - <Space>lsf/lsl/lst/lso, Ctrl-e,
+-- │  └─ Web Dev - <Space>lhd/lhc/lhs/lhf/lhl, Ctrl-e,
 --
 -- ┌─ PLUGINS (UI, Navigation, Editing)
 -- │  ├─ Telescope - Ctrl-j/k, Ctrl-d/u, Ctrl-n/p, Enter, Ctrl-x/v/t, Ctrl-c/q, Tab, Ctrl-q, ?
@@ -393,6 +393,8 @@ local cheatsheet = {
             { category = 'Tab', key = '<Space>wo', desc = 'Close other tabs' },
             { category = 'Tab', key = '<Space>w]', desc = 'Next tab' },
             { category = 'Tab', key = '<Space>w[', desc = 'Previous tab' },
+            { category = 'Tab', key = '<Space>w>', desc = 'Move tab right' },
+            { category = 'Tab', key = '<Space>w<', desc = 'Move tab left' },
             { category = 'Tab', key = '<Space>wf', desc = 'First tab' },
             { category = 'Tab', key = '<Space>wL', desc = 'Last tab' },
             { category = 'Tab', key = 'gt', desc = 'Next tab (Vim native)' },
@@ -589,82 +591,94 @@ local cheatsheet = {
             -- ============================================================
             -- FLUTTER (DART FILES)
             -- ============================================================
-            { category = 'Flutter', key = '<Space>fr', desc = 'Run app (Dart files)' },
-            { category = 'Flutter', key = '<Space>fR', desc = 'Hot restart (any buffer)' },
-            { category = 'Flutter', key = '<Space>fh', desc = 'Hot reload (any buffer)' },
-            { category = 'Flutter', key = '<Space>fq', desc = 'Quit app (any buffer)' },
-            { category = 'Flutter', key = '<Space>fd', desc = 'Select device (any buffer)' },
-            { category = 'Flutter', key = '<Space>fe', desc = 'Launch emulator (any buffer)' },
-            { category = 'Flutter', key = '<Space>fo', desc = 'Toggle outline (Dart files)' },
-            { category = 'Flutter', key = '<Space>ft', desc = 'Start DevTools (any buffer)' },
-            { category = 'Flutter', key = '<Space>fa', desc = 'Attach to app (Dart files)' },
-            { category = 'Flutter', key = '<Space>fD', desc = 'Detach from app (Dart files)' },
-            { category = 'Flutter', key = '<Space>fL', desc = 'Toggle logs (any buffer)' },
-            { category = 'Flutter', key = '<Space>fc', desc = 'Copy profiler URL (Dart files)' },
-            { category = 'Flutter', key = '<Space>fl', desc = 'Restart LSP (Dart files)' },
+            { category = 'Flutter', key = '<Space>lfr', desc = 'Run app (Dart files)' },
+            { category = 'Flutter', key = '<Space>lfR', desc = 'Hot restart (any buffer)' },
+            { category = 'Flutter', key = '<Space>lfh', desc = 'Hot reload (any buffer)' },
+            { category = 'Flutter', key = '<Space>lfq', desc = 'Quit app (any buffer)' },
+            { category = 'Flutter', key = '<Space>lfd', desc = 'Select device (any buffer)' },
+            { category = 'Flutter', key = '<Space>lfe', desc = 'Launch emulator (any buffer)' },
+            { category = 'Flutter', key = '<Space>lfo', desc = 'Toggle outline (Dart files)' },
+            { category = 'Flutter', key = '<Space>lft', desc = 'Start DevTools (any buffer)' },
+            { category = 'Flutter', key = '<Space>lfa', desc = 'Attach to app (Dart files)' },
+            { category = 'Flutter', key = '<Space>lfD', desc = 'Detach from app (Dart files)' },
+            { category = 'Flutter', key = '<Space>lfL', desc = 'Toggle logs (any buffer)' },
+            { category = 'Flutter', key = '<Space>lfc', desc = 'Copy profiler URL (Dart files)' },
+            { category = 'Flutter', key = '<Space>lfl', desc = 'Restart LSP (Dart files)' },
             { category = 'Flutter', key = '<Space>. or gra', desc = 'Code actions (Cmd+.)' },
 
             -- ============================================================
             -- RUST (RUST FILES)
             -- ============================================================
-            { category = 'Rust', key = '<Space>rh', desc = 'Hover actions' },
-            { category = 'Rust', key = '<Space>ra', desc = 'Code actions' },
-            { category = 'Rust', key = '<Space>re', desc = 'Explain error' },
-            { category = 'Rust', key = '<Space>rC', desc = 'Open Cargo.toml' },
-            { category = 'Rust', key = '<Space>rp', desc = 'Parent module' },
-            { category = 'Rust', key = '<Space>rj', desc = 'Join lines' },
-            { category = 'Rust', key = '<Space>rr', desc = 'Runnables' },
-            { category = 'Rust', key = '<Space>rd', desc = 'Debuggables' },
-            { category = 'Rust', key = '<Space>rm', desc = 'Expand macro' },
+            { category = 'Rust', key = '<Space>lrh', desc = 'Hover actions' },
+            { category = 'Rust', key = '<Space>lra', desc = 'Code actions' },
+            { category = 'Rust', key = '<Space>lre', desc = 'Explain error' },
+            { category = 'Rust', key = '<Space>lrC', desc = 'Open Cargo.toml' },
+            { category = 'Rust', key = '<Space>lrp', desc = 'Parent module' },
+            { category = 'Rust', key = '<Space>lrj', desc = 'Join lines' },
+            { category = 'Rust', key = '<Space>lrr', desc = 'Runnables' },
+            { category = 'Rust', key = '<Space>lrd', desc = 'Debuggables' },
+            { category = 'Rust', key = '<Space>lrm', desc = 'Expand macro' },
 
             -- ============================================================
             -- RUST CRATES (CARGO.TOML)
             -- ============================================================
-            { category = 'Rust: Crates', key = '<Space>rct', desc = 'Toggle crates popup' },
-            { category = 'Rust: Crates', key = '<Space>rcr', desc = 'Reload crates' },
-            { category = 'Rust: Crates', key = '<Space>rcv', desc = 'Show versions popup' },
-            { category = 'Rust: Crates', key = '<Space>rcf', desc = 'Show features popup' },
-            { category = 'Rust: Crates', key = '<Space>rcd', desc = 'Show dependencies popup' },
-            { category = 'Rust: Crates', key = '<Space>rcu', desc = 'Update crate under cursor' },
-            { category = 'Rust: Crates', key = '<Space>rcu (visual)', desc = 'Update selected crates' },
-            { category = 'Rust: Crates', key = '<Space>rca', desc = 'Update all crates' },
-            { category = 'Rust: Crates', key = '<Space>rcU', desc = 'Upgrade crate under cursor' },
-            { category = 'Rust: Crates', key = '<Space>rcU (visual)', desc = 'Upgrade selected crates' },
-            { category = 'Rust: Crates', key = '<Space>rcA', desc = 'Upgrade all crates' },
-            { category = 'Rust: Crates', key = '<Space>rce', desc = 'Expand to inline table' },
-            { category = 'Rust: Crates', key = '<Space>rcE', desc = 'Extract to table' },
-            { category = 'Rust: Crates', key = '<Space>rcH', desc = 'Open homepage' },
-            { category = 'Rust: Crates', key = '<Space>rcR', desc = 'Open repository' },
-            { category = 'Rust: Crates', key = '<Space>rcD', desc = 'Open documentation' },
-            { category = 'Rust: Crates', key = '<Space>rcC', desc = 'Open crates.io' },
+            { category = 'Rust: Crates', key = '<Space>lrct', desc = 'Toggle crates popup' },
+            { category = 'Rust: Crates', key = '<Space>lrcr', desc = 'Reload crates' },
+            { category = 'Rust: Crates', key = '<Space>lrcv', desc = 'Show versions popup' },
+            { category = 'Rust: Crates', key = '<Space>lrcf', desc = 'Show features popup' },
+            { category = 'Rust: Crates', key = '<Space>lrcd', desc = 'Show dependencies popup' },
+            { category = 'Rust: Crates', key = '<Space>lrcu', desc = 'Update crate under cursor' },
+            { category = 'Rust: Crates', key = '<Space>lrcu (visual)', desc = 'Update selected crates' },
+            { category = 'Rust: Crates', key = '<Space>lrca', desc = 'Update all crates' },
+            { category = 'Rust: Crates', key = '<Space>lrcU', desc = 'Upgrade crate under cursor' },
+            { category = 'Rust: Crates', key = '<Space>lrcU (visual)', desc = 'Upgrade selected crates' },
+            { category = 'Rust: Crates', key = '<Space>lrcA', desc = 'Upgrade all crates' },
+            { category = 'Rust: Crates', key = '<Space>lrce', desc = 'Expand to inline table' },
+            { category = 'Rust: Crates', key = '<Space>lrcE', desc = 'Extract to table' },
+            { category = 'Rust: Crates', key = '<Space>lrcH', desc = 'Open homepage' },
+            { category = 'Rust: Crates', key = '<Space>lrcR', desc = 'Open repository' },
+            { category = 'Rust: Crates', key = '<Space>lrcD', desc = 'Open documentation' },
+            { category = 'Rust: Crates', key = '<Space>lrcC', desc = 'Open crates.io' },
 
             -- ============================================================
-            -- PYTHON (PYTHON FILES)
+            -- PYTHON (GLOBALLY ACCESSIBLE)
             -- ============================================================
-            { category = 'Python', key = '<Space>pr', desc = 'Run file (python3)' },
-            { category = 'Python', key = '<Space>pR', desc = 'Run with args (python3)' },
-            { category = 'Python', key = '<Space>pe', desc = 'Activate .venv' },
-            { category = 'Python', key = '<Space>pl', desc = 'Restart pyright LSP' },
-            { category = 'Python', key = '<Space>pi', desc = 'Organize imports (ruff)' },
-            { category = 'Python', key = '<Space>pf', desc = 'Format code (ruff)' },
+            -- Global commands (available from anywhere)
+            { category = 'Python', key = '<Space>lpr', desc = 'Run custom command or current file (new tab)' },
+            { category = 'Python', key = '<Space>lpR', desc = 'Set/Edit run command (saves with session, ESC to cancel)' },
+            { category = 'Python', key = '<Space>lpX', desc = 'Clear/Reset custom run command (back to default)' },
+            { category = 'Python', key = '<Space>lpa', desc = 'Add package (uv add + prompt)' },
+            { category = 'Python', key = '<Space>lpA', desc = 'Add dev package (uv add --dev + prompt)' },
+            { category = 'Python', key = '<Space>lpd', desc = 'Remove package (uv remove + prompt)' },
+            { category = 'Python', key = '<Space>lpu', desc = 'Sync packages (uv sync, shows success/fail)' },
+            { category = 'Python', key = '<Space>lpv', desc = 'Show venv info (auto-detects .venv)' },
+            { category = 'Python', key = '<Space>lpt', desc = 'Run all tests (pytest, new tab)' },
+            { category = 'Python', key = '<Space>lpc', desc = 'Run tests with coverage (new tab)' },
+            { category = 'Python', key = '<Space>lpl', desc = 'Restart pyright LSP' },
+            -- Buffer-local commands (only in Python files)
+            { category = 'Python', key = '<Space>lpx', desc = 'Run current file with args (buffer-local)' },
+            { category = 'Python', key = '<Space>lpe', desc = 'Activate .venv manually (buffer-local)' },
+            { category = 'Python', key = '<Space>lpT', desc = 'Run current test file (buffer-local)' },
+            { category = 'Python', key = '<Space>lpi', desc = 'Organize imports with ruff (buffer-local)' },
+            { category = 'Python', key = '<Space>lpf', desc = 'Format code with ruff (buffer-local)' },
 
             -- ============================================================
             -- SVELTE (SVELTE FILES)
             -- ============================================================
-            { category = 'Svelte', key = '<Space>vf', desc = 'Format with prettier' },
-            { category = 'Svelte', key = '<Space>vl', desc = 'Restart Svelte LSP' },
-            { category = 'Svelte', key = '<Space>vt', desc = 'Restart TypeScript LSP (ts_ls)' },
-            { category = 'Svelte', key = '<Space>vo', desc = 'Open component in split' },
+            { category = 'Svelte', key = '<Space>lsf', desc = 'Format with prettier' },
+            { category = 'Svelte', key = '<Space>lsl', desc = 'Restart Svelte LSP' },
+            { category = 'Svelte', key = '<Space>lst', desc = 'Restart TypeScript LSP (ts_ls)' },
+            { category = 'Svelte', key = '<Space>lso', desc = 'Open component in split' },
             { category = 'Svelte', key = 'Ctrl-e,', desc = 'Expand Emmet abbreviation' },
 
             -- ============================================================
             -- WEB DEVELOPMENT (HTML/CSS/JS)
             -- ============================================================
-            { category = 'Web Dev', key = '<Space>od', desc = 'Open in default browser' },
-            { category = 'Web Dev', key = '<Space>oc', desc = 'Open in Chrome' },
-            { category = 'Web Dev', key = '<Space>os', desc = 'Open in Safari' },
-            { category = 'Web Dev', key = '<Space>of', desc = 'Open in Firefox' },
-            { category = 'Web Dev', key = '<Space>ol', desc = 'Start live-server' },
+            { category = 'Web Dev', key = '<Space>lhd', desc = 'Open in default browser' },
+            { category = 'Web Dev', key = '<Space>lhc', desc = 'Open in Chrome' },
+            { category = 'Web Dev', key = '<Space>lhs', desc = 'Open in Safari' },
+            { category = 'Web Dev', key = '<Space>lhf', desc = 'Open in Firefox' },
+            { category = 'Web Dev', key = '<Space>lhl', desc = 'Start live-server' },
             { category = 'Web Dev', key = 'Ctrl-e,', desc = 'Expand Emmet abbreviation' },
 
             -- ============================================================

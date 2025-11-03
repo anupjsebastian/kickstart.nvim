@@ -134,28 +134,25 @@ return {
         callback = function(event)
           local bufnr = event.buf
 
-          -- Register which-key group for Svelte
-          require('which-key').add {
-            { '<leader>v', group = ' svelte', buffer = bufnr },
-          }
+          -- NOTE: The <leader>ls group is registered globally in editor.lua
 
           -- Format with Prettier
-          vim.keymap.set('n', '<leader>vf', function()
+          vim.keymap.set('n', '<leader>lsf', function()
             require('conform').format { formatters = { 'prettier' } }
           end, { buffer = bufnr, desc = 'Format with prettier' })
 
           -- Restart Svelte LSP
-          vim.keymap.set('n', '<leader>vl', function()
+          vim.keymap.set('n', '<leader>lsl', function()
             vim.cmd 'LspRestart svelte'
           end, { buffer = bufnr, desc = 'Restart LSP' })
 
           -- Restart TypeScript LSP (often needed in Svelte projects)
-          vim.keymap.set('n', '<leader>vt', function()
+          vim.keymap.set('n', '<leader>lst', function()
             vim.cmd 'LspRestart ts_ls'
           end, { buffer = bufnr, desc = 'Restart TypeScript LSP' })
 
           -- Open component in split
-          vim.keymap.set('n', '<leader>vo', function()
+          vim.keymap.set('n', '<leader>lso', function()
             local word = vim.fn.expand '<cfile>'
             vim.cmd('split ' .. word)
           end, { buffer = bufnr, desc = 'Open component in split' })
@@ -199,33 +196,30 @@ return {
         callback = function(event)
           local bufnr = event.buf
 
-          -- Register which-key group for Browser
-          require('which-key').add {
-            { '<leader>o', group = '󰖟 browser', buffer = bufnr },
-          }
+          -- NOTE: The <leader>lh group is registered globally in editor.lua
 
           -- Open in default browser
-          vim.keymap.set('n', '<leader>od', function()
+          vim.keymap.set('n', '<leader>lhd', function()
             open_in_browser(nil)
           end, { buffer = bufnr, desc = 'Open in default browser' })
 
           -- Open in Chrome
-          vim.keymap.set('n', '<leader>oc', function()
+          vim.keymap.set('n', '<leader>lhc', function()
             open_in_browser('Google Chrome')
           end, { buffer = bufnr, desc = 'Open in Chrome' })
 
           -- Open in Safari
-          vim.keymap.set('n', '<leader>os', function()
+          vim.keymap.set('n', '<leader>lhs', function()
             open_in_browser('Safari')
           end, { buffer = bufnr, desc = 'Open in Safari' })
 
           -- Open in Firefox
-          vim.keymap.set('n', '<leader>of', function()
+          vim.keymap.set('n', '<leader>lhf', function()
             open_in_browser('Firefox')
           end, { buffer = bufnr, desc = 'Open in Firefox' })
 
           -- Start live-server in terminal split
-          vim.keymap.set('n', '<leader>ol', function()
+          vim.keymap.set('n', '<leader>lhl', function()
             vim.cmd('split | terminal live-server')
             vim.notify('Live server started. Press Ctrl+C to stop.', vim.log.levels.INFO)
           end, { buffer = bufnr, desc = 'Start live-server in split' })

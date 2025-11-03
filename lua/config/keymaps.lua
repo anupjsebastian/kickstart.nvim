@@ -203,7 +203,7 @@ vim.keymap.set('n', '<leader>cq', function()
 end, { desc = 'Toggle diagnostic quickfix list' })
 
 -- Flutter outline toggle (works from any window)
-vim.keymap.set('n', '<leader>fo', function()
+vim.keymap.set('n', '<leader>lfo', function()
   -- First, check if Flutter outline window exists
   local outline_winnr = nil
   
@@ -279,7 +279,7 @@ local function is_flutter_running()
 end
 
 -- Hot reload - always execute, notification based on detection
-vim.keymap.set('n', '<leader>fh', function()
+vim.keymap.set('n', '<leader>lfh', function()
   local running = is_flutter_running()
   vim.cmd('FlutterReload')
   if running then
@@ -290,7 +290,7 @@ vim.keymap.set('n', '<leader>fh', function()
 end, { desc = 'Flutter: Hot reload' })
 
 -- Hot restart - always execute, notification based on detection
-vim.keymap.set('n', '<leader>fR', function()
+vim.keymap.set('n', '<leader>lfR', function()
   local running = is_flutter_running()
   vim.cmd('FlutterRestart')
   if running then
@@ -301,7 +301,7 @@ vim.keymap.set('n', '<leader>fR', function()
 end, { desc = 'Flutter: Hot restart' })
 
 -- Quit - always execute, notification based on detection
-vim.keymap.set('n', '<leader>fq', function()
+vim.keymap.set('n', '<leader>lfq', function()
   local running = is_flutter_running()
   vim.cmd('FlutterQuit')
   if running then
@@ -312,13 +312,13 @@ vim.keymap.set('n', '<leader>fq', function()
 end, { desc = 'Flutter: Quit app' })
 
 -- Toggle logs with notification
-vim.keymap.set('n', '<leader>fL', function()
+vim.keymap.set('n', '<leader>lfL', function()
   vim.cmd('FlutterLogToggle')
   vim.notify('󱓞 Toggled Flutter logs', vim.log.levels.INFO)
 end, { desc = 'Flutter: Toggle logs' })
 
 -- DevTools - open in default browser with URL notification
-vim.keymap.set('n', '<leader>ft', function()
+vim.keymap.set('n', '<leader>lft', function()
   local running = is_flutter_running()
   vim.cmd('FlutterOpenDevTools')
   
@@ -349,17 +349,177 @@ vim.keymap.set('n', '<leader>ft', function()
 end, { desc = 'Flutter: Start DevTools' })
 
 -- Select device (always available)
-vim.keymap.set('n', '<leader>fd', function()
+vim.keymap.set('n', '<leader>lfd', function()
   vim.cmd('FlutterDevices')
   -- Longer timeout for device selection since it takes time to load
   vim.notify('󱓞 Select Device. Loading Flutter devices...', vim.log.levels.INFO, { timeout = 8000 })
 end, { desc = 'Flutter: Select device' })
 
 -- Launch emulator (always available)
-vim.keymap.set('n', '<leader>fe', function()
+vim.keymap.set('n', '<leader>lfe', function()
   vim.cmd('FlutterEmulators')
   vim.notify('󱓞 Select emulator to launch', vim.log.levels.INFO)
 end, { desc = 'Flutter: Launch emulator' })
+
+-- ========================================================================
+-- GLOBAL PYTHON COMMANDS (work from any buffer)
+-- ========================================================================
+-- These keymaps are always available, allowing you to run Python commands
+-- from anywhere (logs, terminals, other files)
+-- ========================================================================
+
+-- Helper function to find Python venv (same logic as LSP detection)
+local function find_python_venv()
+  -- Try to find root directory with .venv
+  local root = vim.fs.root(0, { '.venv', 'pyproject.toml', 'setup.py', 'requirements.txt', '.git' })
+  if root then
+    local venv_python = root .. '/.venv/bin/python'
+    if vim.loop.fs_stat(venv_python) then
+      return root .. '/.venv', venv_python
+    end
+  end
+  return nil, nil
+end
+
+-- Add package with uv
+vim.keymap.set('n', '<leader>lpa', function()
+  local pkg = vim.fn.input('Package to add: ')
+  if pkg ~= '' then
+    vim.notify(string.format('󰌠 Adding package: %s...', pkg), vim.log.levels.INFO)
+    local result = vim.fn.system('uv add ' .. pkg)
+    local exit_code = vim.v.shell_error
+    
+    if exit_code == 0 then
+      vim.notify(string.format('✓ Successfully added: %s', pkg), vim.log.levels.INFO)
+    else
+      vim.notify(string.format('✗ Failed to add %s:\n%s', pkg, result), vim.log.levels.ERROR)
+    end
+  end
+end, { desc = 'Python: Add package (uv)' })
+
+-- Add dev package with uv
+vim.keymap.set('n', '<leader>lpA', function()
+  local pkg = vim.fn.input('Dev package to add: ')
+  if pkg ~= '' then
+    vim.notify(string.format('󰌠 Adding dev package: %s...', pkg), vim.log.levels.INFO)
+    local result = vim.fn.system('uv add --dev ' .. pkg)
+    local exit_code = vim.v.shell_error
+    
+    if exit_code == 0 then
+      vim.notify(string.format('✓ Successfully added dev package: %s', pkg), vim.log.levels.INFO)
+    else
+      vim.notify(string.format('✗ Failed to add %s:\n%s', pkg, result), vim.log.levels.ERROR)
+    end
+  end
+end, { desc = 'Python: Add dev package (uv)' })
+
+-- Remove package with uv
+vim.keymap.set('n', '<leader>lpd', function()
+  local pkg = vim.fn.input('Package to remove: ')
+  if pkg ~= '' then
+    vim.notify(string.format('󰌠 Removing package: %s...', pkg), vim.log.levels.INFO)
+    local result = vim.fn.system('uv remove ' .. pkg)
+    local exit_code = vim.v.shell_error
+    
+    if exit_code == 0 then
+      vim.notify(string.format('✓ Successfully removed: %s', pkg), vim.log.levels.INFO)
+    else
+      vim.notify(string.format('✗ Failed to remove %s:\n%s', pkg, result), vim.log.levels.ERROR)
+    end
+  end
+end, { desc = 'Python: Remove package (uv)' })
+
+-- Sync packages with uv
+vim.keymap.set('n', '<leader>lpu', function()
+  vim.notify('󰌠 Syncing packages with uv...', vim.log.levels.INFO)
+  local result = vim.fn.system('uv sync')
+  local exit_code = vim.v.shell_error
+  
+  if exit_code == 0 then
+    vim.notify('✓ Packages synced successfully', vim.log.levels.INFO)
+  else
+    vim.notify(string.format('✗ Sync failed:\n%s', result), vim.log.levels.ERROR)
+  end
+end, { desc = 'Python: Sync packages (uv)' })
+
+-- Show venv info (detect from project, not shell env)
+vim.keymap.set('n', '<leader>lpv', function()
+  local venv_dir, venv_python = find_python_venv()
+  if venv_dir then
+    local python_version = vim.fn.system(venv_python .. ' --version'):gsub('\n', '')
+    vim.notify(string.format('󰌠 Venv: %s\nPython: %s', venv_dir, python_version), vim.log.levels.INFO)
+  else
+    vim.notify('󰌠 No .venv found in project root', vim.log.levels.WARN)
+  end
+end, { desc = 'Python: Show venv info' })
+
+-- Run tests with pytest (in new tab)
+vim.keymap.set('n', '<leader>lpt', function()
+  vim.notify('󰌠 Running tests with pytest...', vim.log.levels.INFO)
+  vim.cmd('tabnew | terminal uv run pytest')
+  -- Stay in normal mode for easy scrolling/navigation
+end, { desc = 'Python: Run tests (pytest)' })
+
+-- Run tests with coverage (in new tab)
+vim.keymap.set('n', '<leader>lpc', function()
+  vim.notify('󰌠 Running tests with coverage...', vim.log.levels.INFO)
+  vim.cmd('tabnew | terminal uv run pytest --cov')
+  -- Stay in normal mode for easy scrolling/navigation
+end, { desc = 'Python: Run tests with coverage' })
+
+-- Run current Python file (in new tab)
+vim.keymap.set('n', '<leader>lpr', function()
+  -- Check if we have a custom run command for this session
+  if vim.g.python_run_command then
+    vim.notify(string.format('󰌠 Running: %s\n💡 Enter INSERT mode then Ctrl-C to kill process', vim.g.python_run_command), vim.log.levels.INFO)
+    vim.cmd('tabnew | terminal ' .. vim.g.python_run_command)
+  else
+    -- Default: run current file
+    local current_file = vim.fn.expand('%:p')
+    if vim.bo.filetype == 'python' then
+      vim.notify(string.format('󰌠 Running: %s\n💡 Enter INSERT mode then Ctrl-C to kill process', vim.fn.expand('%:t')), vim.log.levels.INFO)
+      vim.cmd('tabnew | terminal uv run python ' .. vim.fn.shellescape(current_file))
+    else
+      vim.notify('Not a Python file (use <leader>lpR to set custom command)', vim.log.levels.WARN)
+    end
+  end
+end, { desc = 'Python: Run (or custom command)' })
+
+-- Set/Edit custom run command (persists with session)
+vim.keymap.set('n', '<leader>lpR', function()
+  local current_cmd = vim.g.python_run_command or 'uv run python %'
+  local new_cmd = vim.fn.input({
+    prompt = 'Python run command: ',
+    default = current_cmd,
+  })
+  
+  -- Only save if user pressed Enter (not escape)
+  -- vim.fn.input returns empty string on escape, but also if user deletes everything
+  -- So we check if it's different from the default to detect actual changes
+  if new_cmd ~= '' and new_cmd ~= current_cmd then
+    vim.g.python_run_command = new_cmd
+    vim.notify(string.format('✓ Custom run command set:\n%s\n\nUse <leader>lpr to run it', new_cmd), vim.log.levels.INFO)
+  elseif new_cmd == current_cmd then
+    -- User didn't change anything (or hit escape), do nothing
+    vim.notify('No changes made', vim.log.levels.INFO)
+  end
+end, { desc = 'Python: Set/Edit run command' })
+
+-- Clear/Reset custom run command
+vim.keymap.set('n', '<leader>lpX', function()
+  if vim.g.python_run_command then
+    vim.notify(string.format('✓ Cleared custom command:\n%s\n\nWill use default: uv run python <file>', vim.g.python_run_command), vim.log.levels.INFO)
+    vim.g.python_run_command = nil
+  else
+    vim.notify('No custom command set (already using default)', vim.log.levels.INFO)
+  end
+end, { desc = 'Python: Clear/Reset run command' })
+
+-- Restart Python LSP
+vim.keymap.set('n', '<leader>lpl', function()
+  vim.cmd('LspRestart pyright')
+  vim.notify('󰌠 Restarting pyright LSP...', vim.log.levels.INFO)
+end, { desc = 'Python: Restart LSP' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -451,6 +611,8 @@ vim.keymap.set('n', '<leader>wn', '<cmd>tabnew<CR>', { desc = 'New tab' })
 vim.keymap.set('n', '<leader>wo', '<cmd>tabonly<CR>', { desc = 'Close other tabs' })
 vim.keymap.set('n', '<leader>w]', '<cmd>tabnext<CR>', { desc = 'Next tab' })
 vim.keymap.set('n', '<leader>w[', '<cmd>tabprevious<CR>', { desc = 'Previous tab' })
+vim.keymap.set('n', '<leader>w>', '<cmd>tabmove +1<CR>', { desc = 'Move tab right' })
+vim.keymap.set('n', '<leader>w<', '<cmd>tabmove -1<CR>', { desc = 'Move tab left' })
 vim.keymap.set('n', '<leader>wf', '<cmd>tabfirst<CR>', { desc = 'First tab' })
 vim.keymap.set('n', '<leader>wL', '<cmd>tablast<CR>', { desc = 'Last tab' })
 
