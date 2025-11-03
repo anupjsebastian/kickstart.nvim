@@ -495,6 +495,7 @@ local function get_cheatsheet_data()
             { category = 'Diagnostics', key = '<Space>xx', desc = 'Toggle diagnostics (Trouble)' },
             { category = 'Diagnostics', key = '<Space>xX', desc = 'Buffer diagnostics (Trouble)' },
             { category = 'Diagnostics', key = '<Space>xs', desc = 'Symbols (Trouble)' },
+            { category = 'Diagnostics', key = '<Space>xn', desc = 'Notification history (Noice)' },
 
             -- ============================================================
             -- QUICKFIX & LOCATION LIST OPERATIONS

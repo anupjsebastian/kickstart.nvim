@@ -314,6 +314,13 @@ return {
         desc = 'Dismiss All',
       },
       {
+        '<leader>xn',
+        function()
+          require('noice').cmd('history')
+        end,
+        desc = 'Notification History',
+      },
+      {
         '<c-f>',
         function()
           if not require('noice.lsp').scroll(4) then
