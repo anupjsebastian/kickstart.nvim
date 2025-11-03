@@ -19,28 +19,24 @@ local function run_terminal_cmd(cmd)
   )
   local job_id = vim.fn.termopen({ 'zsh', '-c', wrapped_cmd })
   
-  -- Auto-close terminal when job finishes
+  -- Auto-close terminal when job finishes (user pressed ENTER)
   vim.api.nvim_create_autocmd('TermClose', {
     buffer = bufnr,
     once = true,
     callback = function()
-      -- Show persistent notification
-      vim.notify('✓ Rust command completed - Press ENTER to close terminal', vim.log.levels.INFO, {
-        title = 'Rust',
-        timeout = false,
-      })
       vim.cmd('bdelete!')
     end,
   })
   
   -- Start in insert mode after a delay (let command run first)
   vim.defer_fn(function()
-    if vim.api.nvim_get_current_buf() == bufnr then
+    if vim.api.nvim_buf_is_valid(bufnr) and vim.api.nvim_get_current_buf() == bufnr then
       vim.cmd('startinsert')
     end
   end, 100)
 end
 
+-- NOTE: The <leader>lr group is registered globally in editor.lua
 -- NOTE: The <leader>lr group is registered globally in editor.lua
 -- NOTE: Rustaceanvim-specific buffer-local commands are in the on_attach above
 

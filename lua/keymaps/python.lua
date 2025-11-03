@@ -19,28 +19,24 @@ local function run_terminal_cmd(cmd)
   )
   local job_id = vim.fn.termopen({ 'zsh', '-c', wrapped_cmd })
   
-  -- Auto-close terminal when job finishes
+  -- Auto-close terminal when job finishes (user pressed ENTER)
   vim.api.nvim_create_autocmd('TermClose', {
     buffer = bufnr,
     once = true,
     callback = function()
-      -- Show persistent notification
-      vim.notify('✓ Python command completed - Press ENTER to close terminal', vim.log.levels.INFO, {
-        title = 'Python',
-        timeout = false,
-      })
       vim.cmd('bdelete!')
     end,
   })
   
   -- Start in insert mode after a delay (let command run first)
   vim.defer_fn(function()
-    if vim.api.nvim_get_current_buf() == bufnr then
+    if vim.api.nvim_buf_is_valid(bufnr) and vim.api.nvim_get_current_buf() == bufnr then
       vim.cmd('startinsert')
     end
   end, 100)
 end
 
+-- NOTE: The <leader>lp group is registered globally in editor.lua
 -- NOTE: The <leader>lp group is registered globally in editor.lua
 
 -- Initialize new Python project with uv
@@ -194,14 +190,17 @@ vim.keymap.set('n', '<leader>lpr', function()
   if vim.fn.filereadable(file) == 1 then
     -- Check if there's a custom run command stored
     local custom_cmd = vim.g.python_run_command
+    local cmd = custom_cmd and custom_cmd ~= '' and custom_cmd or ('uv run python ' .. vim.fn.shellescape(file))
+    
+    -- Run directly without wrapper (like Flutter) - works for both quick scripts and long-running servers
+    vim.cmd('tabnew')
+    local bufnr = vim.api.nvim_get_current_buf()
+    vim.fn.termopen(cmd)
+    vim.cmd('startinsert')
+    
     if custom_cmd and custom_cmd ~= '' then
-      -- Use custom command (user set via lpR) - Don't auto-close for long-running processes
-      vim.cmd('tabnew')
-      vim.fn.termopen(custom_cmd)
-      vim.notify(string.format('🚀 Running with custom command:\n%s', custom_cmd), vim.log.levels.INFO)
+      vim.notify(string.format('🚀 Running with custom command:\n%s', cmd), vim.log.levels.INFO)
     else
-      -- Default: use uv run python <file>
-      run_terminal_cmd('uv run python ' .. vim.fn.shellescape(file))
       vim.notify('🚀 Running Python file with uv...', vim.log.levels.INFO)
     end
   else
@@ -285,5 +284,5 @@ vim.keymap.set('n', '<leader>lpl', function()
     return
   end
   run_terminal_cmd('uv run ruff check --fix .')
-  vim.notify('🔧 Linting and fixing Python code...', vm.log.levels.INFO)
+  vim.notify('🔧 Linting and fixing Python code...', vim.log.levels.INFO)
 end, { desc = 'Python: Lint & fix' })
