@@ -48,7 +48,7 @@ vim.keymap.set('n', '<leader>lsr', function()
   vim.cmd('tabnew')
   vim.fn.termopen('bun run dev')
   vim.notify('🚀 Starting dev server...', vim.log.levels.INFO)
-end, { desc = 'Web Dev: Run dev server (bun run dev)' })
+end, { desc = 'Run dev server (bun run dev)' })
 
 -- Build project (bun run build)
 vim.keymap.set('n', '<leader>lsb', function()
@@ -57,7 +57,7 @@ vim.keymap.set('n', '<leader>lsb', function()
   end
   run_terminal_cmd('bun run build')
   vim.notify('📦 Building project...', vim.log.levels.INFO)
-end, { desc = 'Web Dev: Build (bun run build)' })
+end, { desc = 'Build (bun run build)' })
 
 -- Preview build (bun run preview) - Don't auto-close for preview server
 vim.keymap.set('n', '<leader>lsp', function()
@@ -67,7 +67,7 @@ vim.keymap.set('n', '<leader>lsp', function()
   vim.cmd('tabnew')
   vim.fn.termopen('bun run preview')
   vim.notify('👀 Preview production build...', vim.log.levels.INFO)
-end, { desc = 'Web Dev: Preview build' })
+end, { desc = 'Preview build' })
 
 -- Type check (bun run check)
 vim.keymap.set('n', '<leader>lsc', function()
@@ -76,7 +76,7 @@ vim.keymap.set('n', '<leader>lsc', function()
   end
   run_terminal_cmd('bun run check')
   vim.notify('🔍 Type checking...', vim.log.levels.INFO)
-end, { desc = 'Web Dev: Type check' })
+end, { desc = 'Type check' })
 
 -- Lint (bun run lint)
 vim.keymap.set('n', '<leader>lse', function()
@@ -85,7 +85,7 @@ vim.keymap.set('n', '<leader>lse', function()
   end
   run_terminal_cmd('bun run lint')
   vim.notify('📋 Running ESLint...', vim.log.levels.INFO)
-end, { desc = 'Web Dev: Lint (ESLint)' })
+end, { desc = 'Lint (ESLint)' })
 
 -- Run tests (bun test)
 vim.keymap.set('n', '<leader>lsT', function()
@@ -94,7 +94,7 @@ vim.keymap.set('n', '<leader>lsT', function()
   end
   run_terminal_cmd('bun test')
   vim.notify('🧪 Running tests...', vim.log.levels.INFO)
-end, { desc = 'Web Dev: Run tests' })
+end, { desc = 'Run tests' })
 
 -- Install dependencies (bun install)
 vim.keymap.set('n', '<leader>lsi', function()
@@ -103,7 +103,7 @@ vim.keymap.set('n', '<leader>lsi', function()
   end
   run_terminal_cmd('bun install')
   vim.notify('📥 Installing dependencies...', vm.log.levels.INFO)
-end, { desc = 'Web Dev: Install deps' })
+end, { desc = 'Install deps' })
 
 -- Install dependencies (bun install)
 vim.keymap.set('n', '<leader>lsi', function()
@@ -112,7 +112,7 @@ vim.keymap.set('n', '<leader>lsi', function()
   end
   run_terminal_cmd('bun install')
   vim.notify('📦 Installing dependencies...', vim.log.levels.INFO)
-end, { desc = 'Web Dev: Install deps' })
+end, { desc = 'Install deps' })
 
 -- Add package (bun add)
 vim.keymap.set('n', '<leader>lsa', function()
@@ -124,7 +124,7 @@ vim.keymap.set('n', '<leader>lsa', function()
     run_terminal_cmd('bun add ' .. pkg)
     vim.notify('📦 Adding package: ' .. pkg, vim.log.levels.INFO)
   end
-end, { desc = 'Web Dev: Add package' })
+end, { desc = 'Add package' })
 
 -- Add dev package (bun add -d)
 vim.keymap.set('n', '<leader>lsA', function()
@@ -136,7 +136,7 @@ vim.keymap.set('n', '<leader>lsA', function()
     run_terminal_cmd('bun add -d ' .. pkg)
     vim.notify('📦 Adding dev package: ' .. pkg, vim.log.levels.INFO)
   end
-end, { desc = 'Web Dev: Add dev package' })
+end, { desc = 'Add dev package' })
 
 -- Remove package (bun remove)
 vim.keymap.set('n', '<leader>lsx', function()
@@ -148,7 +148,7 @@ vim.keymap.set('n', '<leader>lsx', function()
     run_terminal_cmd('bun remove ' .. pkg)
     vim.notify('🗑️  Removing package: ' .. pkg, vim.log.levels.INFO)
   end
-end, { desc = 'Web Dev: Remove package' })
+end, { desc = 'Remove package' })
 
 -- Update dependencies (bun update)
 vim.keymap.set('n', '<leader>lsu', function()
@@ -157,10 +157,10 @@ vim.keymap.set('n', '<leader>lsu', function()
   end
   run_terminal_cmd('bun update')
   vim.notify('🔄 Updating dependencies...', vim.log.levels.INFO)
-end, { desc = 'Web Dev: Update deps' })
+end, { desc = 'Update deps' })
 
 -- Restart TypeScript LSP
 vim.keymap.set('n', '<leader>lst', function()
   vim.cmd('LspRestart ts_ls')
   vim.notify('󰛦 Restarting TypeScript LSP...', vim.log.levels.INFO)
-end, { desc = 'Web Dev: Restart TypeScript LSP' })
+end, { desc = 'Restart TypeScript LSP' })

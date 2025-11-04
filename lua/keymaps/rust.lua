@@ -47,7 +47,7 @@ vim.keymap.set('n', '<leader>lrb', function()
   end
   run_terminal_cmd 'cargo build'
   vim.notify('📦 Building with cargo...', vim.log.levels.INFO)
-end, { desc = 'Cargo: Build' })
+end, { desc = 'Build' })
 
 -- Run project
 vim.keymap.set('n', '<leader>lrr', function()
@@ -56,7 +56,7 @@ vim.keymap.set('n', '<leader>lrr', function()
   end
   run_terminal_cmd 'cargo run'
   vim.notify('🚀 Running with cargo...', vim.log.levels.INFO)
-end, { desc = 'Cargo: Run' })
+end, { desc = 'Run' })
 
 -- Test project
 vim.keymap.set('n', '<leader>lrt', function()
@@ -65,7 +65,7 @@ vim.keymap.set('n', '<leader>lrt', function()
   end
   run_terminal_cmd 'cargo test'
   vim.notify('🧪 Running tests...', vim.log.levels.INFO)
-end, { desc = 'Cargo: Test' })
+end, { desc = 'Test' })
 
 -- Check project (faster than build)
 vim.keymap.set('n', '<leader>lrk', function()
@@ -74,7 +74,7 @@ vim.keymap.set('n', '<leader>lrk', function()
   end
   run_terminal_cmd 'cargo check'
   vim.notify('🔍 Checking project...', vim.log.levels.INFO)
-end, { desc = 'Cargo: Check' })
+end, { desc = 'Check' })
 
 -- Clippy (linter)
 vim.keymap.set('n', '<leader>lrl', function()
@@ -83,7 +83,7 @@ vim.keymap.set('n', '<leader>lrl', function()
   end
   run_terminal_cmd 'cargo clippy'
   vim.notify('📎 Running clippy...', vim.log.levels.INFO)
-end, { desc = 'Cargo: Clippy' })
+end, { desc = 'Clippy' })
 
 -- Format with rustfmt
 vim.keymap.set('n', '<leader>lrf', function()
@@ -92,7 +92,7 @@ vim.keymap.set('n', '<leader>lrf', function()
   end
   run_terminal_cmd 'cargo fmt'
   vim.notify('✨ Formatting with rustfmt...', vim.log.levels.INFO)
-end, { desc = 'Cargo: Format' })
+end, { desc = 'Format' })
 
 -- Clean build artifacts
 vim.keymap.set('n', '<leader>lrx', function()
@@ -101,7 +101,7 @@ vim.keymap.set('n', '<leader>lrx', function()
   end
   run_terminal_cmd 'cargo clean'
   vim.notify('🧹 Cleaning build artifacts...', vim.log.levels.INFO)
-end, { desc = 'Cargo: Clean' })
+end, { desc = 'Clean' })
 
 -- Add dependency
 vim.keymap.set('n', '<leader>lrA', function()
@@ -115,7 +115,7 @@ vim.keymap.set('n', '<leader>lrA', function()
     run_terminal_cmd('cargo add ' .. crate_name)
     vim.notify('📦 Adding crate: ' .. crate_name, vim.log.levels.INFO)
   end)
-end, { desc = 'Cargo: Add dependency' })
+end, { desc = 'Add dependency' })
 
 -- Remove dependency
 vim.keymap.set('n', '<leader>lrX', function()
@@ -129,7 +129,7 @@ vim.keymap.set('n', '<leader>lrX', function()
     run_terminal_cmd('cargo remove ' .. crate_name)
     vim.notify('🗑️  Removing crate: ' .. crate_name, vim.log.levels.INFO)
   end)
-end, { desc = 'Cargo: Remove dependency' })
+end, { desc = 'Remove dependency' })
 
 -- Update dependencies
 vim.keymap.set('n', '<leader>lrU', function()
@@ -138,7 +138,7 @@ vim.keymap.set('n', '<leader>lrU', function()
   end
   run_terminal_cmd 'cargo update'
   vim.notify('🔄 Updating dependencies...', vim.log.levels.INFO)
-end, { desc = 'Cargo: Update deps' })
+end, { desc = 'Update deps' })
 
 -- Build documentation
 vim.keymap.set('n', '<leader>lrD', function()
@@ -147,4 +147,4 @@ vim.keymap.set('n', '<leader>lrD', function()
   end
   run_terminal_cmd 'cargo doc --open'
   vim.notify('📚 Building and opening docs...', vim.log.levels.INFO)
-end, { desc = 'Cargo: Doc' })
+end, { desc = 'Doc' })

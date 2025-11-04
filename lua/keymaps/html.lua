@@ -39,7 +39,7 @@ vim.keymap.set('n', '<leader>lhl', function()
       .. 'Auto-reload enabled. Saves will refresh the browser.',
     vim.log.levels.INFO
   )
-end, { desc = 'HTML/CSS: Start live-server' })
+end, { desc = 'Start live-server' })
 
 -- Set browser preference
 vim.keymap.set('n', '<leader>lhb', function()
@@ -69,7 +69,7 @@ vim.keymap.set('n', '<leader>lhb', function()
       vim.log.levels.INFO
     )
   end)
-end, { desc = 'HTML/CSS: Set browser preference' })
+end, { desc = 'Set browser preference' })
 
 -- Open current HTML file in preferred browser
 vim.keymap.set('n', '<leader>lho', function()
@@ -90,4 +90,4 @@ vim.keymap.set('n', '<leader>lho', function()
 
   vim.fn.system(cmd)
   vim.notify('Opened in ' .. browser .. ': ' .. vim.fn.expand('%:t'), vim.log.levels.INFO)
-end, { desc = 'HTML/CSS: Open in browser' })
+end, { desc = 'Open in browser' })

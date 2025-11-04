@@ -225,7 +225,7 @@ vim.keymap.set('n', '<leader>lfr', function()
   else
     start_flutter_run(vim.g.flutter_device_id)
   end
-end, { desc = 'Flutter: Run app' })
+end, { desc = 'Run app' })
 
 -- ========================================================================
 -- HOT RELOAD - Send 'r' to terminal (works from anywhere)
@@ -239,7 +239,7 @@ vim.keymap.set('n', '<leader>lfh', function()
 
   vim.api.nvim_chan_send(chan, 'r')
   vim.notify('🔄 Hot reload triggered', vim.log.levels.INFO)
-end, { desc = 'Flutter: Hot reload' })
+end, { desc = 'Hot reload' })
 
 -- ========================================================================
 -- HOT RESTART - Send 'R' to terminal (works from anywhere)
@@ -253,7 +253,7 @@ vim.keymap.set('n', '<leader>lfR', function()
 
   vim.api.nvim_chan_send(chan, 'R')
   vim.notify('🔄 Hot restart triggered', vim.log.levels.INFO)
-end, { desc = 'Flutter: Hot restart' })
+end, { desc = 'Hot restart' })
 
 -- ========================================================================
 -- QUIT - Send 'q' to terminal (works from anywhere)
@@ -279,7 +279,7 @@ vim.keymap.set('n', '<leader>lfq', function()
 
   vim.api.nvim_chan_send(chan, 'q')
   vim.notify('🛑 Flutter app stopping...', vim.log.levels.INFO)
-end, { desc = 'Flutter: Quit app' })
+end, { desc = 'Quit app' })
 
 -- ========================================================================
 -- AUTO-RELOAD ON SAVE - Silently send 'r' when saving .dart files
@@ -311,14 +311,14 @@ vim.keymap.set('n', '<leader>lfa', function()
   vim.g.flutter_auto_reload = not vim.g.flutter_auto_reload
   local status = vim.g.flutter_auto_reload and 'enabled ✓' or 'disabled ✗'
   vim.notify('Auto-reload on save: ' .. status, vim.log.levels.INFO)
-end, { desc = 'Flutter: Toggle auto-reload on save' })
+end, { desc = 'Toggle auto-reload on save' })
 
 -- ========================================================================
 -- SELECT DEVICE - Custom device picker (attached only, no wireless)
 -- ========================================================================
 vim.keymap.set('n', '<leader>lfd', function()
   select_flutter_device()
-end, { desc = 'Flutter: Select device' })
+end, { desc = 'Select device' })
 
 -- ========================================================================
 -- LAUNCH EMULATOR - Keep flutter-tools.nvim emulator picker
@@ -326,7 +326,7 @@ end, { desc = 'Flutter: Select device' })
 vim.keymap.set('n', '<leader>lfe', function()
   vim.cmd('FlutterEmulators')
   vim.notify('Select emulator to launch', vim.log.levels.INFO)
-end, { desc = 'Flutter: Launch emulator' })
+end, { desc = 'Launch emulator' })
 
 -- ========================================================================
 -- RESTART LSP - Keep flutter-tools.nvim LSP restart
@@ -334,7 +334,7 @@ end, { desc = 'Flutter: Launch emulator' })
 vim.keymap.set('n', '<leader>lfl', function()
   vim.cmd('FlutterLspRestart')
   vim.notify('Flutter LSP restarting...', vim.log.levels.INFO)
-end, { desc = 'Flutter: Restart LSP' })
+end, { desc = 'Restart LSP' })
 
 -- ========================================================================
 -- OPEN DEVTOOLS - Send 'v' command to open DevTools (Flutter opens it automatically)
@@ -349,7 +349,7 @@ vim.keymap.set('n', '<leader>lft', function()
   -- Send 'v' command - Flutter will open DevTools in your default browser
   vim.api.nvim_chan_send(chan, 'v')
   vim.notify('✓ Opening DevTools...', vim.log.levels.INFO)
-end, { desc = 'Flutter: Open DevTools' })
+end, { desc = 'Open DevTools' })
 
 -- ========================================================================
 -- FLUTTER DOCTOR - Check Flutter installation
@@ -359,7 +359,7 @@ vim.keymap.set('n', '<leader>lfD', function()
     return
   end
   run_flutter_terminal_cmd('flutter doctor')
-end, { desc = 'Flutter: Doctor' })
+end, { desc = 'Doctor' })
 
 -- ========================================================================
 -- FLUTTER CLEAN - Clean build artifacts
@@ -369,7 +369,7 @@ vim.keymap.set('n', '<leader>lfC', function()
     return
   end
   run_flutter_terminal_cmd('flutter clean')
-end, { desc = 'Flutter: Clean' })
+end, { desc = 'Clean' })
 
 -- ========================================================================
 -- FLUTTER PUB GET - Install dependencies
@@ -379,7 +379,7 @@ vim.keymap.set('n', '<leader>lfp', function()
     return
   end
   run_flutter_terminal_cmd('flutter pub get')
-end, { desc = 'Flutter: Pub get' })
+end, { desc = 'Pub get' })
 
 -- ========================================================================
 -- FLUTTER BUILD - Build with target selection
@@ -396,7 +396,7 @@ vim.keymap.set('n', '<leader>lfb', function()
       run_flutter_terminal_cmd('flutter build ' .. choice)
     end
   end)
-end, { desc = 'Flutter: Build' })
+end, { desc = 'Build' })
 
 -- ========================================================================
 -- FLUTTER TEST - Run tests
@@ -406,7 +406,7 @@ vim.keymap.set('n', '<leader>lfT', function()
     return
   end
   run_flutter_terminal_cmd('flutter test')
-end, { desc = 'Flutter: Test' })
+end, { desc = 'Test' })
 
 -- ========================================================================
 -- FLUTTER INIT - Create new Flutter project with confirmation
@@ -423,4 +423,4 @@ vim.keymap.set('n', '<leader>lfi', function()
       run_flutter_terminal_cmd('flutter create .')
     end
   end)
-end, { desc = 'Flutter: Init project' })
+end, { desc = 'Init project' })

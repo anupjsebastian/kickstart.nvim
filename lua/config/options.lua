@@ -14,25 +14,27 @@ vim.g.have_nerd_font = true
 -- [[ Setup Node.js PATH for plugins like Copilot ]]
 -- Add fnm's Node.js to PATH so Neovim can find it
 -- This is required for GitHub Copilot and other Node.js based plugins
--- Uses fnm's alias resolution to always point to the default/latest version
 --
 -- NOTE: This only sets up Node.js for plugins. For web development tooling,
 -- we use bun (see lua/plugins/lang/svelte.lua for bun commands).
 --
-local home = vim.env.HOME
-local fnm_node_path = home .. '/.local/share/fnm/aliases/default/bin'
--- Fallback: also add the fnm multishell path if it exists
-local fnm_multishell = home .. '/.local/state/fnm_multishells'
-
 -- Only prepend PATH if node isn't already available
 if vim.fn.executable('node') == 0 then
-  if vim.fn.isdirectory(fnm_node_path) == 1 then
-    vim.env.PATH = fnm_node_path .. ':' .. vim.env.PATH
-  elseif vim.fn.isdirectory(fnm_multishell) == 1 then
-    -- If multishell is being used, fnm will handle it via shell integration
-    -- We just need to ensure the PATH includes typical fnm locations
-    vim.env.PATH = home .. '/.local/share/fnm:' .. vim.env.PATH
-  end
+    vim.schedule(function()
+        local home = vim.env.HOME
+        local fnm_node_path = home .. '/.local/share/fnm/aliases/default/bin'
+
+        -- Try to add fnm node to PATH
+        if vim.fn.isdirectory(fnm_node_path) == 1 then
+            vim.env.PATH = fnm_node_path .. ':' .. vim.env.PATH
+            vim.notify('✓ Node.js configured via fnm', vim.log.levels.DEBUG)
+        else
+            -- Only warn if Copilot is actually installed
+            if vim.fn.exists(':Copilot') == 2 then
+                vim.notify('⚠ fnm node not found - Copilot may not work', vim.log.levels.WARN)
+            end
+        end
+    end)
 end
 
 -- Make line numbers default
@@ -51,7 +53,7 @@ vim.o.showmode = false
 -- Schedule the setting after `UiEnter` because it can increase startup-time.
 -- See `:help 'clipboard'`
 vim.schedule(function()
-  vim.o.clipboard = 'unnamedplus'
+    vim.o.clipboard = 'unnamedplus'
 end)
 
 -- Enable break indent
@@ -83,12 +85,12 @@ vim.o.ttimeoutlen = 10
 -- i-ci-ve = thin vertical bar in insert mode
 -- r-cr = horizontal bar in replace mode
 vim.opt.guicursor = {
-  'n-v-c:block',           -- Block cursor in normal, visual, command
-  'i-ci-ve:ver25',         -- Thin vertical bar (25% width) in insert
-  'r-cr:hor20',            -- Horizontal bar (20% height) in replace
-  'o:hor50',               -- Horizontal bar in operator-pending
-  'a:blinkwait700-blinkoff400-blinkon250', -- Blinking settings
-  'sm:block-blinkwait175-blinkoff150-blinkon175', -- Search match
+    'n-v-c:block',                                -- Block cursor in normal, visual, command
+    'i-ci-ve:ver25',                              -- Thin vertical bar (25% width) in insert
+    'r-cr:hor20',                                 -- Horizontal bar (20% height) in replace
+    'o:hor50',                                    -- Horizontal bar in operator-pending
+    'a:blinkwait700-blinkoff400-blinkon250',      -- Blinking settings
+    'sm:block-blinkwait175-blinkoff150-blinkon175', -- Search match
 }
 
 -- Configure how new splits should be opened
@@ -107,7 +109,8 @@ vim.o.inccommand = 'split'
 vim.o.cursorline = true
 
 -- Window separators - visible borders between windows
-vim.opt.fillchars = { vert = '│', horiz = '─', horizup = '┴', horizdown = '┬', vertleft = '┤', vertright = '├', verthoriz = '┼' }
+vim.opt.fillchars = { vert = '│', horiz = '─', horizup = '┴', horizdown = '┬', vertleft = '┤', vertright = '├', verthoriz =
+'┼' }
 
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.o.scrolloff = 10
@@ -121,12 +124,12 @@ vim.o.confirm = true
 -- FOLDING CONFIGURATION - For Flutter widgets and code blocks
 -- ========================================================================
 -- Enable folding based on Treesitter (for Flutter widgets, functions, etc.)
--- 
+--
 -- NOTE: This is the GLOBAL folding configuration.
 -- Language-specific configs (e.g., flutter.lua) may override these settings
 -- with autocmds for specific filetypes. The language-specific settings take
 -- precedence when you open files of that type.
--- 
+--
 vim.o.foldmethod = 'expr'
 vim.o.foldexpr = 'nvim_treesitter#foldexpr()'
 
@@ -137,7 +140,7 @@ vim.o.foldenable = false
 vim.o.foldlevel = 99
 vim.o.foldlevelstart = 99
 
--- Customize fold text to show more context
+-- Show first line of fold (modern, clean look)
 vim.o.foldtext = ''
 
 -- Hide fold column globally (saves space, folds still work with za/zc/zo)
