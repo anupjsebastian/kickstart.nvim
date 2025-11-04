@@ -76,8 +76,8 @@ return {
                 enable = true,
               },
             },
-            -- Add clippy lints for Rust
-            checkOnSave = {
+            -- Add clippy lints for Rust (updated for newer rust-analyzer)
+            check = {
               allFeatures = true,
               command = 'clippy',
               extraArgs = { '--no-deps' },
@@ -112,11 +112,7 @@ return {
     'saecki/crates.nvim',
     event = { 'BufRead Cargo.toml' },
     opts = {
-      completion = {
-        cmp = {
-          enabled = true,
-        },
-      },
+      -- Using LSP completion instead of deprecated nvim-cmp source
       lsp = {
         enabled = true,
         actions = true,

@@ -44,11 +44,11 @@ end, { desc = 'HTML/CSS: Start live-server' })
 -- Set browser preference
 vim.keymap.set('n', '<leader>lhb', function()
   local available_browsers = {
-    { name = 'Google Chrome', display = '🌐 Google Chrome' },
-    { name = 'Safari', display = '🧭 Safari' },
-    { name = 'Firefox', display = '🦊 Firefox' },
-    { name = 'Default', display = '💻 System Default' },
-  }
+    { name = 'Google Chrome', display = ' Google Chrome' },
+    { name = 'Safari', display = ' Safari' },
+    { name = 'Firefox', display = ' Firefox' },
+    { name = 'Default', display = ' System Default' },
+  } 
 
   local choices = {}
   for i, browser in ipairs(available_browsers) do
