@@ -2,7 +2,7 @@
 -- Loaded only for Rust files (*.rs)
 
 -- Load Rust/Cargo keymaps immediately (not buffer-local, always available)
-require('keymaps.rust')
+require 'keymaps.rust'
 
 return {
   -- Rust Tools - Enhanced rust-analyzer integration
@@ -28,42 +28,42 @@ return {
 
           -- Code actions
           vim.keymap.set('n', '<leader>lra', function()
-            vim.cmd.RustLsp('codeAction')
+            vim.cmd.RustLsp 'codeAction'
           end, { buffer = bufnr, desc = 'Code actions' })
 
           -- Explain error
           vim.keymap.set('n', '<leader>lre', function()
-            vim.cmd.RustLsp('explainError')
+            vim.cmd.RustLsp 'explainError'
           end, { buffer = bufnr, desc = 'Explain error' })
 
           -- Open Cargo.toml
           vim.keymap.set('n', '<leader>lrC', function()
-            vim.cmd.RustLsp('openCargo')
+            vim.cmd.RustLsp 'openCargo'
           end, { buffer = bufnr, desc = 'Open Cargo.toml' })
 
           -- Parent module
           vim.keymap.set('n', '<leader>lrp', function()
-            vim.cmd.RustLsp('parentModule')
+            vim.cmd.RustLsp 'parentModule'
           end, { buffer = bufnr, desc = 'Parent module' })
 
           -- Join lines
           vim.keymap.set('n', '<leader>lrj', function()
-            vim.cmd.RustLsp('joinLines')
+            vim.cmd.RustLsp 'joinLines'
           end, { buffer = bufnr, desc = 'Join lines' })
 
           -- Runnables
-          vim.keymap.set('n', '<leader>lrr', function()
-            vim.cmd.RustLsp('runnables')
+          vim.keymap.set('n', '<leader>lrR', function()
+            vim.cmd.RustLsp 'runnables'
           end, { buffer = bufnr, desc = 'Runnables' })
 
           -- Debuggables
           vim.keymap.set('n', '<leader>lrd', function()
-            vim.cmd.RustLsp('debuggables')
+            vim.cmd.RustLsp 'debuggables'
           end, { buffer = bufnr, desc = 'Debuggables' })
 
           -- Expand macro
           vim.keymap.set('n', '<leader>lrm', function()
-            vim.cmd.RustLsp('expandMacro')
+            vim.cmd.RustLsp 'expandMacro'
           end, { buffer = bufnr, desc = 'Expand macro' })
         end,
         default_settings = {
@@ -235,7 +235,7 @@ return {
     optional = true,
     opts = function()
       local dap = require 'dap'
-      
+
       dap.configurations.rust = {
         {
           name = 'Launch',
@@ -267,5 +267,4 @@ return {
       }
     end,
   },
-
 }

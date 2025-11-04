@@ -5,33 +5,33 @@
 -- This allows you to control Cargo/Rust projects from terminals, logs, etc.
 -- ========================================================================
 
-local toolcheck = require('utils.toolcheck')
+local toolcheck = require 'utils.toolcheck'
 
 -- Helper function to run terminal commands with "Press ENTER to close" prompt
 local function run_terminal_cmd(cmd)
-  vim.cmd('tabnew')
+  vim.cmd 'tabnew'
   local bufnr = vim.api.nvim_get_current_buf()
-  
+
   -- Wrap command to show exit status and wait for Enter, then close buffer
   local wrapped_cmd = string.format(
     '%s; echo "\n---"; if [ $? -eq 0 ]; then echo "✓ Command completed successfully"; else echo "✗ Command failed with exit code $?"; fi; echo "Press ENTER to close"; read; exit',
     cmd
   )
-  local job_id = vim.fn.termopen({ 'zsh', '-c', wrapped_cmd })
-  
+  local job_id = vim.fn.termopen { 'zsh', '-c', wrapped_cmd }
+
   -- Auto-close terminal when job finishes (user pressed ENTER)
   vim.api.nvim_create_autocmd('TermClose', {
     buffer = bufnr,
     once = true,
     callback = function()
-      vim.cmd('bdelete!')
+      vim.cmd 'bdelete!'
     end,
   })
-  
+
   -- Start in insert mode after a delay (let command run first)
   vim.defer_fn(function()
     if vim.api.nvim_buf_is_valid(bufnr) and vim.api.nvim_get_current_buf() == bufnr then
-      vim.cmd('startinsert')
+      vim.cmd 'startinsert'
     end
   end, 100)
 end
@@ -45,16 +45,16 @@ vim.keymap.set('n', '<leader>lrb', function()
   if not toolcheck.check_cargo() then
     return
   end
-  run_terminal_cmd('cargo build')
+  run_terminal_cmd 'cargo build'
   vim.notify('📦 Building with cargo...', vim.log.levels.INFO)
 end, { desc = 'Cargo: Build' })
 
 -- Run project
-vim.keymap.set('n', '<leader>lrR', function()
+vim.keymap.set('n', '<leader>lrr', function()
   if not toolcheck.check_cargo() then
     return
   end
-  run_terminal_cmd('cargo run')
+  run_terminal_cmd 'cargo run'
   vim.notify('🚀 Running with cargo...', vim.log.levels.INFO)
 end, { desc = 'Cargo: Run' })
 
@@ -63,7 +63,7 @@ vim.keymap.set('n', '<leader>lrt', function()
   if not toolcheck.check_cargo() then
     return
   end
-  run_terminal_cmd('cargo test')
+  run_terminal_cmd 'cargo test'
   vim.notify('🧪 Running tests...', vim.log.levels.INFO)
 end, { desc = 'Cargo: Test' })
 
@@ -72,7 +72,7 @@ vim.keymap.set('n', '<leader>lrk', function()
   if not toolcheck.check_cargo() then
     return
   end
-  run_terminal_cmd('cargo check')
+  run_terminal_cmd 'cargo check'
   vim.notify('🔍 Checking project...', vim.log.levels.INFO)
 end, { desc = 'Cargo: Check' })
 
@@ -81,7 +81,7 @@ vim.keymap.set('n', '<leader>lrl', function()
   if not toolcheck.check_cargo() then
     return
   end
-  run_terminal_cmd('cargo clippy')
+  run_terminal_cmd 'cargo clippy'
   vim.notify('📎 Running clippy...', vim.log.levels.INFO)
 end, { desc = 'Cargo: Clippy' })
 
@@ -90,7 +90,7 @@ vim.keymap.set('n', '<leader>lrf', function()
   if not toolcheck.check_cargo() then
     return
   end
-  run_terminal_cmd('cargo fmt')
+  run_terminal_cmd 'cargo fmt'
   vim.notify('✨ Formatting with rustfmt...', vim.log.levels.INFO)
 end, { desc = 'Cargo: Format' })
 
@@ -99,7 +99,7 @@ vim.keymap.set('n', '<leader>lrx', function()
   if not toolcheck.check_cargo() then
     return
   end
-  run_terminal_cmd('cargo clean')
+  run_terminal_cmd 'cargo clean'
   vim.notify('🧹 Cleaning build artifacts...', vim.log.levels.INFO)
 end, { desc = 'Cargo: Clean' })
 
@@ -136,7 +136,7 @@ vim.keymap.set('n', '<leader>lrU', function()
   if not toolcheck.check_cargo() then
     return
   end
-  run_terminal_cmd('cargo update')
+  run_terminal_cmd 'cargo update'
   vim.notify('🔄 Updating dependencies...', vim.log.levels.INFO)
 end, { desc = 'Cargo: Update deps' })
 
@@ -145,6 +145,6 @@ vim.keymap.set('n', '<leader>lrD', function()
   if not toolcheck.check_cargo() then
     return
   end
-  run_terminal_cmd('cargo doc --open')
+  run_terminal_cmd 'cargo doc --open'
   vim.notify('📚 Building and opening docs...', vim.log.levels.INFO)
 end, { desc = 'Cargo: Doc' })
