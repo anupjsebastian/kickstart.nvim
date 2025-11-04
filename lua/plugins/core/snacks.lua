@@ -310,6 +310,50 @@ return {
         end
         vim.print = _G.dd
         
+        -- Override LspRestart to suppress "Invalid server name" errors
+        vim.api.nvim_create_user_command('LspRestart', function(opts)
+          -- Get all active clients
+          local clients = vim.lsp.get_clients()
+          
+          if opts.args ~= '' then
+            -- Restart specific server by name
+            local found = false
+            for _, client in ipairs(clients) do
+              if client.name == opts.args then
+                vim.lsp.stop_client(client.id)
+                vim.defer_fn(function()
+                  vim.cmd.edit()  -- Trigger LSP attach
+                end, 500)
+                found = true
+                break
+              end
+            end
+            if not found then
+              -- Silently ignore invalid server names (like Copilot)
+              return
+            end
+          else
+            -- Restart all clients
+            for _, client in ipairs(clients) do
+              vim.lsp.stop_client(client.id)
+            end
+            vim.defer_fn(function()
+              vim.cmd.edit()  -- Trigger LSP attach for all
+            end, 500)
+          end
+        end, { 
+          nargs = '?',
+          complete = function()
+            local clients = vim.lsp.get_clients()
+            local names = {}
+            for _, client in ipairs(clients) do
+              table.insert(names, client.name)
+            end
+            return names
+          end,
+          desc = 'Restart LSP clients'
+        })
+        
         -- Create commands for GitHub integration
         vim.api.nvim_create_user_command('GhIssues', function()
           require('snacks').gh.issue()

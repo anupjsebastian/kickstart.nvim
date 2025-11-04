@@ -133,7 +133,7 @@ return {
         vim.notify('blink.cmp not available, using vanilla LSP capabilities', vim.log.levels.WARN)
       end
 
-      -- General LSP servers (lua_ls for Neovim config, pyright for Python)
+      -- General LSP servers (lua_ls for Neovim config, basedpyright for Python)
       local servers = {
         lua_ls = {
           settings = {
@@ -144,18 +144,59 @@ return {
             },
           },
         },
-        pyright = {
+        basedpyright = {
           settings = {
-            python = {
+            basedpyright = {
               analysis = {
                 typeCheckingMode = 'basic',
                 autoImportCompletions = true,
                 autoSearchPaths = true,
                 useLibraryCodeForTypes = true,
-                diagnosticMode = 'workspace',
+                diagnosticMode = 'openFilesOnly',
               },
             },
           },
+          -- Detect and configure virtual environment
+          on_new_config = function(new_config, new_root_dir)
+            local util = require('lspconfig.util')
+            
+            -- Helper function to find virtual environment
+            local function find_venv()
+              -- Check common venv locations
+              local venv_names = { '.venv', 'venv', '.env', 'env' }
+              for _, venv_name in ipairs(venv_names) do
+                local venv_python = util.path.join(new_root_dir, venv_name, 'bin', 'python')
+                if vim.fn.filereadable(venv_python) == 1 then
+                  return venv_python
+                end
+              end
+              
+              -- Check VIRTUAL_ENV environment variable
+              local virtual_env = os.getenv('VIRTUAL_ENV')
+              if virtual_env then
+                local venv_python = util.path.join(virtual_env, 'bin', 'python')
+                if vim.fn.filereadable(venv_python) == 1 then
+                  return venv_python
+                end
+              end
+              
+              return nil
+            end
+            
+            local venv_python = find_venv()
+            if venv_python then
+              new_config.settings.python = new_config.settings.python or {}
+              new_config.settings.python.pythonPath = venv_python
+            else
+              vim.notify('⚠️  No Python venv found in ' .. new_root_dir, vim.log.levels.WARN)
+            end
+          end,
+          -- Notify server of configuration after it attaches
+          on_attach = function(client, bufnr)
+            if client.config.settings.python and client.config.settings.python.pythonPath then
+              client.notify('workspace/didChangeConfiguration', { settings = client.config.settings })
+            end
+          end,
         },
         html = {
           -- HTML language server
@@ -211,29 +252,6 @@ return {
           end,
         },
       }
-
-      -- ========================================================================
-      -- PYTHON VENV DETECTION
-      -- ========================================================================
-      -- Automatically configure pyright to use .venv when it attaches
-      -- This is here instead of python.lua to ensure it runs after LSP setup
-      -- ========================================================================
-      vim.api.nvim_create_autocmd('LspAttach', {
-        group = vim.api.nvim_create_augroup('python-venv-detection', { clear = true }),
-        callback = function(args)
-          local client = vim.lsp.get_client_by_id(args.data.client_id)
-          if client and client.name == 'pyright' then
-            local root_dir = client.config.root_dir
-            local venv_python = root_dir .. '/.venv/bin/python'
-            
-            if vim.loop.fs_stat(venv_python) then
-              client.config.settings.python = client.config.settings.python or {}
-              client.config.settings.python.pythonPath = venv_python
-              client.notify('workspace/didChangeConfiguration', { settings = client.config.settings })
-            end
-          end
-        end,
-      })
     end,
   },
 

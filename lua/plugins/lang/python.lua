@@ -25,15 +25,15 @@ return {
   -- ========================================================================
   -- PYTHON TOOLS - Language Server and Linter
   -- ========================================================================
-  -- Ensures pyright and ruff are installed via Mason
+  -- Ensures basedpyright and ruff are installed via Mason
   -- NOTE: Venv detection is configured in lua/plugins/lsp/init.lua
   -- ========================================================================
   {
     'WhoIsSethDaniel/mason-tool-installer.nvim',
     ft = 'python',
-    dependencies = { 'williamboman/mason.nvim' },
+    dependencies = { 'mason-org/mason.nvim' },
     opts = {
-      ensure_installed = { 'pyright', 'ruff' },
+      ensure_installed = { 'basedpyright', 'ruff' },
     },
   },
 

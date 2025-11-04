@@ -144,7 +144,7 @@ end, { desc = 'Python: Update deps (uv sync)' })
 
 -- Reload Python environment and LSP (after adding/removing packages)
 vim.keymap.set('n', '<leader>lpe', function()
-  -- Restart LSP clients for Python files
+  -- Restart all LSP clients
   vim.cmd('LspRestart')
   
   -- Reload all Python buffers to pick up new imports

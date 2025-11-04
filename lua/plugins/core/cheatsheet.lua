@@ -946,27 +946,27 @@ local function get_cheatsheet_data()
             -- MINI.AI (TEXT OBJECTS)
             -- ============================================================
             -- Enhanced text objects with next/last support
-            { category = 'Text Objects', key = 'a/i + object', desc = "Around/inside: w(word) s(sentence) p(paragraph) []{}<>() \"'` t(tag)" },
-            { category = 'Text Objects', key = 'an/in', desc = 'Around/inside next - an) goes to next ), cin changes inside next )' },
-            { category = 'Text Objects', key = 'al/il', desc = 'Around/inside last - al" goes to previous ", vil selects inside last "' },
+            { category = 'Text Objects', key = 'a/i + object', desc = "Around/inside: w(word) s(sentence) p(paragraph) []{}<>() \"'` t(tag) (mini.ai)" },
+            { category = 'Text Objects', key = 'an/in', desc = 'Around/inside next - an) goes to next ), cin changes inside next ) (mini.ai)' },
+            { category = 'Text Objects', key = 'al/il', desc = 'Around/inside last - al" goes to previous ", vil selects inside last " (mini.ai)' },
             
             -- Common text object operations (repeatable with .)
-            { category = 'Text Objects', key = 'daw', desc = 'Delete around word (repeatable)' },
-            { category = 'Text Objects', key = 'ciw', desc = 'Change inside word (repeatable)' },
-            { category = 'Text Objects', key = 'yap', desc = 'Yank around paragraph (repeatable)' },
-            { category = 'Text Objects', key = 'di"', desc = 'Delete inside quotes (repeatable)' },
-            { category = 'Text Objects', key = 'da(', desc = 'Delete around parentheses (repeatable)' },
-            { category = 'Text Objects', key = 'ci{', desc = 'Change inside braces (repeatable)' },
-            { category = 'Text Objects', key = 'da[', desc = 'Delete around brackets (repeatable)' },
-            { category = 'Text Objects', key = 'dit', desc = 'Delete inside HTML/XML tag (repeatable)' },
-            { category = 'Text Objects', key = 'vit', desc = 'Visual inside tag - select content between tags' },
-            { category = 'Text Objects', key = 'vis', desc = 'Visual inside sentence' },
+            { category = 'Text Objects', key = 'daw', desc = 'Delete around word (repeatable) (mini.ai)' },
+            { category = 'Text Objects', key = 'ciw', desc = 'Change inside word (repeatable) (mini.ai)' },
+            { category = 'Text Objects', key = 'yap', desc = 'Yank around paragraph (repeatable) (mini.ai)' },
+            { category = 'Text Objects', key = 'di"', desc = 'Delete inside quotes (repeatable) (mini.ai)' },
+            { category = 'Text Objects', key = 'da(', desc = 'Delete around parentheses (repeatable) (mini.ai)' },
+            { category = 'Text Objects', key = 'ci{', desc = 'Change inside braces (repeatable) (mini.ai)' },
+            { category = 'Text Objects', key = 'da[', desc = 'Delete around brackets (repeatable) (mini.ai)' },
+            { category = 'Text Objects', key = 'dit', desc = 'Delete inside HTML/XML tag (repeatable) (mini.ai)' },
+            { category = 'Text Objects', key = 'vit', desc = 'Visual inside tag - select content between tags (mini.ai)' },
+            { category = 'Text Objects', key = 'vis', desc = 'Visual inside sentence (mini.ai)' },
             
             -- Function/call text objects (mini.ai)
-            { category = 'Text Objects', key = 'daf', desc = 'Delete around function call - includes name + ()' },
-            { category = 'Text Objects', key = 'cif', desc = 'Change inside function call - only arguments' },
-            { category = 'Text Objects', key = 'daa', desc = 'Delete around argument - including commas' },
-            { category = 'Text Objects', key = 'cia', desc = 'Change inside argument - current arg only' },
+            { category = 'Text Objects', key = 'daf', desc = 'Delete around function call - includes name + () (mini.ai)' },
+            { category = 'Text Objects', key = 'cif', desc = 'Change inside function call - only arguments (mini.ai)' },
+            { category = 'Text Objects', key = 'daa', desc = 'Delete around argument - including commas (mini.ai)' },
+            { category = 'Text Objects', key = 'cia', desc = 'Change inside argument - current arg only (mini.ai)' },
 
             -- ============================================================
             -- MINI.SURROUND (works with vim-repeat!)
@@ -1037,9 +1037,32 @@ return {
               key_max = math.max(key_max, vim.fn.strdisplaywidth(item.key))
             end
             
-            -- Apply min/max constraints (increased max for wider screens)
-            local cat_width = math.min(math.max(cat_max + 2, 20), 45)  -- increased from 35 to 45
-            local key_width = math.min(math.max(key_max + 2, 18), 40)  -- increased from 30 to 40
+            -- Get screen width for dynamic sizing
+            local screen_width = vim.o.columns
+            
+            -- Adjust max widths based on screen size
+            local cat_max_width, key_max_width
+            if screen_width < 100 then
+              -- Very small screens (half laptop width)
+              cat_max_width = 25
+              key_max_width = 20
+            elseif screen_width < 140 then
+              -- Small screens (laptop)
+              cat_max_width = 30
+              key_max_width = 25
+            elseif screen_width < 180 then
+              -- Medium screens
+              cat_max_width = 35
+              key_max_width = 28
+            else
+              -- Large screens
+              cat_max_width = 38
+              key_max_width = 32
+            end
+            
+            -- Apply min/max constraints
+            local cat_width = math.min(math.max(cat_max + 2, 18), cat_max_width)
+            local key_width = math.min(math.max(key_max + 2, 16), key_max_width)
             
             return cat_width, key_width
           end
@@ -1131,7 +1154,7 @@ return {
               layout_config = {
                 width = width_ratio,
                 height = height_ratio,
-                preview_width = 0.50,
+                preview_width = 0.25,  -- 25% for preview, 75% for main window
               },
               attach_mappings = function(prompt_bufnr, map)
                 actions.select_default:replace(function()
@@ -1508,7 +1531,7 @@ return {
               layout_config = {
                 width = 0.90,
                 height = 0.85,
-                preview_width = 0.50,
+                preview_width = 0.25,  -- 25% for preview, 75% for main window
               },
               previewer = previewers.new_buffer_previewer {
                 title = 'Preview',
@@ -1604,7 +1627,7 @@ return {
               layout_config = {
                 width = 0.90,
                 height = 0.85,
-                preview_width = 0.50,
+                preview_width = 0.25,  -- 25% for preview, 75% for main window
               },
               attach_mappings = function(prompt_bufnr)
                 actions.select_default:replace(function()
@@ -1764,7 +1787,7 @@ return {
                       layout_config = {
                         width = width_ratio,
                         height = height_ratio,
-                        preview_width = 0.50,
+                        preview_width = 0.25,  -- 25% for preview, 75% for main window
                       },
                       attach_mappings = function(filtered_prompt_bufnr, map)
                         -- Add Ctrl-b to go back to category browser
