@@ -30,8 +30,12 @@ return {
       { '<leader>dC', function() require('dap').run_to_cursor() end, desc = 'Run to cursor' },
     },
     config = function()
-      -- nvim-dap doesn't need explicit setup unless configuring adapters
-      -- Adapters are configured in language-specific files (flutter.lua, rust.lua, etc.)
+      -- Custom debug signs - more visible breakpoints
+      vim.fn.sign_define('DapBreakpoint', { text = '●', texthl = 'DiagnosticError', linehl = '', numhl = '' })
+      vim.fn.sign_define('DapBreakpointCondition', { text = '◆', texthl = 'DiagnosticWarn', linehl = '', numhl = '' })
+      vim.fn.sign_define('DapBreakpointRejected', { text = '○', texthl = 'DiagnosticHint', linehl = '', numhl = '' })
+      vim.fn.sign_define('DapStopped', { text = '→', texthl = 'DiagnosticInfo', linehl = 'DapStoppedLine', numhl = '' })
+      vim.fn.sign_define('DapLogPoint', { text = '◎', texthl = 'DiagnosticInfo', linehl = '', numhl = '' })
     end,
   },
 

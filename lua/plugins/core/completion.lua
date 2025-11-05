@@ -28,7 +28,6 @@ return {
       'folke/lazydev.nvim',
     },
     ---@module 'blink.cmp'
-    ---@type blink.cmp.Config
     opts = {
       keymap = {
         preset = 'enter',
@@ -47,7 +46,7 @@ return {
       },
       snippets = { preset = 'luasnip' },
       fuzzy = { implementation = 'lua' },
-      signature = { enabled = false},
+      signature = { enabled = false },
     },
   },
 

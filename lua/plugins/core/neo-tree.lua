@@ -8,9 +8,9 @@ return {
     'nvim-lua/plenary.nvim',
     'nvim-tree/nvim-web-devicons', -- not strictly required, but recommended
     'MunifTanjim/nui.nvim',
-    's1n7ax/nvim-window-picker', -- Required for split_with_window_picker
+    's1n7ax/nvim-window-picker',   -- Required for split_with_window_picker
   },
-  lazy = false,
+  cmd = 'Neotree',                 -- Lazy-load on command
   keys = {
     { '\\', ':Neotree reveal<CR>', desc = 'NeoTree reveal', silent = true },
   },
@@ -20,35 +20,62 @@ return {
     popup_border_style = 'rounded',
     enable_git_status = true,
     enable_diagnostics = true,
-    
     -- Default to filesystem view
     default_component_configs = {
       indent = {
         padding = 0,
       },
-      diagnostics = {
-        symbols = {
-          hint = '󰌶 ',
-          info = '󰋽 ',
-          warn = '󰀪 ',
-          error = '󰅚 ',
-        },
+      -- Modified indicator (always shows, space if not modified)
+      modified = {
+        symbol = '●',
+        highlight = 'NeoTreeModified',
       },
+      -- Git status symbols (no trailing spaces for compact display)
       git_status = {
         symbols = {
           added = '',
           deleted = '',
           modified = '',
           renamed = '➜',
-          untracked = '★',
+          untracked = '?',
           ignored = '◌',
           unstaged = '✗',
           staged = '✓',
-          conflict = '',
+          conflict = '!',
+        },
+        align = 'right', -- Align git indicators to the right for consistency
+      },
+      -- Diagnostics (no trailing spaces for compact display)
+      diagnostics = {
+        symbols = {
+          hint = '󰌶',
+          info = '󰋽',
+          warn = '󰀪',
+          error = '󰅚',
+        },
+        highlights = {
+          hint = 'DiagnosticSignHint',
+          info = 'DiagnosticSignInfo',
+          warn = 'DiagnosticSignWarn',
+          error = 'DiagnosticSignError',
         },
       },
+      -- Icon (file type icon)
+      icon = {
+        folder_closed = '󰉋',
+        folder_open = '󰝰',
+        folder_empty = '󰉖',
+        folder_empty_open = '󰷏',
+        default = '',
+      },
+      -- Name component
+      name = {
+        trailing_slash = false,
+        use_git_status_colors = true,
+        highlight = 'NeoTreeFileName',
+      },
     },
-    
+
     -- Global window mappings (apply to all Neo-tree windows)
     window = {
       mappings = {
@@ -60,7 +87,7 @@ return {
         ['za'] = 'toggle_node',
       },
     },
-    
+
     filesystem = {
       -- Follow the current file in the tree
       follow_current_file = {
@@ -69,44 +96,44 @@ return {
       },
       -- Use system commands for file operations
       use_libuv_file_watcher = true,
-      
+
       window = {
         position = 'left',
         width = 30,
         mappings = {
           ['\\'] = 'close_window',
-          
+
           -- Consistent with Telescope: <C-x> = split, <C-v> = vsplit, <C-t> = tabnew
           ['<C-x>'] = 'split_with_window_picker',
           ['<C-v>'] = 'vsplit_with_window_picker',
           ['<C-t>'] = 'open_tabnew',
-          
+
           -- Open file (consistent with Telescope <CR>)
           ['<CR>'] = 'open',
           ['o'] = 'open',
-          
+
           -- Navigation
           ['<C-j>'] = 'next_source', -- Match Telescope down navigation
           ['<C-k>'] = 'prev_source', -- Match Telescope up navigation
-          
+
           -- Preview (like Telescope)
           ['P'] = { 'toggle_preview', config = { use_float = true } },
-          
+
           -- Telescope integration from Neo-tree
-          ['/'] = 'telescope_find_root',       -- Search from root directory
-          ['<leader>sf'] = 'telescope_find',   -- Search from current directory
-          ['<leader>sg'] = 'telescope_grep',   -- Grep from current directory
-          
+          ['/'] = 'telescope_find_root',     -- Search from root directory
+          ['<leader>sf'] = 'telescope_find', -- Search from current directory
+          ['<leader>sg'] = 'telescope_grep', -- Grep from current directory
+
           -- Refresh
           ['R'] = 'refresh',
-          
+
           -- Toggle hidden files
           ['H'] = 'toggle_hidden',
-          
+
           -- Navigation
           ['-'] = 'navigate_up',
           ['.'] = 'set_root',
-          
+
           -- File operations
           ['a'] = 'add',
           ['A'] = 'add_directory',
@@ -117,16 +144,16 @@ return {
           ['p'] = 'paste_from_clipboard',
           ['c'] = 'copy', -- Copy (takes a path as input)
           ['m'] = 'move', -- Move (takes a path as input)
-          
+
           -- Help
           ['?'] = 'show_help',
         },
       },
     },
-    
+
     -- Add custom commands for Telescope integration
     commands = {
-      telescope_find_root = function(state)
+      telescope_find_root = function()
         -- Always search from the root of the workspace
         require('telescope.builtin').find_files {
           cwd = vim.fn.getcwd(),

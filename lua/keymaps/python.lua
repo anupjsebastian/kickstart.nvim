@@ -1,0 +1,304 @@
+-- ========================================================================
+-- PYTHON GLOBAL KEYMAPS - Always available (not buffer-local)
+-- ========================================================================
+-- Loaded eagerly at startup to make commands available from any buffer
+-- This allows you to control Python projects from terminals, logs, etc.
+-- ========================================================================
+
+local toolcheck = require('utils.toolcheck')
+
+-- Helper function to run terminal commands with "Press ENTER to close" prompt
+local function run_terminal_cmd(cmd)
+    vim.cmd('tabnew')
+    local bufnr = vim.api.nvim_get_current_buf()
+
+    -- Wrap command to show exit status and wait for Enter, then close buffer
+    local wrapped_cmd = string.format(
+        '%s; echo "\n---"; if [ $? -eq 0 ]; then echo "✓ Command completed successfully"; else echo "✗ Command failed with exit code $?"; fi; echo "Press ENTER to close"; read; exit',
+        cmd
+    )
+    vim.fn.jobstart({ 'zsh', '-c', wrapped_cmd }, { pty = true })
+
+    -- Auto-close terminal when job finishes (user pressed ENTER)
+    vim.api.nvim_create_autocmd('TermClose', {
+        buffer = bufnr,
+        once = true,
+        callback = function()
+            vim.cmd('bdelete!')
+        end,
+    })
+
+    -- Start in insert mode after a delay (let command run first)
+    vim.defer_fn(function()
+        if vim.api.nvim_buf_is_valid(bufnr) and vim.api.nvim_get_current_buf() == bufnr then
+            vim.cmd('startinsert')
+        end
+    end, 100)
+end
+
+-- Auto-reload Python project files when they change externally
+-- This handles: uv add/remove from terminal, manual edits, git operations, etc.
+vim.api.nvim_create_autocmd('FileChangedShellPost', {
+    pattern = { 'pyproject.toml', 'uv.lock', 'requirements*.txt', 'setup.py', 'setup.cfg' },
+    callback = function(args)
+        local filename = vim.fn.fnamemodify(args.file, ':t')
+        vim.notify('📦 ' .. filename .. ' updated automatically', vim.log.levels.INFO)
+    end,
+    desc = 'Auto-reload Python project files when changed externally',
+})
+
+-- NOTE: The <leader>lp group is registered globally in editor.lua
+
+-- Initialize new Python project with uv
+vim.keymap.set('n', '<leader>lpi', function()
+    if not toolcheck.check_uv() then
+        return
+    end
+    run_terminal_cmd('uv init')
+    vim.notify('🐍 Initializing Python project (creates pyproject.toml)...', vim.log.levels.INFO)
+end, { desc = 'Init project (uv)' })
+
+
+-- Add dependency to project
+vim.keymap.set('n', '<leader>lpa', function()
+    if not toolcheck.check_uv() then
+        return
+    end
+    vim.ui.input({
+        prompt = 'Enter package name(s) to add: ',
+    }, function(input)
+        if input and input ~= '' then
+            -- Open terminal and run command
+            run_terminal_cmd('uv add ' .. input)
+            vim.notify('📦 Adding package: ' .. input, vim.log.levels.INFO)
+
+            -- Auto-reload pyproject.toml and related files after a short delay
+            vim.defer_fn(function()
+                for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+                    if vim.api.nvim_buf_is_loaded(buf) then
+                        local bufname = vim.api.nvim_buf_get_name(buf)
+                        -- Reload pyproject.toml, uv.lock, requirements files, etc.
+                        if bufname:match('pyproject%.toml$') or
+                            bufname:match('uv%.lock$') or
+                            bufname:match('requirements.*%.txt$') then
+                            vim.api.nvim_buf_call(buf, function()
+                                -- checktime refreshes buffer from disk if file changed externally
+                                vim.cmd('checktime')
+                            end)
+                        end
+                    end
+                end
+            end, 2000) -- 2 second delay to let command complete
+        else
+            vim.notify('No package specified', vim.log.levels.WARN)
+        end
+    end)
+end, { desc = 'Add dependency' })
+
+-- Remove dependency from project
+vim.keymap.set('n', '<leader>lpA', function()
+    if not toolcheck.check_uv() then
+        return
+    end
+    vim.ui.input({
+        prompt = 'Enter package name(s) to remove: ',
+    }, function(input)
+        if input and input ~= '' then
+            -- Open terminal and run command
+            run_terminal_cmd('uv remove ' .. input)
+            vim.notify('🗑️  Removing package: ' .. input, vim.log.levels.INFO)
+
+            -- Auto-reload pyproject.toml and related files after a short delay
+            vim.defer_fn(function()
+                for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+                    if vim.api.nvim_buf_is_loaded(buf) then
+                        local bufname = vim.api.nvim_buf_get_name(buf)
+                        -- Reload pyproject.toml, uv.lock, requirements files, etc.
+                        if bufname:match('pyproject%.toml$') or
+                            bufname:match('uv%.lock$') or
+                            bufname:match('requirements.*%.txt$') then
+                            vim.api.nvim_buf_call(buf, function()
+                                -- checktime refreshes buffer from disk if file changed externally
+                                vim.cmd('checktime')
+                            end)
+                        end
+                    end
+                end
+            end, 2000) -- 2 second delay to let command complete
+        else
+            vim.notify('No package specified', vim.log.levels.WARN)
+        end
+    end)
+end, { desc = 'Remove dependency' })
+
+
+
+-- Update Python dependencies with uv
+vim.keymap.set('n', '<leader>lpu', function()
+    if not toolcheck.check_uv() then
+        return
+    end
+    run_terminal_cmd('uv sync')
+    vim.notify('🔄 Updating Python dependencies with uv...', vim.log.levels.INFO)
+end, { desc = 'Update deps (uv sync)' })
+
+-- Reload Python environment and LSP (after adding/removing packages)
+vim.keymap.set('n', '<leader>lpe', function()
+    -- Restart all LSP clients
+    vim.cmd('LspRestart')
+
+    -- Reload all Python buffers to pick up new imports
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        if vim.api.nvim_buf_is_loaded(buf) then
+            local filetype = vim.bo[buf].filetype
+            if filetype == 'python' then
+                vim.api.nvim_buf_call(buf, function()
+                    vim.cmd('edit!')
+                end)
+            end
+        end
+    end
+
+    vim.notify('🔄 Reloaded Python environment and LSP', vim.log.levels.INFO)
+end, { desc = 'Reload environment & LSP' })
+
+-- View installed packages
+vim.keymap.set('n', '<leader>lpv', function()
+    if not toolcheck.check_uv() then
+        return
+    end
+    run_terminal_cmd('uv pip list')
+    vim.notify('📦 Viewing installed Python packages...', vim.log.levels.INFO)
+end, { desc = 'View packages' })
+
+
+-- Run Python tests
+vim.keymap.set('n', '<leader>lpt', function()
+    if not toolcheck.check_uv() then
+        return
+    end
+    run_terminal_cmd('uv run pytest')
+    vim.notify('🧪 Running Python tests...', vim.log.levels.INFO)
+end, { desc = 'Run tests' })
+
+-- Check code style (ruff check)
+vim.keymap.set('n', '<leader>lpc', function()
+    if not toolcheck.check_uv() then
+        return
+    end
+    run_terminal_cmd('uv run ruff check .')
+    vim.notify('🔍 Checking Python code style...', vim.log.levels.INFO)
+end, { desc = 'Check style' })
+
+-- Run current Python file with configurable command
+vim.keymap.set('n', '<leader>lpr', function()
+    if not toolcheck.check_uv() then
+        return
+    end
+
+    local file = vim.fn.expand('%:p')
+    if vim.fn.filereadable(file) == 1 then
+        -- Check if there's a custom run command stored
+        local custom_cmd = vim.g.python_run_command
+        local cmd = custom_cmd and custom_cmd ~= '' and custom_cmd or ('uv run python ' .. vim.fn.shellescape(file))
+
+        -- Run directly without wrapper (like Flutter) - works for both quick scripts and long-running servers
+        vim.cmd('tabnew')
+        vim.fn.jobstart(cmd, { pty = true })
+        vim.cmd('startinsert')
+
+        if custom_cmd and custom_cmd ~= '' then
+            vim.notify(string.format('🚀 Running with custom command:\n%s', cmd), vim.log.levels.INFO)
+        else
+            vim.notify('🚀 Running Python file with uv...', vim.log.levels.INFO)
+        end
+    else
+        vim.notify('❌ No Python file to run', vim.log.levels.ERROR)
+    end
+end, { desc = 'Run current file' })
+
+-- Set custom run command (interactive input)
+vim.keymap.set('n', '<leader>lpR', function()
+    local current = vim.g.python_run_command or ('uv run python ' .. vim.fn.shellescape(vim.fn.expand('%:p')))
+    vim.ui.input({
+        prompt = 'Enter Python run command: ',
+        default = current,
+    }, function(input)
+        if input and input ~= '' then
+            vim.g.python_run_command = input
+            vim.notify(
+                string.format('✓ Custom run command set:\n%s\n\nUse <leader>lpr to execute', input),
+                vim.log.levels.INFO
+            )
+        else
+            vim.notify('No changes made to run command', vim.log.levels.INFO)
+        end
+    end)
+end, { desc = 'Set custom run command' })
+
+-- Clear/reset custom run command
+vim.keymap.set('n', '<leader>lpC', function()
+    if vim.g.python_run_command then
+        vim.notify(
+            string.format(
+                '✓ Cleared custom command:\n%s\n\nWill use default: uv run python <file>',
+                vim.g.python_run_command
+            ),
+            vim.log.levels.INFO
+        )
+        vim.g.python_run_command = nil
+    else
+        vim.notify('No custom command set (already using default)', vim.log.levels.INFO)
+    end
+end, { desc = 'Clear/reset run command' })
+
+-- Run Python REPL/Shell - Don't auto-close for interactive sessions
+vim.keymap.set('n', '<leader>lpS', function()
+    if not toolcheck.check_uv() then
+        return
+    end
+    vim.cmd('tabnew')
+    vim.fn.jobstart('uv run python', { pty = true })
+    vim.notify('🐍 Starting Python Shell...', vim.log.levels.INFO)
+end, { desc = 'Shell (REPL)' })
+
+-- Execute Python code from visual selection
+vim.keymap.set('v', '<leader>lpX', function()
+    if not toolcheck.check_uv() then
+        return
+    end
+    -- Get visual selection
+    local start_pos = vim.fn.getpos("'<")
+    local end_pos = vim.fn.getpos("'>")
+    local lines = vim.fn.getline(start_pos[2], end_pos[2])
+    ---@cast lines string[]
+
+    -- Handle single line selection
+    if #lines == 1 then
+        lines[1] = string.sub(lines[1], start_pos[3], end_pos[3])
+    else
+        -- Handle multi-line selection
+        lines[1] = string.sub(lines[1], start_pos[3])
+        lines[#lines] = string.sub(lines[#lines], 1, end_pos[3])
+    end
+
+    local code = table.concat(lines, '\n')
+    local escaped_code = vim.fn.shellescape(code)
+    -- Ensure escaped_code is a string (shellescape can return string or string[])
+    if type(escaped_code) == 'table' then
+        escaped_code = table.concat(escaped_code, ' ')
+    end
+    ---@cast escaped_code string
+    local command = 'uv run python -c ' .. escaped_code
+    run_terminal_cmd(command)
+    vim.notify('⚡ Executing Python code...', vim.log.levels.INFO)
+end, { desc = 'Execute selection' })
+
+-- Lint and fix with ruff
+vim.keymap.set('n', '<leader>lpl', function()
+    if not toolcheck.check_uv() then
+        return
+    end
+    run_terminal_cmd('uv run ruff check --fix .')
+    vim.notify('🔧 Linting and fixing Python code...', vim.log.levels.INFO)
+end, { desc = 'Lint & fix' })

@@ -1,6 +1,9 @@
 -- Rust Development Configuration
 -- Loaded only for Rust files (*.rs)
 
+-- Load Rust/Cargo keymaps immediately (not buffer-local, always available)
+require 'keymaps.rust'
+
 return {
   -- Rust Tools - Enhanced rust-analyzer integration
   {
@@ -10,55 +13,57 @@ return {
     ft = { 'rust' },
     opts = {
       server = {
-        on_attach = function(client, bufnr)
-          -- Register which-key group for Rust
-          require('which-key').add {
-            { '<leader>r', group = '󱘗 rust', buffer = bufnr },
-          }
+        on_attach = function(_, bufnr)
+          -- NOTE: The <leader>lr group is registered globally in editor.lua
+          -- NOTE: Cargo workflow commands are defined GLOBALLY in:
+          --       lua/config/keymaps.lua (after Python section)
+          --
+          -- This makes cargo commands available from any buffer (terminals, logs)
+          -- Commands below are rustaceanvim-specific and remain buffer-local
 
           -- Hover actions
-          vim.keymap.set('n', '<leader>rh', function()
+          vim.keymap.set('n', '<leader>lrh', function()
             vim.cmd.RustLsp { 'hover', 'actions' }
           end, { buffer = bufnr, desc = 'Hover actions' })
 
           -- Code actions
-          vim.keymap.set('n', '<leader>ra', function()
-            vim.cmd.RustLsp('codeAction')
+          vim.keymap.set('n', '<leader>lra', function()
+            vim.cmd.RustLsp 'codeAction'
           end, { buffer = bufnr, desc = 'Code actions' })
 
           -- Explain error
-          vim.keymap.set('n', '<leader>re', function()
-            vim.cmd.RustLsp('explainError')
+          vim.keymap.set('n', '<leader>lre', function()
+            vim.cmd.RustLsp 'explainError'
           end, { buffer = bufnr, desc = 'Explain error' })
 
           -- Open Cargo.toml
-          vim.keymap.set('n', '<leader>rC', function()
-            vim.cmd.RustLsp('openCargo')
+          vim.keymap.set('n', '<leader>lrC', function()
+            vim.cmd.RustLsp 'openCargo'
           end, { buffer = bufnr, desc = 'Open Cargo.toml' })
 
           -- Parent module
-          vim.keymap.set('n', '<leader>rp', function()
-            vim.cmd.RustLsp('parentModule')
+          vim.keymap.set('n', '<leader>lrp', function()
+            vim.cmd.RustLsp 'parentModule'
           end, { buffer = bufnr, desc = 'Parent module' })
 
           -- Join lines
-          vim.keymap.set('n', '<leader>rj', function()
-            vim.cmd.RustLsp('joinLines')
+          vim.keymap.set('n', '<leader>lrj', function()
+            vim.cmd.RustLsp 'joinLines'
           end, { buffer = bufnr, desc = 'Join lines' })
 
           -- Runnables
-          vim.keymap.set('n', '<leader>rr', function()
-            vim.cmd.RustLsp('runnables')
+          vim.keymap.set('n', '<leader>lrR', function()
+            vim.cmd.RustLsp 'runnables'
           end, { buffer = bufnr, desc = 'Runnables' })
 
           -- Debuggables
-          vim.keymap.set('n', '<leader>rd', function()
-            vim.cmd.RustLsp('debuggables')
+          vim.keymap.set('n', '<leader>lrd', function()
+            vim.cmd.RustLsp 'debuggables'
           end, { buffer = bufnr, desc = 'Debuggables' })
 
           -- Expand macro
-          vim.keymap.set('n', '<leader>rm', function()
-            vim.cmd.RustLsp('expandMacro')
+          vim.keymap.set('n', '<leader>lrm', function()
+            vim.cmd.RustLsp 'expandMacro'
           end, { buffer = bufnr, desc = 'Expand macro' })
         end,
         default_settings = {
@@ -71,8 +76,8 @@ return {
                 enable = true,
               },
             },
-            -- Add clippy lints for Rust
-            checkOnSave = {
+            -- Add clippy lints for Rust (updated for newer rust-analyzer)
+            check = {
               allFeatures = true,
               command = 'clippy',
               extraArgs = { '--no-deps' },
@@ -107,11 +112,7 @@ return {
     'saecki/crates.nvim',
     event = { 'BufRead Cargo.toml' },
     opts = {
-      completion = {
-        cmp = {
-          enabled = true,
-        },
-      },
+      -- Using LSP completion instead of deprecated nvim-cmp source
       lsp = {
         enabled = true,
         actions = true,
@@ -129,76 +130,73 @@ return {
         callback = function()
           local bufnr = vim.api.nvim_get_current_buf()
 
-          -- Register which-key group for Rust Crates
-          require('which-key').add {
-            { '<leader>rc', group = ' crates', buffer = bufnr },
-          }
+          -- NOTE: The <leader>lrc group is registered as a subgroup of <leader>lr
 
-          vim.keymap.set('n', '<leader>rct', function()
+          vim.keymap.set('n', '<leader>lrct', function()
             crates.toggle()
           end, { buffer = bufnr, desc = 'Toggle crates' })
 
-          vim.keymap.set('n', '<leader>rcr', function()
+          vim.keymap.set('n', '<leader>lrcr', function()
             crates.reload()
           end, { buffer = bufnr, desc = 'Reload crates' })
 
-          vim.keymap.set('n', '<leader>rcv', function()
+          vim.keymap.set('n', '<leader>lrcv', function()
             crates.show_versions_popup()
           end, { buffer = bufnr, desc = 'Show versions' })
 
-          vim.keymap.set('n', '<leader>rcf', function()
+          vim.keymap.set('n', '<leader>lrcf', function()
             crates.show_features_popup()
           end, { buffer = bufnr, desc = 'Show features' })
 
-          vim.keymap.set('n', '<leader>rcd', function()
+          vim.keymap.set('n', '<leader>lrcd', function()
             crates.show_dependencies_popup()
           end, { buffer = bufnr, desc = 'Show dependencies' })
 
-          vim.keymap.set('n', '<leader>rcu', function()
+          vim.keymap.set('n', '<leader>lrcu', function()
             crates.update_crate()
           end, { buffer = bufnr, desc = 'Update crate' })
 
-          vim.keymap.set('v', '<leader>rcu', function()
+          vim.keymap.set('v', '<leader>lrcu', function()
             crates.update_crates()
           end, { buffer = bufnr, desc = 'Update selected' })
 
-          vim.keymap.set('n', '<leader>rca', function()
+          vim.keymap.set('n', '<leader>lrca', function()
             crates.update_all_crates()
           end, { buffer = bufnr, desc = 'Update all' })
 
-          vim.keymap.set('n', '<leader>rcU', function()
+          vim.keymap.set('n', '<leader>lrcU', function()
             crates.upgrade_crate()
           end, { buffer = bufnr, desc = 'Upgrade crate' })
 
-          vim.keymap.set('v', '<leader>rcU', function()
+          vim.keymap.set('v', '<leader>lrcU', function()
             crates.upgrade_crates()
           end, { buffer = bufnr, desc = 'Upgrade selected' })
 
-          vim.keymap.set('n', '<leader>rcA', function()
+          vim.keymap.set('n', '<leader>lrcA', function()
             crates.upgrade_all_crates()
           end, { buffer = bufnr, desc = 'Upgrade all' })
 
-          vim.keymap.set('n', '<leader>rce', function()
+          vim.keymap.set('n', '<leader>lrce', function()
             crates.expand_plain_crate_to_inline_table()
           end, { buffer = bufnr, desc = 'Expand to inline' })
 
-          vim.keymap.set('n', '<leader>rcE', function()
+          vim.keymap.set('n', '<leader>lrcE', function()
             crates.extract_crate_into_table()
           end, { buffer = bufnr, desc = 'Extract to table' })
 
-          vim.keymap.set('n', '<leader>rcH', function()
+          vim.keymap.set('n', '<leader>lrcH', function()
             crates.open_homepage()
           end, { buffer = bufnr, desc = 'Open homepage' })
 
-          vim.keymap.set('n', '<leader>rcR', function()
+          vim.keymap.set('n', '<leader>lrcR', function()
             crates.open_repository()
           end, { buffer = bufnr, desc = 'Open repository' })
 
-          vim.keymap.set('n', '<leader>rcD', function()
+          vim.keymap.set('n', '<leader>lrcD', function()
             crates.open_documentation()
           end, { buffer = bufnr, desc = 'Open documentation' })
 
-          vim.keymap.set('n', '<leader>rcC', function()
+          vim.keymap.set('n', '<leader>lrcC', function()
             crates.open_crates_io()
           end, { buffer = bufnr, desc = 'Open crates.io' })
         end,
@@ -208,7 +206,7 @@ return {
 
   -- Mason tool installations for Rust
   {
-    'williamboman/mason.nvim',
+    'mason-org/mason.nvim',
     opts = function(_, opts)
       opts.ensure_installed = opts.ensure_installed or {}
       vim.list_extend(opts.ensure_installed, {
@@ -237,7 +235,7 @@ return {
     optional = true,
     opts = function()
       local dap = require 'dap'
-      
+
       dap.configurations.rust = {
         {
           name = 'Launch',

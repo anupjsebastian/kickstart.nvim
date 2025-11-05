@@ -1,4 +1,4 @@
-# 🚀 Kickstart.nvim - Professional Edition
+🚀 Kickstart.nvim - Professional Edition
 
 > A powerful, modular Neovim configuration built on kickstart.nvim, enhanced with LazyVim-style organization and comprehensive language support.
 
@@ -11,11 +11,13 @@
 ## ✨ Features
 
 ### 🎨 **LazyVim-Style Interface**
+
 - Beautiful which-key menu with icons and intuitive groupings
 - Consistent keybindings across all plugins (Telescope, Neo-tree, etc.)
 - Comprehensive searchable cheatsheet with 200+ keymaps (`<Leader>sc`)
 
 ### 🛠️ **Language Support**
+
 - **Flutter/Dart**: Full Flutter tools integration with device management
 - **Rust**: rust-analyzer + Crates.io integration for dependency management
 - **Python**: Pyright LSP with virtual environment support
@@ -23,6 +25,7 @@
 - **Go, TypeScript, Lua**: Pre-configured LSP servers
 
 ### 🔍 **Advanced Tooling**
+
 - **Telescope**: Fuzzy finder for files, git, LSP, and more
 - **Neo-tree**: File explorer with git integration
 - **nvim-dap**: Full debugging support for all languages
@@ -31,6 +34,7 @@
 - **Mini.nvim**: Surround, autopairs, comments, and more
 
 ### 📚 **Comprehensive Documentation**
+
 - In-editor cheatsheet accessible anytime
 - Progressive learning path from basics to advanced
 - Vim mastery tips to build your skills over time
@@ -40,18 +44,21 @@
 ## 📋 Requirements
 
 ### Core Dependencies
+
 - **Neovim** 0.11.4+ (stable or nightly)
 - **Git** for plugin management
 - **C Compiler** (gcc/clang) for TreeSitter
 - **Make** and **unzip**
 
 ### Recommended Tools
+
 - **ripgrep** - Fast file searching (required for Telescope)
 - **fd** - Fast file finding
 - **Nerd Font** - Icons support (set `vim.g.have_nerd_font = true`)
 - **Clipboard tool** - xclip (Linux), pbcopy (macOS), win32yank (Windows)
 
 ### Language-Specific
+
 - **Node.js** & **npm** - TypeScript, Svelte, web development
 - **Python 3** - Python development
 - **Rust** & **Cargo** - Rust development
@@ -63,6 +70,7 @@
 ## 🚀 Quick Start
 
 ### 1. Backup Existing Config
+
 ```bash
 # macOS/Linux
 mv ~/.config/nvim ~/.config/nvim.backup
@@ -72,12 +80,14 @@ mv ~/.cache/nvim ~/.cache/nvim.backup
 ```
 
 ### 2. Clone This Configuration
+
 ```bash
 git clone https://github.com/anupjsebastian/kickstart.nvim.git ~/.config/nvim
 cd ~/.config/nvim
 ```
 
 ### 3. Install Dependencies
+
 ```bash
 # macOS (using Homebrew)
 brew install neovim ripgrep fd
@@ -90,17 +100,20 @@ sudo pacman -S neovim ripgrep fd
 ```
 
 ### 4. Launch Neovim
+
 ```bash
 nvim
 ```
 
 On first launch:
+
 - Lazy.nvim will automatically install all plugins
 - TreeSitter will compile language parsers
 - LSP servers will be installed via Mason
 - Wait for all installations to complete (check bottom right)
 
 ### 5. Verify Installation
+
 ```vim
 :checkhealth
 ```
@@ -110,6 +123,7 @@ On first launch:
 ## � Version & Stability
 
 ### Tested Configuration
+
 - **Neovim Version**: `v0.11.4`
 - **Last Tested**: November 2025
 - **Plugin Lock**: `lazy-lock.json` (commit-pinned versions)
@@ -121,6 +135,7 @@ This configuration is tested and confirmed working with the versions specified a
 If a plugin update causes issues, you can restore to the last known-good state:
 
 #### Quick Restore (Recommended)
+
 ```vim
 " Inside Neovim
 :Lazy restore
@@ -129,6 +144,7 @@ If a plugin update causes issues, you can restore to the last known-good state:
 This restores all plugins to the exact commits specified in `lazy-lock.json`.
 
 #### Full Reset to This Configuration
+
 ```bash
 # 1. Backup your current state
 cd ~/.config/nvim
@@ -146,6 +162,7 @@ nvim -c "checkhealth"
 ```
 
 #### Install Specific Neovim Version (macOS)
+
 ```bash
 # If you need to downgrade/upgrade Neovim
 brew unlink neovim
@@ -176,6 +193,7 @@ nvim -c "Lazy update" -c "qa"
 ```
 
 If issues occur, restore with:
+
 ```bash
 cp lazy-lock.json.backup lazy-lock.json
 nvim -c "Lazy restore" -c "qa"
@@ -186,11 +204,13 @@ nvim -c "Lazy restore" -c "qa"
 ## �📖 Documentation
 
 ### Essential Reading
+
 - **[Getting Started](docs/getting-started/README.md)** - First-time setup and orientation
 - **[Installation Guide](docs/getting-started/installation.md)** - Detailed installation steps
 - **[Quick Reference](docs/getting-started/quick-reference.md)** - Most common commands
 
 ### Core Guides
+
 - **[Keymaps Reference](docs/keymaps/README.md)** - Complete keymap documentation
   - [Core Keymaps](docs/keymaps/core.md) - Leader key organization
   - [LSP Keymaps](docs/keymaps/lsp.md) - Language Server Protocol commands
@@ -211,6 +231,7 @@ nvim -c "Lazy restore" -c "qa"
   - [Other Languages](docs/languages/others.md)
 
 ### Advanced Topics
+
 - **[Vim Mastery](docs/vim-mastery/README.md)** - Progressive skill building
   - [Week 1: Motion Basics](docs/vim-mastery/week-01-motions.md)
   - [Week 2: Text Objects](docs/vim-mastery/week-02-text-objects.md)
@@ -228,22 +249,24 @@ nvim -c "Lazy restore" -c "qa"
 ## 🎯 Quick Access Cheatsheet
 
 ### In-Editor Help
+
 - `<Leader>sc` - Open comprehensive cheatsheet (searchable!)
 - `<Leader>sk` - Search all keymaps with Telescope
 - `<Leader>?` - Quick keymap search
 - `<Leader>sK` - Which-key command palette
 
 ### Essential Keymaps
-| Keymap | Action | Category |
-|--------|--------|----------|
-| `<Leader>sf` | Find files | Search |
-| `<Leader>sg` | Live grep | Search |
-| `<Leader>bb` | List buffers | Buffer |
-| `\` | Toggle Neo-tree | Files |
-| `<Leader>gg` | LazyGit | Git |
-| `<Leader>dc` or `F5` | Start debugging | Debug |
-| `K` | Hover documentation | LSP |
-| `gra` | Code actions | LSP |
+
+| Keymap               | Action              | Category |
+| -------------------- | ------------------- | -------- |
+| `<Leader>sf`         | Find files          | Search   |
+| `<Leader>sg`         | Live grep           | Search   |
+| `<Leader>bb`         | List buffers        | Buffer   |
+| `\`                  | Toggle Neo-tree     | Files    |
+| `<Leader>gg`         | LazyGit             | Git      |
+| `<Leader>dc` or `F5` | Start debugging     | Debug    |
+| `K`                  | Hover documentation | LSP      |
+| `gra`                | Code actions        | LSP      |
 
 > **Pro Tip**: Press `<Leader>` and wait - which-key will show you all available keymaps!
 

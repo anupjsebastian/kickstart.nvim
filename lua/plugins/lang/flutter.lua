@@ -18,6 +18,9 @@
 -- early to ensure they're available when core plugins need them.
 -- ========================================================================
 
+-- Load Flutter keymaps immediately (not buffer-local, always available)
+require('keymaps.flutter')
+
 return {
   -- ============================================================================
   -- FLUTTER & DART DEVELOPMENT ENVIRONMENT
@@ -41,7 +44,7 @@ return {
       -- Enable Dart-specific indentation options (VSCode-like behavior)
       vim.g.dart_style_guide = 2  -- Use 2-space indentation
       vim.g.dart_format_on_save = 0  -- Disable format on save (we use conform.nvim)
-      
+
       -- Set indentation to align with opening parenthesis (VSCode behavior)
       -- This makes parameters align with the opening ( like:
       -- Container(
@@ -117,40 +120,44 @@ return {
 
         lsp = {
           capabilities = capabilities,
-          
+
           -- Suppress didChange errors during snippet expansion
-          on_attach = function(client, bufnr)
+          on_attach = function(client, _)
             -- Reduce didChange notification frequency to prevent errors with snippets
             client.server_capabilities.textDocumentSync = vim.tbl_deep_extend('force', client.server_capabilities.textDocumentSync or {}, {
               change = 2, -- 2 = Incremental (less prone to errors than full sync)
             })
-            
-            -- Filter out didChange error notifications (they're harmless during snippet expansion)
-            -- We'll use an autocmd to do this after noice.nvim is loaded
+
+            -- Filter out dartls didChange error notifications (they're harmless during snippet expansion)
+            -- Only suppress this specific error from dartls, not all notifications
             vim.api.nvim_create_autocmd('User', {
               pattern = 'VeryLazy',
               once = true,
               callback = function()
                 local notify = vim.notify
+                ---@diagnostic disable-next-line: duplicate-set-field
                 vim.notify = function(msg, level, opts)
-                  if type(msg) == 'string' and msg:match('textDocument/didChange') then
-                    return -- Suppress this specific error
+                  -- Only suppress dartls textDocument/didChange errors
+                  if type(msg) == 'string'
+                     and msg:match('textDocument/didChange')
+                     and (msg:match('dartls') or vim.bo.filetype == 'dart') then
+                    return -- Suppress this specific error from dartls only
                   end
                   notify(msg, level, opts)
                 end
               end,
             })
           end,
-          
+
           -- Color preview for dart variables (Colors.red, Color(0xFF...), etc.)
           -- This shows the actual Material Design colors inline!
           color = {
             enabled = true, -- whether or not to highlight color variables at all, only supported on flutter >= 2.10
-            background = true, -- highlight the background
+            background = false, -- Don't highlight the background (cleaner look)
             background_color = nil, -- required, when background is transparent (i.e. background_color = { r = 19, g = 17, b = 24},)
-            foreground = false, -- highlight the foreground
-            virtual_text = true, -- show the highlight using virtual text
-            virtual_text_str = '■', -- the virtual text character to highlight
+            foreground = false, -- Don't highlight the foreground
+            virtual_text = true, -- Show color block at end of line (consistent with web dev)
+            virtual_text_str = '███', -- Wider block (3 characters for better visibility)
           },
           -- Settings passed to the Dart LSP
           settings = {
@@ -185,16 +192,16 @@ return {
           enabled = true, -- Show closing tags for widgets
         },
 
+        -- DISABLED: We use terminal commands instead of plugin-managed dev log
         dev_log = {
-          enabled = true,
-          notify_errors = false, -- Don't show error notifications for log buffer issues
-          open_cmd = 'tabedit', -- Open logs in a new tab
-          focus_on_open = false, -- Don't auto-focus the log window
+          enabled = false, -- Don't create __FLUTTER_DEV_LOG__ buffer
+          notify_errors = false,
         },
 
+        -- DISABLED: We manage DevTools manually with browser selection
         dev_tools = {
-          autostart = false, -- autostart devtools server if not detected
-          auto_open_browser = false, -- Automatically opens devtools in the browser
+          autostart = false, -- Don't autostart devtools server
+          auto_open_browser = false, -- Don't automatically open browser
         },
 
         outline = {
@@ -204,7 +211,7 @@ return {
 
         debugger = {
           enabled = true, -- Enable Flutter debugger integration
-          run_via_dap = true, -- Use DAP for debugging
+          run_via_dap = false, -- Don't intercept flutter run (we use terminal commands)
           -- if empty dap will not stop on any exceptions, otherwise it will stop on those specified
           -- see |:help dap.set_exception_breakpoints()| for more info
           exception_breakpoints = {},
@@ -269,17 +276,17 @@ return {
       local function open_dapui_in_tabs()
         -- Save current tab to return to it
         local current_tab = vim.fn.tabpagenr()
-        
+
         -- Create new tab with a named buffer for debug views
         vim.cmd 'tabnew'
         local debug_buf = vim.api.nvim_create_buf(false, true)
         -- Use pcall to safely set buffer name (may fail if name exists)
         pcall(vim.api.nvim_buf_set_name, debug_buf, 'Flutter Debug')
         vim.api.nvim_set_current_buf(debug_buf)
-        
+
         -- Open DAP UI in this tab
         dapui.open()
-        
+
         -- Return to original tab so user continues coding there
         vim.cmd('tabnext ' .. current_tab)
       end
@@ -287,7 +294,7 @@ return {
       -- Custom function to close DAP UI tabs
       local function close_dapui_tabs()
         dapui.close()
-        
+
         -- Find and close the Flutter Debug tab
         local current_tab = vim.fn.tabpagenr()
         for i = 1, vim.fn.tabpagenr '$' do
@@ -298,7 +305,7 @@ return {
             break
           end
         end
-        
+
         -- Return to original tab
         if vim.fn.tabpagenr '$' >= current_tab then
           vim.cmd('tabnext ' .. current_tab)
@@ -315,8 +322,13 @@ return {
       -- ========================================================================
       -- Set fold method to use Treesitter for Flutter widgets
       -- Using multiple autocmds to ensure it sticks (some plugins override it)
+      --
+      -- NOTE: These settings OVERRIDE the global folding config in options.lua
+      -- for Dart files specifically. The autocmd runs after buffer load, so these
+      -- settings take precedence for *.dart files.
+      --
       local fold_augroup = vim.api.nvim_create_augroup('DartFolding', { clear = true })
-      
+
       vim.api.nvim_create_autocmd({ 'BufRead', 'BufEnter', 'BufWinEnter' }, {
         group = fold_augroup,
         pattern = '*.dart',
@@ -325,15 +337,15 @@ return {
           vim.opt_local.foldexpr = 'nvim_treesitter#foldexpr()'
           vim.opt_local.foldlevel = 99          -- High level = everything unfolded
           vim.opt_local.foldlevelstart = 99     -- Start with everything unfolded
-          
+
           -- Hide fold column (no extra column, folds still work!)
           vim.opt_local.foldcolumn = '0'
-          
+
           -- Minimal fold display (VS Code style - just shows first line)
           vim.opt_local.foldtext = ''
         end,
       })
-      
+
       -- Also set after LSP attaches (flutter-tools might reset it)
       vim.api.nvim_create_autocmd('LspAttach', {
         group = fold_augroup,
@@ -350,45 +362,18 @@ return {
       -- ========================================================================
       -- FLUTTER-SPECIFIC KEYMAPS (Dart files only)
       -- ========================================================================
-      -- These keymaps are only for Dart files (code actions, run)
-      -- Global Flutter commands (reload, quit, logs, devices) are in lua/config/keymaps.lua
+      -- Buffer-local keymaps for Dart files (code actions)
+      -- Global Flutter commands (run, reload, quit, devices) are in lua/keymaps/flutter.lua
       -- ========================================================================
       vim.api.nvim_create_autocmd('FileType', {
         pattern = 'dart',
-        callback = function(event)
+        callback = function()
           local opts = { buffer = true, silent = true }
-
-          -- Flutter run - only available in Dart files
-          -- WORKFLOW: 
-          --   1. First time: <leader>fd to select device (global keymap)
-          --   2. Then: <leader>fr to run (Dart only)
-          --   3. Use <leader>fh (reload), <leader>fq (quit) from anywhere
-          vim.keymap.set('n', '<leader>fr', '<cmd>FlutterRun<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Run app' }))
 
           -- Code Actions (Cmd+. equivalent) - wrap, remove, extract widgets, etc.
           -- Note: 'gra' is already defined globally in lua/plugins/lsp/init.lua for all languages
           vim.keymap.set('n', '<leader>.', vim.lsp.buf.code_action, vim.tbl_extend('force', opts, { desc = 'Flutter: Code actions (Cmd+.)' }))
           vim.keymap.set('v', '<leader>.', vim.lsp.buf.code_action, vim.tbl_extend('force', opts, { desc = 'Flutter: Code actions (Cmd+.)' }))
-
-          -- Attach/Detach - Dart specific
-          vim.keymap.set('n', '<leader>fa', '<cmd>FlutterAttach<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Attach to app' }))
-          vim.keymap.set('n', '<leader>fD', '<cmd>FlutterDetach<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Detach from app' }))
-          
-          -- LSP restart - Dart specific
-          vim.keymap.set('n', '<leader>fl', '<cmd>FlutterLspRestart<cr>', vim.tbl_extend('force', opts, { desc = 'Flutter: Restart LSP' }))
-          
-          -- Copy profiler URL - Dart specific
-          vim.keymap.set(
-            'n',
-            '<leader>fc',
-            '<cmd>FlutterCopyProfilerUrl<cr>',
-            vim.tbl_extend('force', opts, { desc = 'Flutter: Copy profiler URL' })
-          )
-
-          -- Register which-key group for Flutter
-          require('which-key').add {
-            { '<leader>f', group = ' flutter', mode = 'n', buffer = event.buf },
-          }
         end,
       })
     end,

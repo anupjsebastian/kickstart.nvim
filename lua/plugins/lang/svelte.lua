@@ -21,6 +21,9 @@
 -- Usage: Just open a .svelte file and these plugins will automatically load!
 -- ========================================================================
 
+-- Load Web Dev/Svelte keymaps immediately (not buffer-local, always available)
+require('keymaps.svelte')
+
 return {
   -- ========================================================================
   -- SVELTE LSP - Language Server Protocol for Svelte
@@ -32,12 +35,15 @@ return {
   -- ========================================================================
   {
     'WhoIsSethDaniel/mason-tool-installer.nvim',
-    ft = { 'svelte', 'typescript', 'javascript' }, -- Load for web files
+    ft = { 'svelte', 'typescript', 'javascript', 'html', 'css', 'json' }, -- Load for web files
     opts = {
       ensure_installed = {
         'svelte-language-server',
         'typescript-language-server',
         'tailwindcss-language-server',
+        'html-lsp',  -- HTML language server
+        'css-lsp',   -- CSS language server
+        'json-lsp',  -- JSON language server
         'prettier',
         'eslint_d',
       },
@@ -75,7 +81,7 @@ return {
   -- ========================================================================
   {
     'nvim-treesitter/nvim-treesitter',
-    ft = { 'svelte', 'typescript', 'javascript', 'css', 'html' },
+    ft = { 'svelte', 'typescript', 'javascript', 'css', 'html', 'json' },
     opts = function(_, opts)
       -- Ensure web language parsers are installed
       opts.ensure_installed = opts.ensure_installed or {}
@@ -91,6 +97,25 @@ return {
       })
       return opts
     end,
+  },
+
+  -- ========================================================================
+  -- TAILWIND CSS INLINE COLOR PREVIEW
+  -- ========================================================================
+  -- Shows inline color previews for Tailwind classes and hex/rgb/hsl colors
+  -- Example: bg-blue-500 shows blue color block, #3b82f6 shows blue block
+  -- NOTE: Excludes dart/flutter files to avoid conflict with flutter-tools
+  -- ========================================================================
+  {
+    'brenoprata10/nvim-highlight-colors',
+    ft = { 'svelte', 'html', 'css', 'javascript', 'typescript', 'jsx', 'tsx' },
+    opts = {
+      render = 'virtual', -- Shows color block at end of line
+      virtual_symbol = '███', -- Wider block (3 characters for better visibility)
+      enable_named_colors = true, -- Enable CSS named colors like 'red', 'blue'
+      enable_tailwind = true, -- Enable Tailwind CSS colors (bg-blue-500, text-red-600, etc.)
+      exclude_filetypes = { 'dart' }, -- Exclude Dart to avoid conflict with flutter-tools
+    },
   },
 
   -- ========================================================================
@@ -118,46 +143,66 @@ return {
   },
 
   -- ========================================================================
-  -- SVELTE-SPECIFIC KEYMAPS
+  -- SVELTE-SPECIFIC KEYMAPS (Buffer-local only)
   -- ========================================================================
-  -- Additional Svelte-specific settings and keymaps
+  -- Svelte-specific formatting and LSP commands
+  -- NOTE: Build/test/package commands are now GLOBAL in keymaps.lua
+  -- This allows you to run them from logs, terminals, etc.
   -- ========================================================================
   {
     'nvim-lua/plenary.nvim',
-    ft = 'svelte',
+    ft = { 'svelte', 'javascript', 'typescript' },
     config = function()
       vim.api.nvim_create_autocmd('FileType', {
-        pattern = 'svelte',
+        pattern = { 'svelte', 'javascript', 'typescript' },
         callback = function(event)
           local bufnr = event.buf
+          local filetype = vim.bo[bufnr].filetype
 
-          -- Register which-key group for Svelte
-          require('which-key').add {
-            { '<leader>v', group = ' svelte', buffer = bufnr },
-          }
+          -- NOTE: The <leader>ls group is registered globally in editor.lua
+          -- NOTE: Most <leader>ls commands (build, test, etc.) are now global in keymaps.lua
 
-          -- Format with Prettier
-          vim.keymap.set('n', '<leader>vf', function()
-            require('conform').format { formatters = { 'prettier' } }
-          end, { buffer = bufnr, desc = 'Format with prettier' })
+          -- Format with Prettier (only for Svelte)
+          if filetype == 'svelte' then
+            vim.keymap.set('n', '<leader>lsf', function()
+              require('conform').format { formatters = { 'prettier' } }
+            end, { buffer = bufnr, desc = 'Format with prettier' })
 
-          -- Restart Svelte LSP
-          vim.keymap.set('n', '<leader>vl', function()
-            vim.cmd 'LspRestart svelte'
-          end, { buffer = bufnr, desc = 'Restart LSP' })
+            -- Restart Svelte LSP
+            vim.keymap.set('n', '<leader>lsl', function()
+              vim.cmd 'LspRestart svelte'
+            end, { buffer = bufnr, desc = 'Restart Svelte LSP' })
 
-          -- Restart TypeScript LSP (often needed in Svelte projects)
-          vim.keymap.set('n', '<leader>vt', function()
-            vim.cmd 'LspRestart ts_ls'
-          end, { buffer = bufnr, desc = 'Restart TypeScript LSP' })
-
-          -- Open component in split
-          vim.keymap.set('n', '<leader>vo', function()
-            local word = vim.fn.expand '<cfile>'
-            vim.cmd('split ' .. word)
-          end, { buffer = bufnr, desc = 'Open component in split' })
+            -- Open component in split
+            vim.keymap.set('n', '<leader>lso', function()
+              local word = vim.fn.expand '<cfile>'
+              vim.cmd('split ' .. word)
+            end, { buffer = bufnr, desc = 'Open component in split' })
+          end
         end,
       })
     end,
   },
+
+  -- ========================================================================
+  -- HTML/CSS KEYMAPS (Buffer-local only)
+  -- ========================================================================
+  -- NOTE: Most HTML/CSS commands are now GLOBAL in keymaps.lua
+  -- This allows you to start/stop live-server from logs, terminals, etc.
+  -- This section only keeps Emmet (buffer-specific)
+  -- ========================================================================
+  {
+    'nvim-lua/plenary.nvim',
+    ft = { 'html', 'css' },
+    config = function()
+      -- Initialize browser preference (defaults to Google Chrome, persists with session)
+      if not vim.g.html_browser_preference then
+        vim.g.html_browser_preference = 'Google Chrome'
+      end
+
+      -- Note: Browser commands (<leader>lho, <leader>lhb, <leader>lhl) are now global in keymaps.lua
+      -- This allows you to start/stop live-server from any buffer (terminals, logs, etc.)
+    end,
+  },
 }
+

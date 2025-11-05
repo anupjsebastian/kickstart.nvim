@@ -18,19 +18,22 @@
 -- Usage: Just open a .py file and these plugins will automatically load!
 -- ========================================================================
 
+-- Load Python keymaps immediately (not buffer-local, always available)
+require('keymaps.python')
+
 return {
   -- ========================================================================
   -- PYTHON TOOLS - Language Server and Linter
   -- ========================================================================
-  -- Ensures pyright and ruff are installed via Mason
+  -- Ensures basedpyright and ruff are installed via Mason
   -- NOTE: Venv detection is configured in lua/plugins/lsp/init.lua
   -- ========================================================================
   {
     'WhoIsSethDaniel/mason-tool-installer.nvim',
     ft = 'python',
-    dependencies = { 'williamboman/mason.nvim' },
+    dependencies = { 'mason-org/mason.nvim' },
     opts = {
-      ensure_installed = { 'pyright', 'ruff' },
+      ensure_installed = { 'basedpyright', 'ruff' },
     },
   },
 
@@ -68,68 +71,6 @@ return {
       opts.ensure_installed = opts.ensure_installed or {}
       vim.list_extend(opts.ensure_installed, { 'python' })
       return opts
-    end,
-  },
-
-  -- ========================================================================
-  -- PYTHON-SPECIFIC KEYMAPS
-  -- ========================================================================
-  -- Python-specific keymaps that are available only in Python files
-  -- ========================================================================
-  {
-    'nvim-lua/plenary.nvim', -- Dummy dependency to create a lazy spec
-    ft = 'python',
-    config = function()
-      vim.api.nvim_create_autocmd('FileType', {
-        pattern = 'python',
-        callback = function(event)
-          local bufnr = event.buf
-
-          -- Register which-key group for Python
-          require('which-key').add {
-            { '<leader>p', group = ' python', buffer = bufnr },
-          }
-
-          -- Run current file
-          vim.keymap.set('n', '<leader>pr', function()
-            vim.cmd('!python3 %')
-          end, { buffer = bufnr, desc = 'Run file' })
-
-          -- Run with arguments
-          vim.keymap.set('n', '<leader>pR', function()
-            local args = vim.fn.input 'Arguments: '
-            vim.cmd('!python3 % ' .. args)
-          end, { buffer = bufnr, desc = 'Run with args' })
-
-          -- Select virtual environment (activate .venv)
-          vim.keymap.set('n', '<leader>pe', function()
-            local venv = vim.fn.getcwd() .. '/.venv/bin/python'
-            if vim.loop.fs_stat(venv) then
-              vim.env.VIRTUAL_ENV = vim.fn.getcwd() .. '/.venv'
-              vim.env.PATH = vim.fn.getcwd() .. '/.venv/bin:' .. vim.env.PATH
-              vim.notify('Activated venv: ' .. vim.env.VIRTUAL_ENV, vim.log.levels.INFO)
-              vim.cmd 'LspRestart pyright'
-            else
-              vim.notify('No .venv found in project root', vim.log.levels.ERROR)
-            end
-          end, { buffer = bufnr, desc = 'Activate .venv' })
-
-          -- Restart Python LSP
-          vim.keymap.set('n', '<leader>pl', function()
-            vim.cmd 'LspRestart pyright'
-          end, { buffer = bufnr, desc = 'Restart LSP' })
-
-          -- Import organization (via Ruff)
-          vim.keymap.set('n', '<leader>pi', function()
-            require('conform').format { formatters = { 'ruff_organize_imports' } }
-          end, { buffer = bufnr, desc = 'Organize imports' })
-
-          -- Format with Ruff
-          vim.keymap.set('n', '<leader>pf', function()
-            require('conform').format { formatters = { 'ruff_format' } }
-          end, { buffer = bufnr, desc = 'Format code' })
-        end,
-      })
     end,
   },
 }

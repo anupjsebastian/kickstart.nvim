@@ -18,17 +18,15 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
   end
 end
 
----@type vim.Option
-local rtp = vim.opt.rtp
-rtp:prepend(lazypath)
+vim.opt.rtp:prepend(lazypath)
 
 -- Configure and load plugins
 require('lazy').setup({
   -- Import all plugins from the new modular structure
-  { import = 'plugins.core' },     -- Core plugins (always loaded)
-  { import = 'plugins.lsp' },      -- LSP configuration
-  { import = 'plugins.lang' },     -- Language-specific plugins (lazy-loaded)
-  { import = 'plugins.ui' },       -- UI enhancements (smear cursor, etc.)
+  { import = 'plugins.core' }, -- Core plugins (always loaded)
+  { import = 'plugins.lsp' },  -- LSP configuration
+  { import = 'plugins.lang' }, -- Language-specific plugins (lazy-loaded)
+  { import = 'plugins.ui' },   -- UI enhancements (smear cursor, etc.)
 }, {
   ui = {
     icons = vim.g.have_nerd_font and {} or {
