@@ -99,7 +99,9 @@ end
 --   safe_command('LspRestart', { error_msg = 'LSP not running' })
 function M.safe_command(cmd, opts)
     opts = opts or {}
-    local ok, err = pcall(vim.cmd, cmd)
+    local ok, err = pcall(function()
+        vim.cmd(cmd)
+    end)
     if not ok then
         if not opts.silent then
             local msg = opts.error_msg or ('Command failed: ' .. cmd .. ' - ' .. tostring(err))
@@ -142,6 +144,10 @@ end
 --   -- Call multiple times, only executes once after 1 second of inactivity
 function M.debounce(fn, delay)
     local timer = vim.loop.new_timer()
+    if not timer then
+        vim.notify('Failed to create timer for debounce', vim.log.levels.ERROR)
+        return fn -- Return original function as fallback
+    end
     return function(...)
         local args = { ... }
         timer:stop()

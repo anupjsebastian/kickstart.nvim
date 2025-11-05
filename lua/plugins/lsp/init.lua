@@ -135,6 +135,9 @@ return {
                 vim.notify('blink.cmp not available, using vanilla LSP capabilities', vim.log.levels.WARN)
             end
 
+            -- Require lspconfig util once at the top
+            local lspconfig_util = require('lspconfig.util')
+
             -- General LSP servers (lua_ls for Neovim config, basedpyright for Python)
             local servers = {
                 lua_ls = {
@@ -161,7 +164,7 @@ return {
                     -- Detect and configure virtual environment
                     -- Supports: .venv, venv, VIRTUAL_ENV env var (set by direnv/pyenv)
                     before_init = function(_, config)
-                        local util = require('lspconfig.util')
+                        local util = lspconfig_util
                         local root_dir = config.root_dir
 
                         -- Try to find Python interpreter in order of preference:
@@ -201,10 +204,9 @@ return {
                     -- HTML language server
                     filetypes = { 'html', 'svelte' },
                     root_dir = function(fname)
-                        local util = require('lspconfig.util')
-                        return util.find_git_ancestor(fname)
-                            or util.find_node_modules_ancestor(fname)
-                            or util.find_package_json_ancestor(fname)
+                        return lspconfig_util.find_git_ancestor(fname)
+                            or lspconfig_util.find_node_modules_ancestor(fname)
+                            or lspconfig_util.find_package_json_ancestor(fname)
                             or vim.fn.getcwd()
                     end,
                 },
@@ -212,10 +214,9 @@ return {
                     -- CSS language server
                     filetypes = { 'css', 'scss', 'less', 'svelte' },
                     root_dir = function(fname)
-                        local util = require('lspconfig.util')
-                        return util.find_git_ancestor(fname)
-                            or util.find_node_modules_ancestor(fname)
-                            or util.find_package_json_ancestor(fname)
+                        return lspconfig_util.find_git_ancestor(fname)
+                            or lspconfig_util.find_node_modules_ancestor(fname)
+                            or lspconfig_util.find_package_json_ancestor(fname)
                             or vim.fn.getcwd()
                     end,
                 },
@@ -223,8 +224,7 @@ return {
                     -- JSON language server
                     filetypes = { 'json', 'jsonc' },
                     root_dir = function(fname)
-                        local util = require('lspconfig.util')
-                        return util.find_git_ancestor(fname)
+                        return lspconfig_util.find_git_ancestor(fname)
                             or vim.fn.getcwd()
                     end,
                 },

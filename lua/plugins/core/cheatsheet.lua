@@ -1542,12 +1542,6 @@ return {
                                 },
                                 sorter = conf.generic_sorter {},
                                 sorting_strategy = 'ascending', -- Display top to bottom
-                                layout_strategy = 'horizontal',
-                                layout_config = {
-                                    width = 0.90,
-                                    height = 0.85,
-                                    preview_width = 0.25, -- 25% for preview, 75% for main window
-                                },
                                 previewer = previewers.new_buffer_previewer {
                                     title = 'Preview',
                                     -- Don't keep preview buffers around - clean up immediately

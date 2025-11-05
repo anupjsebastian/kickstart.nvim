@@ -1,3 +1,65 @@
+# VSCode Neovim Compatibility
+
+## ✅ IMPLEMENTED - Ready to Use!
+
+This Neovim configuration is now fully compatible with VSCode through the [VSCode Neovim extension](https://github.com/vscode-neovim/vscode-neovim).
+
+### How It Works
+
+The configuration automatically detects when it's running inside VSCode (via `vim.g.vscode`) and:
+1. Loads a minimal plugin configuration from `lua/vscode.lua`
+2. Skips all UI plugins (colorscheme, statusline, telescope, etc.)
+3. Loads only text manipulation plugins that work well with VSCode
+
+### Quick Setup
+
+1. **Install VSCode Neovim Extension**
+   ```
+   ext install asvetliakov.vscode-neovim
+   ```
+
+2. **Configure VSCode** - Add to your `settings.json`:
+   ```json
+   {
+     "vscode-neovim.neovimExecutablePaths.darwin": "/opt/homebrew/bin/nvim",
+     "vscode-neovim.neovimInitVimPaths.darwin": "~/.config/nvim/init.lua",
+     "vscode-neovim.useCtrlKeysForInsertMode": false,
+     "vscode-neovim.useCtrlKeysForNormalMode": false,
+     "editor.lineNumbers": "relative"
+   }
+   ```
+
+3. **Test** - Open VSCode, you should see: "VSCode-Neovim loaded successfully!"
+
+### VSCode-Compatible Plugins (Auto-Loaded)
+
+- **nvim-treesitter** - Better syntax and text objects
+- **mini.surround** - `ys`, `ds`, `cs` operators
+- **mini.pairs** - Auto-pair brackets
+- **mini.ai** - Better text objects
+- **mini.comment** - `gc` to comment
+- **vim-repeat** - Better `.` repeat
+
+### VSCode Keybindings (Configured)
+
+All your familiar Neovim keybindings work in VSCode:
+- `<leader>w` - Save, `<leader>q` - Close, `<leader>e` - Toggle sidebar
+- `<leader>sf` - Find files, `<leader>sg` - Grep, `<leader>sb` - Buffers
+- `gd` - Definition, `gr` - References, `K` - Hover, `<leader>rn` - Rename
+- And many more! See `lua/vscode.lua` for the full list
+
+### No Manual Switching Required
+
+Your config automatically:
+- **In VSCode** → Loads minimal VSCode-compatible config
+- **In Terminal** → Loads full Neovim with all plugins
+
+---
+
+## Original Compatibility Analysis
+
+Below is the original detailed analysis of plugin compatibility.
+
 # VS Code Neovim Compatibility Analysis
 
 This document provides a comprehensive analysis of your Neovim configuration and how each plugin will behave when using the **VS Code Neovim extension** (`asvetliakov.vscode-neovim`).
