@@ -17,7 +17,7 @@ local function run_terminal_cmd(cmd)
         '%s; echo "\n---"; if [ $? -eq 0 ]; then echo "✓ Command completed successfully"; else echo "✗ Command failed with exit code $?"; fi; echo "Press ENTER to close"; read; exit',
         cmd
     )
-    local job_id = vim.fn.termopen({ 'zsh', '-c', wrapped_cmd })
+    vim.fn.jobstart({ 'zsh', '-c', wrapped_cmd }, { pty = true })
 
     -- Auto-close terminal when job finishes (user pressed ENTER)
     vim.api.nvim_create_autocmd('TermClose', {
@@ -150,7 +150,7 @@ vim.keymap.set('n', '<leader>lpe', function()
     -- Reload all Python buffers to pick up new imports
     for _, buf in ipairs(vim.api.nvim_list_bufs()) do
         if vim.api.nvim_buf_is_loaded(buf) then
-            local filetype = vim.api.nvim_buf_get_option(buf, 'filetype')
+            local filetype = vim.bo[buf].filetype
             if filetype == 'python' then
                 vim.api.nvim_buf_call(buf, function()
                     vim.cmd('edit!')
@@ -204,8 +204,7 @@ vim.keymap.set('n', '<leader>lpr', function()
 
         -- Run directly without wrapper (like Flutter) - works for both quick scripts and long-running servers
         vim.cmd('tabnew')
-        local bufnr = vim.api.nvim_get_current_buf()
-        vim.fn.termopen(cmd)
+        vim.fn.jobstart(cmd, { pty = true })
         vim.cmd('startinsert')
 
         if custom_cmd and custom_cmd ~= '' then
@@ -220,7 +219,7 @@ end, { desc = 'Run current file' })
 
 -- Set custom run command (interactive input)
 vim.keymap.set('n', '<leader>lpR', function()
-    local current = vim.g.python_run_command or 'uv run python ' .. vim.fn.shellescape(vim.fn.expand('%:p'))
+    local current = vim.g.python_run_command or ('uv run python ' .. vim.fn.shellescape(vim.fn.expand('%:p')))
     vim.ui.input({
         prompt = 'Enter Python run command: ',
         default = current,
@@ -259,7 +258,7 @@ vim.keymap.set('n', '<leader>lpS', function()
         return
     end
     vim.cmd('tabnew')
-    vim.fn.termopen('uv run python')
+    vim.fn.jobstart('uv run python', { pty = true })
     vim.notify('🐍 Starting Python Shell...', vim.log.levels.INFO)
 end, { desc = 'Shell (REPL)' })
 
@@ -272,6 +271,7 @@ vim.keymap.set('v', '<leader>lpX', function()
     local start_pos = vim.fn.getpos("'<")
     local end_pos = vim.fn.getpos("'>")
     local lines = vim.fn.getline(start_pos[2], end_pos[2])
+    ---@cast lines string[]
 
     -- Handle single line selection
     if #lines == 1 then
@@ -284,7 +284,13 @@ vim.keymap.set('v', '<leader>lpX', function()
 
     local code = table.concat(lines, '\n')
     local escaped_code = vim.fn.shellescape(code)
-    run_terminal_cmd('uv run python -c ' .. escaped_code)
+    -- Ensure escaped_code is a string (shellescape can return string or string[])
+    if type(escaped_code) == 'table' then
+        escaped_code = table.concat(escaped_code, ' ')
+    end
+    ---@cast escaped_code string
+    local command = 'uv run python -c ' .. escaped_code
+    run_terminal_cmd(command)
     vim.notify('⚡ Executing Python code...', vim.log.levels.INFO)
 end, { desc = 'Execute selection' })
 

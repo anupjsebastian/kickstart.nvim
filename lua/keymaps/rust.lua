@@ -17,7 +17,7 @@ local function run_terminal_cmd(cmd)
     '%s; echo "\n---"; if [ $? -eq 0 ]; then echo "✓ Command completed successfully"; else echo "✗ Command failed with exit code $?"; fi; echo "Press ENTER to close"; read; exit',
     cmd
   )
-  local job_id = vim.fn.termopen { 'zsh', '-c', wrapped_cmd }
+  vim.fn.jobstart({ 'zsh', '-c', wrapped_cmd }, { pty = true })
 
   -- Auto-close terminal when job finishes (user pressed ENTER)
   vim.api.nvim_create_autocmd('TermClose', {

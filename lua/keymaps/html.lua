@@ -29,9 +29,11 @@ vim.keymap.set('n', '<leader>lhl', function()
     end
   end
 
-  -- Start live-server in current directory - keep terminal open
+    -- Create a new terminal buffer for live-server
   vim.cmd('tabnew')
-  vim.fn.termopen('live-server' .. browser_flag)
+  vim.cmd('setlocal bufhidden=wipe')
+  vim.fn.jobstart('live-server' .. browser_flag, { pty = true })
+  vim.cmd('startinsert')
   vim.notify(
     '🌐 Live server started in '
       .. (vim.g.html_browser_preference or 'default browser')
@@ -48,10 +50,10 @@ vim.keymap.set('n', '<leader>lhb', function()
     { name = 'Safari', display = ' Safari' },
     { name = 'Firefox', display = ' Firefox' },
     { name = 'Default', display = ' System Default' },
-  } 
+  }
 
   local choices = {}
-  for i, browser in ipairs(available_browsers) do
+  for _, browser in ipairs(available_browsers) do
     local marker = (vim.g.html_browser_preference == browser.name) and '✓ ' or '  '
     table.insert(choices, marker .. browser.display)
   end

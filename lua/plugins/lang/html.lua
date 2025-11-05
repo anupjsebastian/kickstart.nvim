@@ -46,5 +46,24 @@ return {
       end
     end,
   },
+
+  -- ========================================================================
+  -- TAILWIND CSS INLINE COLOR PREVIEW
+  -- ========================================================================
+  -- Shows inline color previews for Tailwind classes and hex/rgb/hsl colors
+  -- Example: bg-blue-500 shows blue color block, #3b82f6 shows blue block
+  -- NOTE: Excludes dart/flutter files to avoid conflict with flutter-tools
+  -- ========================================================================
+  {
+    'brenoprata10/nvim-highlight-colors',
+    ft = { 'html', 'css' },
+    opts = {
+      render = 'virtual', -- Shows color block at end of line
+      virtual_symbol = '███', -- Wider block (3 characters for better visibility)
+      enable_named_colors = true, -- Enable CSS named colors like 'red', 'blue'
+      enable_tailwind = true, -- Enable Tailwind CSS colors (bg-blue-500, text-red-600, etc.)
+      exclude_filetypes = { 'dart' }, -- Exclude Dart to avoid conflict with flutter-tools
+    },
+  },
 }
 

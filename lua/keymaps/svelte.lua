@@ -11,14 +11,14 @@ local toolcheck = require('utils.toolcheck')
 local function run_terminal_cmd(cmd)
   vim.cmd('tabnew')
   local bufnr = vim.api.nvim_get_current_buf()
-  
+
   -- Wrap command to show exit status and wait for Enter, then close buffer
   local wrapped_cmd = string.format(
     '%s; echo "\n---"; if [ $? -eq 0 ]; then echo "✓ Command completed successfully"; else echo "✗ Command failed with exit code $?"; fi; echo "Press ENTER to close"; read; exit',
     cmd
   )
-  local job_id = vim.fn.termopen({ 'zsh', '-c', wrapped_cmd })
-  
+  vim.fn.jobstart({ 'zsh', '-c', wrapped_cmd }, { pty = true })
+
   -- Auto-close terminal when job finishes (user pressed ENTER)
   vim.api.nvim_create_autocmd('TermClose', {
     buffer = bufnr,
@@ -27,7 +27,7 @@ local function run_terminal_cmd(cmd)
       vim.cmd('bdelete!')
     end,
   })
-  
+
   -- Start in insert mode after a delay (let command run first)
   vim.defer_fn(function()
     if vim.api.nvim_buf_is_valid(bufnr) and vim.api.nvim_get_current_buf() == bufnr then
@@ -46,7 +46,7 @@ vim.keymap.set('n', '<leader>lsr', function()
   end
   -- Don't use helper for dev server - it's long-running
   vim.cmd('tabnew')
-  vim.fn.termopen('bun run dev')
+  vim.fn.jobstart('bun run dev', { pty = true })
   vim.notify('🚀 Starting dev server...', vim.log.levels.INFO)
 end, { desc = 'Run dev server (bun run dev)' })
 
@@ -65,7 +65,7 @@ vim.keymap.set('n', '<leader>lsp', function()
     return
   end
   vim.cmd('tabnew')
-  vim.fn.termopen('bun run preview')
+  vim.fn.jobstart('bun run preview', { pty = true })
   vim.notify('👀 Preview production build...', vim.log.levels.INFO)
 end, { desc = 'Preview build' })
 
@@ -102,7 +102,7 @@ vim.keymap.set('n', '<leader>lsi', function()
     return
   end
   run_terminal_cmd('bun install')
-  vim.notify('📥 Installing dependencies...', vm.log.levels.INFO)
+  vim.notify('📥 Installing dependencies...', vim.log.levels.INFO)
 end, { desc = 'Install deps' })
 
 -- Install dependencies (bun install)

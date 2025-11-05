@@ -28,7 +28,7 @@ local function run_flutter_terminal_cmd(cmd)
   )
 
   local bufnr = vim.api.nvim_get_current_buf()
-  vim.fn.termopen({ 'zsh', '-c', wrapped_cmd })
+  vim.fn.jobstart({ 'zsh', '-c', wrapped_cmd }, { pty = true })
 
   vim.api.nvim_create_autocmd('TermClose', {
     buffer = bufnr,
@@ -110,8 +110,8 @@ local function select_flutter_device(callback)
         for _, line in ipairs(data) do
           if line and line ~= '' and not line:match('^%s*$') then
             -- Skip common informational messages that go to stderr
-            if not line:match('Checking for wireless devices') 
-               and not line:match('Connected device') 
+            if not line:match('Checking for wireless devices')
+               and not line:match('Connected device')
                and not line:match('Flutter')
                and not line:match('Dart')
                and not line:match('Channel') then
@@ -119,7 +119,7 @@ local function select_flutter_device(callback)
             end
           end
         end
-        
+
         -- Only show error if there are actual error messages
         if #errors > 0 then
           vim.schedule(function()
@@ -174,13 +174,14 @@ local function start_flutter_run(device_id)
   local bufnr = vim.api.nvim_get_current_buf()
 
   -- Start Flutter with device
-  local chan = vim.fn.termopen(string.format('flutter run -d %s', device_id), {
-    on_exit = function(_, exit_code)
+  local chan = vim.fn.jobstart(string.format('flutter run -d %s', device_id), {
+    pty = true,
+    on_exit = function(_, _)
       -- Clear global state
       vim.g.flutter_terminal_chan = nil
       vim.g.flutter_terminal_buf = nil
       vim.g.flutter_terminal_tab = nil
-      
+
       -- Close buffer automatically after exit
       vim.schedule(function()
         if vim.api.nvim_buf_is_valid(bufnr) then
@@ -291,7 +292,7 @@ vim.api.nvim_create_autocmd('BufWritePost', {
       local chan = find_flutter_terminal()
       if chan then
         -- Use pcall to gracefully handle if channel closed between check and send
-        local ok, err = pcall(vim.api.nvim_chan_send, chan, 'r')
+        local ok, _ = pcall(vim.api.nvim_chan_send, chan, 'r')
         if not ok then
           -- Channel closed, clear global state
           vim.g.flutter_terminal_chan = nil

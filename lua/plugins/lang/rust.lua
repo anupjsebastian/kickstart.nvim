@@ -13,7 +13,7 @@ return {
     ft = { 'rust' },
     opts = {
       server = {
-        on_attach = function(client, bufnr)
+        on_attach = function(_, bufnr)
           -- NOTE: The <leader>lr group is registered globally in editor.lua
           -- NOTE: Cargo workflow commands are defined GLOBALLY in:
           --       lua/config/keymaps.lua (after Python section)
