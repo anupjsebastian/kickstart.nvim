@@ -68,9 +68,9 @@ return {
         auto_session_create_enabled = true,       -- Auto-create session on first save
 
         -- Session options - what to save
-        -- Note: Removed 'globals' and 'buffers' for simpler, more reliable sessions
-        -- Use project-local .nvim.lua files for project-specific settings instead
-        sessionoptions = 'curdir,folds,help,tabpages,winsize',
+        -- Note: Added 'buffers' back for scope.nvim tab-scoped buffer management
+        -- Use project-local .nvim.lua files for project-specific settings instead of 'globals'
+        sessionoptions = 'buffers,curdir,folds,help,tabpages,winsize',
 
         -- Hooks to run before/after session save/restore
         pre_save_cmds = {

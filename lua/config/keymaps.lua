@@ -251,7 +251,7 @@ vim.keymap.set('n', '<leader>bo', '<cmd>%bd|e#|bd#<CR>', { desc = 'Delete other 
 -- ========================================================================
 -- Window operations
 vim.keymap.set('n', '<leader>ww', '<C-w>w', { desc = 'Other window' })
-vim.keymap.set('n', '<leader>wc', '<C-w>c', { desc = 'Close window/tab' })
+vim.keymap.set('n', '<leader>wc', '<C-w>c', { desc = 'Close window/workspace' })
 vim.keymap.set('n', '<leader>ws', '<C-w>s', { desc = 'Split window below' })
 vim.keymap.set('n', '<leader>wv', '<C-w>v', { desc = 'Split window right' })
 vim.keymap.set('n', '<leader>wm', '<C-w>_<C-w>|', { desc = 'Maximize window' })
@@ -262,14 +262,14 @@ vim.keymap.set('n', '<leader>wk', '<C-w>k', { desc = 'Go to upper window' })
 vim.keymap.set('n', '<leader>wl', '<C-w>l', { desc = 'Go to right window' })
 
 -- Tab operations (moved from <leader>t to keep toggle menu clean)
-vim.keymap.set('n', '<leader>wn', '<cmd>tabnew<CR>', { desc = 'New tab' })
-vim.keymap.set('n', '<leader>wo', '<cmd>tabonly<CR>', { desc = 'Close other tabs' })
-vim.keymap.set('n', '<leader>w]', '<cmd>tabnext<CR>', { desc = 'Next tab' })
-vim.keymap.set('n', '<leader>w[', '<cmd>tabprevious<CR>', { desc = 'Previous tab' })
-vim.keymap.set('n', '<leader>w>', '<cmd>tabmove +1<CR>', { desc = 'Move tab right' })
-vim.keymap.set('n', '<leader>w<', '<cmd>tabmove -1<CR>', { desc = 'Move tab left' })
-vim.keymap.set('n', '<leader>wf', '<cmd>tabfirst<CR>', { desc = 'First tab' })
-vim.keymap.set('n', '<leader>wL', '<cmd>tablast<CR>', { desc = 'Last tab' })
+vim.keymap.set('n', '<leader>wn', '<cmd>tabnew<CR>', { desc = 'New workspace' })
+vim.keymap.set('n', '<leader>wo', '<cmd>tabonly<CR>', { desc = 'Close other workspaces' })
+vim.keymap.set('n', '<leader>w]', '<cmd>tabnext<CR>', { desc = 'Next workspace' })
+vim.keymap.set('n', '<leader>w[', '<cmd>tabprevious<CR>', { desc = 'Previous workspace' })
+vim.keymap.set('n', '<leader>w>', '<cmd>tabmove +1<CR>', { desc = 'Move workspace right' })
+vim.keymap.set('n', '<leader>w<', '<cmd>tabmove -1<CR>', { desc = 'Move workspace left' })
+vim.keymap.set('n', '<leader>wf', '<cmd>tabfirst<CR>', { desc = 'First workspace' })
+vim.keymap.set('n', '<leader>wL', '<cmd>tablast<CR>', { desc = 'Last workspace' })
 
 -- ========================================================================
 -- TOGGLE OPERATIONS (<leader>t)

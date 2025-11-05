@@ -12,14 +12,21 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     end,
 })
 
--- Highlight active window borders
+-- Highlight active window borders and modified indicators
 vim.api.nvim_create_autocmd('ColorScheme', {
-    desc = 'Set window border colors',
+    desc = 'Set window border and modified indicator colors',
     group = vim.api.nvim_create_augroup('window-border-colors', { clear = true }),
     callback = function()
         -- Active window border - bright blue
         vim.api.nvim_set_hl(0, 'WinSeparator', { fg = '#7aa2f7', bold = true })
         -- You can also use: '#bb9af7' (purple), '#9ece6a' (green), '#f7768e' (red)
+        
+        -- Set consistent modified indicator colors across all components
+        -- Link to DiagnosticWarn for a consistent orange/yellow color
+        vim.api.nvim_set_hl(0, 'BufferLineModified', { link = 'DiagnosticWarn' })
+        vim.api.nvim_set_hl(0, 'BufferLineModifiedVisible', { link = 'DiagnosticWarn' })
+        vim.api.nvim_set_hl(0, 'BufferLineModifiedSelected', { link = 'DiagnosticWarn', bold = true })
+        vim.api.nvim_set_hl(0, 'NeoTreeModified', { link = 'DiagnosticWarn' })
     end,
 })
 

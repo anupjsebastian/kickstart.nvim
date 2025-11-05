@@ -53,7 +53,7 @@ function M.pick_buffer()
             end
 
             -- Build separate indicators for alignment
-            local modified_indicator = is_modified and { '●', 'DiagnosticInfo' } or { ' ', 'Normal' }
+            local modified_indicator = is_modified and { '●', 'DiagnosticWarn' } or { ' ', 'Normal' }
 
             local diag_indicator
             if error_count > 0 then
