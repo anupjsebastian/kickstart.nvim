@@ -20,7 +20,8 @@ vim.api.nvim_create_autocmd('ColorScheme', {
         -- Active window border - bright blue
         vim.api.nvim_set_hl(0, 'WinSeparator', { fg = '#7aa2f7', bold = true })
         -- You can also use: '#bb9af7' (purple), '#9ece6a' (green), '#f7768e' (red)
-        
+
+
         -- Set consistent modified indicator colors across all components
         -- Link to DiagnosticWarn for a consistent orange/yellow color
         vim.api.nvim_set_hl(0, 'BufferLineModified', { link = 'DiagnosticWarn' })
@@ -43,8 +44,8 @@ vim.api.nvim_create_autocmd('VimEnter', {
             -- Find the first normal buffer window
             for _, win in ipairs(vim.api.nvim_list_wins()) do
                 local buf = vim.api.nvim_win_get_buf(win)
-                local buftype = vim.api.nvim_buf_get_option(buf, 'buftype')
-                local filetype = vim.api.nvim_buf_get_option(buf, 'filetype')
+                local buftype = vim.bo[buf].buftype
+                local filetype = vim.bo[buf].filetype
                 -- Skip special buffers like neo-tree, terminal, etc.
                 if buftype == '' and filetype ~= 'neo-tree' then
                     vim.api.nvim_set_current_win(win)

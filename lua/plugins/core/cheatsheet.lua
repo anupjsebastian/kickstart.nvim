@@ -1160,7 +1160,7 @@ return {
                                         '  ' .. entry.value.desc,
                                     }
                                     vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, lines)
-                                    vim.api.nvim_buf_set_option(self.state.bufnr, 'filetype', 'markdown')
+                                    vim.bo[self.state.bufnr].filetype = 'markdown'
                                 end,
                             },
                             layout_strategy = 'horizontal',
@@ -1169,7 +1169,7 @@ return {
                                 height = height_ratio,
                                 preview_width = 0.25, -- 25% for preview, 75% for main window
                             },
-                            attach_mappings = function(prompt_bufnr, map)
+                            attach_mappings = function(prompt_bufnr)
                                 actions.select_default:replace(function()
                                     actions.close(prompt_bufnr)
                                     local selection = action_state.get_selected_entry()
@@ -1634,7 +1634,7 @@ return {
                                         end
 
                                         vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, lines)
-                                        vim.api.nvim_buf_set_option(self.state.bufnr, 'filetype', 'markdown')
+                                        vim.bo[self.state.bufnr].filetype = 'markdown'
                                     end,
                                 },
                                 layout_strategy = 'horizontal',
@@ -1702,8 +1702,8 @@ return {
                                         -- Calculate dynamic column width for filtered view
                                         local function calculate_key_width(data)
                                             local key_max = 0
-                                            for _, item in ipairs(data) do
-                                                key_max = math.max(key_max, vim.fn.strdisplaywidth(item.key))
+                                            for _, entry in ipairs(data) do
+                                                key_max = math.max(key_max, vim.fn.strdisplaywidth(entry.key))
                                             end
                                             return math.min(math.max(key_max + 2, 18), 32)
                                         end
@@ -1795,8 +1795,7 @@ return {
                                                             '  Tip: Press Ctrl-b to go back to categories',
                                                         }
                                                         vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, lines)
-                                                        vim.api.nvim_buf_set_option(self.state.bufnr, 'filetype',
-                                                            'markdown')
+                                                        vim.bo[self.state.bufnr].filetype = 'markdown'
                                                     end,
                                                 },
                                                 layout_strategy = 'horizontal',

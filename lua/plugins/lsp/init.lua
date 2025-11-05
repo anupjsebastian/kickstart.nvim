@@ -26,15 +26,8 @@ return {
         },
         config = function()
             -- LSP UI Enhancements - Better hover, signature help, and borders
-            vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, {
-                border = 'rounded',
-                max_width = 80,
-            })
-
-            vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers.signature_help, {
-                border = 'rounded',
-                max_width = 80,
-            })
+            -- Set default border for all LSP floating windows
+            require('lspconfig.ui.windows').default_options.border = 'rounded'
 
             -- Add keymaps to close LSP floating windows
             vim.api.nvim_create_autocmd('FileType', {

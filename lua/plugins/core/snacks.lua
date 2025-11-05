@@ -107,7 +107,7 @@ return {
             enabled = true,
             notify = true,
             size = 1.5 * 1024 * 1024, -- 1.5MB
-            setup = function(ctx)
+            setup = function()
                 -- Disable heavy features for big files
                 vim.b.minianimate_disable = true
                 vim.cmd('syntax off')

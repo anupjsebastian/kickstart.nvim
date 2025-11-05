@@ -228,7 +228,6 @@ vim.keymap.set('n', '<leader>Q', '<cmd>qa<CR>', { desc = 'Quit all' })
 -- Smart buffer delete - closes window if it's the only buffer in the window
 vim.keymap.set('n', '<leader>bd', function()
     local buf = vim.api.nvim_get_current_buf()
-    local win = vim.api.nvim_get_current_win()
 
     -- Get all windows showing this buffer
     local wins_with_buf = vim.fn.win_findbuf(buf)

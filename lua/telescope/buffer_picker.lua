@@ -35,9 +35,9 @@ function M.pick_buffer()
             local display_name = entry.display_name
 
             -- Get buffer state
-            local is_modified = vim.api.nvim_buf_get_option(bufnr, 'modified')
-            local is_readonly = vim.api.nvim_buf_get_option(bufnr, 'readonly')
-            local buftype = vim.api.nvim_buf_get_option(bufnr, 'buftype')
+            local is_modified = vim.bo[bufnr].modified
+            local is_readonly = vim.bo[bufnr].readonly
+            local buftype = vim.bo[bufnr].buftype
             local is_special = buftype ~= '' -- terminal, quickfix, help, etc.
 
             -- Get diagnostic counts for this buffer
