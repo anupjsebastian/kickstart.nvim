@@ -65,5 +65,17 @@ return {
       exclude_filetypes = { 'dart' }, -- Exclude Dart to avoid conflict with flutter-tools
     },
   },
-}
 
+  -- ========================================================================
+  -- AUTO-CLOSE HTML/JSX/TSX TAGS
+  -- ========================================================================
+  -- Automatically closes HTML tags as you type
+  -- Works with: HTML, JSX, TSX, Vue, Svelte, XML, PHP, etc.
+  -- Example: Type <div> and it auto-adds </div>, cursor in between
+  -- ========================================================================
+  {
+    'windwp/nvim-ts-autotag',
+    ft = { 'html', 'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'svelte', 'vue', 'tsx', 'jsx', 'xml', 'php', 'markdown' },
+    opts = {},
+  },
+}
