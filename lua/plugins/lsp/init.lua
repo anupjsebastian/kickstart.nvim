@@ -108,11 +108,11 @@ return {
                         })
                     end
 
-                    -- Inlay hints toggle
+                    -- Inlay hints - enable by default for Python
                     if client and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_inlayHint, event.buf) then
-                        map('<leader>th', function()
-                            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
-                        end, 'Toggle Inlay Hints')
+                        if vim.bo[event.buf].filetype == 'python' then
+                            vim.lsp.inlay_hint.enable(true, { bufnr = event.buf })
+                        end
                     end
                 end,
             })
@@ -151,6 +151,13 @@ return {
                                 autoSearchPaths = true,
                                 useLibraryCodeForTypes = true,
                                 diagnosticMode = 'openFilesOnly',
+                                -- Enable inlay hints
+                                inlayHints = {
+                                    variableTypes = true,
+                                    functionReturnTypes = true,
+                                    callArgumentNames = true,
+                                    parameterNames = true,
+                                },
                             },
                         },
                     },

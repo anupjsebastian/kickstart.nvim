@@ -51,29 +51,25 @@ return {
       'tiagovla/scope.nvim', -- Tab-scoped buffers
     },
     config = function()
-      -- Setup bufferline when we have multiple buffers
-      local function setup_bufferline()
-        local bufs = vim.fn.getbufinfo { buflisted = 1 }
-        if #bufs >= 2 then
-          require('bufferline').setup(require('plugins.ui.bufferline').opts)
-          return true
+      -- Setup bufferline immediately (always show, even with 1 buffer)
+      require('bufferline').setup(require('plugins.ui.bufferline').opts)
+      
+      -- Hide bufferline on dashboard
+      local function update_bufferline_visibility()
+        if vim.bo.filetype == 'snacks_dashboard' then
+          vim.opt.showtabline = 0
+        else
+          vim.opt.showtabline = 2
         end
-        return false
       end
-      -- Try immediate setup (e.g., after session restore)
-      if not setup_bufferline() then
-        -- Otherwise wait for multiple buffers
-        vim.api.nvim_create_autocmd({ 'BufAdd', 'BufEnter' }, {
-          callback = function()
-            if vim.bo.filetype ~= 'snacks_dashboard' and vim.bo.buftype == '' then
-              if setup_bufferline() then
-                -- Remove this autocmd after setup
-                return true
-              end
-            end
-          end,
-        })
-      end
+      
+      -- Check on startup
+      update_bufferline_visibility()
+      
+      -- Update when filetype changes
+      vim.api.nvim_create_autocmd({ 'FileType', 'BufEnter' }, {
+        callback = update_bufferline_visibility,
+      })
     end,
     opts = {
       options = {
@@ -82,6 +78,16 @@ return {
         -- Buffer numbers (no tab indicator here - moved to top right)
         numbers = function(opts)
           return string.format('%s', opts.ordinal)
+        end,
+
+        -- Hide terminal buffers from bufferline
+        custom_filter = function(buf_number)
+          local buf_type = vim.bo[buf_number].buftype
+          -- Hide terminal buffers
+          if buf_type == 'terminal' then
+            return false
+          end
+          return true
         end,
 
         -- Close behavior

@@ -53,70 +53,79 @@
 -- ========================================================================
 
 return {
-    'rmagatti/auto-session',
-    lazy = false, -- Load on startup to restore session
-    opts = {
-        -- Session save/restore options
-        auto_session_enabled = true,                               -- Automatically save sessions on exit
-        auto_restore_enabled = false,                              -- Don't auto-restore - use dashboard 's' or <leader>Sr instead
-        auto_save_enabled = true,                                  -- Auto-save session on exit
-        auto_session_suppress_dirs = { '~/', '~/Downloads', '/' }, -- Don't save sessions in these dirs
-        auto_session_use_git_branch = false,                       -- One session per directory (not per git branch)
+  'rmagatti/auto-session',
+  lazy = false, -- Load on startup to restore session
+  opts = {
+    -- Session save/restore options
+    auto_session_enabled = true, -- Automatically save sessions on exit
+    auto_restore_enabled = false, -- Don't auto-restore - use dashboard 's' or <leader>Sr instead
+    auto_save_enabled = true, -- Auto-save session on exit
+    auto_session_suppress_dirs = { '~/', '~/Downloads', '/' }, -- Don't save sessions in these dirs
+    auto_session_use_git_branch = false, -- One session per directory (not per git branch)
 
-        -- What to save in the session
-        auto_session_enable_last_session = false, -- Don't restore last session if not in a project
-        auto_session_create_enabled = true,       -- Auto-create session on first save
+    -- What to save in the session
+    auto_session_enable_last_session = false, -- Don't restore last session if not in a project
+    auto_session_create_enabled = true, -- Auto-create session on first save
 
-        -- Session options - what to save
-        -- Note: Added 'buffers' back for scope.nvim tab-scoped buffer management
-        -- Use project-local .nvim.lua files for project-specific settings instead of 'globals'
-        sessionoptions = 'buffers,curdir,folds,help,tabpages,winsize',
+    -- Session options - what to save
+    -- Note: Added 'buffers' back for scope.nvim tab-scoped buffer management
+    sessionoptions = 'buffers,curdir,folds,help,tabpages,winsize',
 
-        -- Hooks to run before/after session save/restore
-        pre_save_cmds = {
-            'Neotree close', -- Close Neo-tree before saving session
-        },
-        post_restore_cmds = {
-            'DeleteNoNameBuffers', -- Clean up unnamed buffers after session restore
-        },
-
-        -- Session lens (Telescope integration for browsing sessions)
-        session_lens = {
-            load_on_setup = true,
-            theme_conf = { border = true },
-            previewer = false,
-        },
+    -- Hooks to run before/after session save/restore
+    pre_save_cmds = {
+      'Neotree close', -- Close Neo-tree before saving session
     },
-    keys = {
-        -- Manual session control (Capital S to avoid conflict with search)
-        {
-            '<leader>Ss',
-            '<cmd>AutoSession save<cr>',
-            desc = 'Save',
-        },
-        {
-            '<leader>Sr',
-            '<cmd>AutoSession restore<cr>',
-            desc = 'Restore',
-        },
-        {
-            '<leader>Sd',
-            '<cmd>AutoSession delete<cr>',
-            desc = 'Delete',
-        },
-        {
-            '<leader>Sf',
-            '<cmd>AutoSession search<cr>',
-            desc = 'Find/search',
-        },
+    post_restore_cmds = {
+      'DeleteNoNameBuffers', -- Clean up unnamed buffers after session restore
     },
-    config = function(_, opts)
-        require('auto-session').setup(opts)
+    -- Save/restore custom variables using auto-session callbacks
+    save_extra_cmds = {
+      function()
+        -- Save Python custom run command if it exists
+        if vim.g.python_run_command then
+          return [[let g:python_run_command = ']] .. vim.g.python_run_command:gsub("'", "''") .. [[']]
+        end
+        return ''
+      end,
+    },
 
-        -- Register with which-key
-        require('which-key').add {
-            { '<leader>S', group = 'Session' },
-            { '<leader>Q', group = 'Quit' },
-        }
-    end,
+    -- Session lens (Telescope integration for browsing sessions)
+    session_lens = {
+      load_on_setup = true,
+      theme_conf = { border = true },
+      previewer = false,
+    },
+  },
+  keys = {
+    -- Manual session control (Capital S to avoid conflict with search)
+    {
+      '<leader>Ss',
+      '<cmd>AutoSession save<cr>',
+      desc = 'Save',
+    },
+    {
+      '<leader>Sr',
+      '<cmd>AutoSession restore<cr>',
+      desc = 'Restore',
+    },
+    {
+      '<leader>Sd',
+      '<cmd>AutoSession delete<cr>',
+      desc = 'Delete',
+    },
+    {
+      '<leader>Sf',
+      '<cmd>AutoSession search<cr>',
+      desc = 'Find/search',
+    },
+  },
+  config = function(_, opts)
+    require('auto-session').setup(opts)
+
+    -- Register with which-key
+    require('which-key').add {
+      { '<leader>S', group = 'Session' },
+      { '<leader>Q', group = 'Quit' },
+    }
+  end,
 }
