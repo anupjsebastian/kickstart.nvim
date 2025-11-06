@@ -78,4 +78,24 @@ return {
     ft = { 'html', 'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'svelte', 'vue', 'tsx', 'jsx', 'xml', 'php', 'markdown' },
     opts = {},
   },
+
+  -- ========================================================================
+  -- LOREM IPSUM GENERATOR
+  -- ========================================================================
+  -- Generate placeholder text for mockups and prototypes
+  -- Commands: :LoremIpsum [count] [unit] - unit can be: words, sentences, paragraphs
+  -- Examples: :LoremIpsum 50 words, :LoremIpsum 3 paragraphs
+  -- ========================================================================
+  {
+    'derektata/lorem.nvim',
+    ft = { 'html', 'markdown', 'text', 'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'svelte', 'vue', 'tsx', 'jsx' },
+    config = function()
+      require('lorem').opts {
+        sentence_length = 'mixed',
+        comma_chance = 0.3,
+        max_commas = 2,
+        debounce_ms = 200,
+      }
+    end,
+  },
 }
