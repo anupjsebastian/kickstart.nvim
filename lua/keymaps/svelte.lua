@@ -5,35 +5,58 @@
 -- Available from any buffer (terminals, logs) for bun workflow
 -- ========================================================================
 
-local toolcheck = require('utils.toolcheck')
+local toolcheck = require 'utils.toolcheck'
 
 -- Helper function to run terminal commands with "Press ENTER to close" prompt
 local function run_terminal_cmd(cmd)
-  vim.cmd('tabnew')
+  vim.cmd 'split'
+  vim.cmd 'wincmd J' -- Move split to bottom
+  vim.cmd 'resize 15' -- Set height to 15 lines
+  vim.cmd 'enew' -- Create empty buffer
   local bufnr = vim.api.nvim_get_current_buf()
 
-  -- Wrap command to show exit status and wait for Enter, then close buffer
+  -- Set buffer options to make it unlisted and scratch
+  vim.api.nvim_set_option_value('bufhidden', 'wipe', { buf = bufnr })
+  vim.api.nvim_set_option_value('buflisted', false, { buf = bufnr })
+  vim.api.nvim_set_option_value('buftype', 'nofile', { buf = bufnr })
+
+  -- Wrap command to show exit status
   local wrapped_cmd = string.format(
-    '%s; echo "\n---"; if [ $? -eq 0 ]; then echo "✓ Command completed successfully"; else echo "✗ Command failed with exit code $?"; fi; echo "Press ENTER to close"; read; exit',
+    '%s; echo "\n---"; if [ $? -eq 0 ]; then echo "✓ Command completed successfully"; else echo "✗ Command failed with exit code $?"; fi',
     cmd
   )
-  vim.fn.jobstart({ 'zsh', '-c', wrapped_cmd }, { pty = true })
 
-  -- Auto-close terminal when job finishes (user pressed ENTER)
-  vim.api.nvim_create_autocmd('TermClose', {
-    buffer = bufnr,
-    once = true,
-    callback = function()
-      vim.cmd('bdelete!')
+  -- Collect output and display in buffer
+  local output = {}
+  vim.fn.jobstart({ 'zsh', '-c', wrapped_cmd }, {
+    on_stdout = function(_, data)
+      if data then
+        for _, line in ipairs(data) do
+          if line ~= '' then
+            table.insert(output, line)
+          end
+        end
+      end
+    end,
+    on_stderr = function(_, data)
+      if data then
+        for _, line in ipairs(data) do
+          if line ~= '' then
+            table.insert(output, line)
+          end
+        end
+      end
+    end,
+    on_exit = function()
+      vim.schedule(function()
+        if vim.api.nvim_buf_is_valid(bufnr) then
+          vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, output)
+          vim.api.nvim_set_option_value('modifiable', false, { buf = bufnr })
+          -- Stay in normal mode - user can close with :q or <C-w>q
+        end
+      end)
     end,
   })
-
-  -- Start in insert mode after a delay (let command run first)
-  vim.defer_fn(function()
-    if vim.api.nvim_buf_is_valid(bufnr) and vim.api.nvim_get_current_buf() == bufnr then
-      vim.cmd('startinsert')
-    end
-  end, 100)
 end
 
 -- NOTE: The <leader>ls group is registered globally in editor.lua
@@ -45,7 +68,7 @@ vim.keymap.set('n', '<leader>lsr', function()
     return
   end
   -- Don't use helper for dev server - it's long-running
-  vim.cmd('tabnew')
+  vim.cmd 'tabnew'
   vim.fn.jobstart('bun run dev', { pty = true })
   vim.notify('🚀 Starting dev server...', vim.log.levels.INFO)
 end, { desc = 'Run dev server (bun run dev)' })
@@ -55,7 +78,7 @@ vim.keymap.set('n', '<leader>lsb', function()
   if not toolcheck.check_bun() then
     return
   end
-  run_terminal_cmd('bun run build')
+  run_terminal_cmd 'bun run build'
   vim.notify('📦 Building project...', vim.log.levels.INFO)
 end, { desc = 'Build (bun run build)' })
 
@@ -64,7 +87,7 @@ vim.keymap.set('n', '<leader>lsp', function()
   if not toolcheck.check_bun() then
     return
   end
-  vim.cmd('tabnew')
+  vim.cmd 'tabnew'
   vim.fn.jobstart('bun run preview', { pty = true })
   vim.notify('👀 Preview production build...', vim.log.levels.INFO)
 end, { desc = 'Preview build' })
@@ -74,7 +97,7 @@ vim.keymap.set('n', '<leader>lsc', function()
   if not toolcheck.check_bun() then
     return
   end
-  run_terminal_cmd('bun run check')
+  run_terminal_cmd 'bun run check'
   vim.notify('🔍 Type checking...', vim.log.levels.INFO)
 end, { desc = 'Type check' })
 
@@ -83,7 +106,7 @@ vim.keymap.set('n', '<leader>lse', function()
   if not toolcheck.check_bun() then
     return
   end
-  run_terminal_cmd('bun run lint')
+  run_terminal_cmd 'bun run lint'
   vim.notify('📋 Running ESLint...', vim.log.levels.INFO)
 end, { desc = 'Lint (ESLint)' })
 
@@ -92,7 +115,7 @@ vim.keymap.set('n', '<leader>lsT', function()
   if not toolcheck.check_bun() then
     return
   end
-  run_terminal_cmd('bun test')
+  run_terminal_cmd 'bun test'
   vim.notify('🧪 Running tests...', vim.log.levels.INFO)
 end, { desc = 'Run tests' })
 
@@ -101,7 +124,7 @@ vim.keymap.set('n', '<leader>lsi', function()
   if not toolcheck.check_bun() then
     return
   end
-  run_terminal_cmd('bun install')
+  run_terminal_cmd 'bun install'
   vim.notify('📥 Installing dependencies...', vim.log.levels.INFO)
 end, { desc = 'Install deps' })
 
@@ -110,7 +133,7 @@ vim.keymap.set('n', '<leader>lsi', function()
   if not toolcheck.check_bun() then
     return
   end
-  run_terminal_cmd('bun install')
+  run_terminal_cmd 'bun install'
   vim.notify('📦 Installing dependencies...', vim.log.levels.INFO)
 end, { desc = 'Install deps' })
 
@@ -119,7 +142,7 @@ vim.keymap.set('n', '<leader>lsa', function()
   if not toolcheck.check_bun() then
     return
   end
-  local pkg = vim.fn.input('Package name (e.g., @sveltejs/kit): ')
+  local pkg = vim.fn.input 'Package name (e.g., @sveltejs/kit): '
   if pkg ~= '' then
     run_terminal_cmd('bun add ' .. pkg)
     vim.notify('📦 Adding package: ' .. pkg, vim.log.levels.INFO)
@@ -131,7 +154,7 @@ vim.keymap.set('n', '<leader>lsA', function()
   if not toolcheck.check_bun() then
     return
   end
-  local pkg = vim.fn.input('Dev package name (e.g., vite): ')
+  local pkg = vim.fn.input 'Dev package name (e.g., vite): '
   if pkg ~= '' then
     run_terminal_cmd('bun add -d ' .. pkg)
     vim.notify('📦 Adding dev package: ' .. pkg, vim.log.levels.INFO)
@@ -143,7 +166,7 @@ vim.keymap.set('n', '<leader>lsx', function()
   if not toolcheck.check_bun() then
     return
   end
-  local pkg = vim.fn.input('Package to remove: ')
+  local pkg = vim.fn.input 'Package to remove: '
   if pkg ~= '' then
     run_terminal_cmd('bun remove ' .. pkg)
     vim.notify('🗑️  Removing package: ' .. pkg, vim.log.levels.INFO)
@@ -155,12 +178,12 @@ vim.keymap.set('n', '<leader>lsu', function()
   if not toolcheck.check_bun() then
     return
   end
-  run_terminal_cmd('bun update')
+  run_terminal_cmd 'bun update'
   vim.notify('🔄 Updating dependencies...', vim.log.levels.INFO)
 end, { desc = 'Update deps' })
 
 -- Restart TypeScript LSP
 vim.keymap.set('n', '<leader>lst', function()
-  vim.cmd('LspRestart ts_ls')
+  vim.cmd 'LspRestart ts_ls'
   vim.notify('󰛦 Restarting TypeScript LSP...', vim.log.levels.INFO)
 end, { desc = 'Restart TypeScript LSP' })

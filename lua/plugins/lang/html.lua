@@ -65,5 +65,37 @@ return {
       exclude_filetypes = { 'dart' }, -- Exclude Dart to avoid conflict with flutter-tools
     },
   },
-}
 
+  -- ========================================================================
+  -- AUTO-CLOSE HTML/JSX/TSX TAGS
+  -- ========================================================================
+  -- Automatically closes HTML tags as you type
+  -- Works with: HTML, JSX, TSX, Vue, Svelte, XML, PHP, etc.
+  -- Example: Type <div> and it auto-adds </div>, cursor in between
+  -- ========================================================================
+  {
+    'windwp/nvim-ts-autotag',
+    ft = { 'html', 'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'svelte', 'vue', 'tsx', 'jsx', 'xml', 'php', 'markdown' },
+    opts = {},
+  },
+
+  -- ========================================================================
+  -- LOREM IPSUM GENERATOR
+  -- ========================================================================
+  -- Generate placeholder text for mockups and prototypes
+  -- Commands: :LoremIpsum [count] [unit] - unit can be: words, sentences, paragraphs
+  -- Examples: :LoremIpsum 50 words, :LoremIpsum 3 paragraphs
+  -- ========================================================================
+  {
+    'derektata/lorem.nvim',
+    ft = { 'html', 'markdown', 'text', 'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'svelte', 'vue', 'tsx', 'jsx' },
+    config = function()
+      require('lorem').opts {
+        sentence_length = 'mixed',
+        comma_chance = 0.3,
+        max_commas = 2,
+        debounce_ms = 200,
+      }
+    end,
+  },
+}

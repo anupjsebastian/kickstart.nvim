@@ -9,34 +9,55 @@ local toolcheck = require 'utils.toolcheck'
 
 -- Helper function to run terminal commands with "Press ENTER to close" prompt
 local function run_terminal_cmd(cmd)
-  vim.cmd 'tabnew'
+  vim.cmd('split')
+  vim.cmd('wincmd J') -- Move split to bottom
+  vim.cmd('resize 15') -- Set height to 15 lines
+  vim.cmd('enew') -- Create empty buffer
   local bufnr = vim.api.nvim_get_current_buf()
 
-  -- Wrap command to show exit status and wait for Enter, then close buffer
+  -- Set buffer options to make it unlisted and scratch
+  vim.api.nvim_set_option_value('bufhidden', 'wipe', { buf = bufnr })
+  vim.api.nvim_set_option_value('buflisted', false, { buf = bufnr })
+  vim.api.nvim_set_option_value('buftype', 'nofile', { buf = bufnr })
+
+  -- Wrap command to show exit status
   local wrapped_cmd = string.format(
-    '%s; echo "\n---"; if [ $? -eq 0 ]; then echo "✓ Command completed successfully"; else echo "✗ Command failed with exit code $?"; fi; echo "Press ENTER to close"; read; exit',
+    '%s; echo "\n---"; if [ $? -eq 0 ]; then echo "✓ Command completed successfully"; else echo "✗ Command failed with exit code $?"; fi',
     cmd
   )
-  vim.fn.jobstart({ 'zsh', '-c', wrapped_cmd }, { pty = true })
 
-  -- Auto-close terminal when job finishes (user pressed ENTER)
-  vim.api.nvim_create_autocmd('TermClose', {
-    buffer = bufnr,
-    once = true,
-    callback = function()
-      vim.cmd 'bdelete!'
+  -- Collect output and display in buffer
+  local output = {}
+  vim.fn.jobstart({ 'zsh', '-c', wrapped_cmd }, {
+    on_stdout = function(_, data)
+      if data then
+        for _, line in ipairs(data) do
+          if line ~= '' then
+            table.insert(output, line)
+          end
+        end
+      end
+    end,
+    on_stderr = function(_, data)
+      if data then
+        for _, line in ipairs(data) do
+          if line ~= '' then
+            table.insert(output, line)
+          end
+        end
+      end
+    end,
+    on_exit = function(_, exit_code)
+      vim.schedule(function()
+        if vim.api.nvim_buf_is_valid(bufnr) then
+          vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, output)
+          vim.api.nvim_set_option_value('modifiable', false, { buf = bufnr })
+          -- Stay in normal mode - user can close with :q or <C-w>q
+        end
+      end)
     end,
   })
-
-  -- Start in insert mode after a delay (let command run first)
-  vim.defer_fn(function()
-    if vim.api.nvim_buf_is_valid(bufnr) and vim.api.nvim_get_current_buf() == bufnr then
-      vim.cmd 'startinsert'
-    end
-  end, 100)
-end
-
--- NOTE: The <leader>lr group is registered globally in editor.lua
+end-- NOTE: The <leader>lr group is registered globally in editor.lua
 -- NOTE: The <leader>lr group is registered globally in editor.lua
 -- NOTE: Rustaceanvim-specific buffer-local commands are in the on_attach above
 
