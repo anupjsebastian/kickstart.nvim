@@ -103,7 +103,9 @@ vim.o.list = true
 vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 
 -- Preview substitutions live, as you type!
-vim.o.inccommand = 'split'
+-- Note: Disabled due to command-line rendering issue (last character hidden)
+-- The live preview causes a redraw race condition with the cmdline
+vim.o.inccommand = ''
 
 -- Show which line your cursor is on
 vim.o.cursorline = true
