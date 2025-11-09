@@ -294,6 +294,22 @@ return {
         { '<leader>ts', function() require('snacks').toggle.scroll():toggle() end,      desc = 'Toggle Smooth Scroll' },
         { '<leader>tw', function() require('snacks').toggle.words():toggle() end,       desc = 'Toggle Word Highlights' },
         { '<leader>ti', function() require('snacks').toggle.indent():toggle() end,      desc = 'Toggle Indent Guides' },
+
+        -- Vim training plugin toggles
+        {
+            '<leader>th',
+            function()
+                require('hardtime').toggle()
+            end,
+            desc = 'Toggle Hardtime (Vim training)'
+        },
+        {
+            '<leader>tp',
+            function()
+                require('precognition').toggle()
+            end,
+            desc = 'Toggle Precognition (motion hints)'
+        },
     },
 
     -- ====================================================================

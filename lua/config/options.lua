@@ -68,6 +68,7 @@ vim.o.smartcase = true
 
 -- Keep signcolumn on by default
 vim.o.signcolumn = 'yes'
+vim.o.numberwidth = 4 -- Width of the number column (includes signs)
 
 -- Decrease update time
 vim.o.updatetime = 250
@@ -85,11 +86,11 @@ vim.o.ttimeoutlen = 10
 -- i-ci-ve = thin vertical bar in insert mode
 -- r-cr = horizontal bar in replace mode
 vim.opt.guicursor = {
-    'n-v-c:block',                                -- Block cursor in normal, visual, command
-    'i-ci-ve:ver25',                              -- Thin vertical bar (25% width) in insert
-    'r-cr:hor20',                                 -- Horizontal bar (20% height) in replace
-    'o:hor50',                                    -- Horizontal bar in operator-pending
-    'a:blinkwait700-blinkoff400-blinkon250',      -- Blinking settings
+    'n-v-c:block',                                  -- Block cursor in normal, visual, command
+    'i-ci-ve:ver25',                                -- Thin vertical bar (25% width) in insert
+    'r-cr:hor20',                                   -- Horizontal bar (20% height) in replace
+    'o:hor50',                                      -- Horizontal bar in operator-pending
+    'a:blinkwait700-blinkoff400-blinkon250',        -- Blinking settings
     'sm:block-blinkwait175-blinkoff150-blinkon175', -- Search match
 }
 
@@ -111,8 +112,16 @@ vim.o.inccommand = ''
 vim.o.cursorline = true
 
 -- Window separators - visible borders between windows
-vim.opt.fillchars = { vert = '│', horiz = '─', horizup = '┴', horizdown = '┬', vertleft = '┤', vertright = '├', verthoriz =
-'┼' }
+vim.opt.fillchars = {
+    vert = '│',
+    horiz = '─',
+    horizup = '┴',
+    horizdown = '┬',
+    vertleft = '┤',
+    vertright = '├',
+    verthoriz =
+    '┼'
+}
 
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.o.scrolloff = 10
