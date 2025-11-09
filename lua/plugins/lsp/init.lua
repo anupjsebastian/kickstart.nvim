@@ -142,6 +142,40 @@ return {
                         },
                     },
                 },
+                ts_ls = {
+                    -- TypeScript/JavaScript language server
+                    settings = {
+                        typescript = {
+                            inlayHints = {
+                                includeInlayParameterNameHints = 'all',
+                                includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+                                includeInlayFunctionParameterTypeHints = true,
+                                includeInlayVariableTypeHints = true,
+                                includeInlayPropertyDeclarationTypeHints = true,
+                                includeInlayFunctionLikeReturnTypeHints = true,
+                                includeInlayEnumMemberValueHints = true,
+                            },
+                        },
+                        javascript = {
+                            inlayHints = {
+                                includeInlayParameterNameHints = 'all',
+                                includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+                                includeInlayFunctionParameterTypeHints = true,
+                                includeInlayVariableTypeHints = true,
+                                includeInlayPropertyDeclarationTypeHints = true,
+                                includeInlayFunctionLikeReturnTypeHints = true,
+                                includeInlayEnumMemberValueHints = true,
+                            },
+                        },
+                    },
+                    filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact' },
+                    root_dir = function(fname)
+                        return lspconfig_util.find_git_ancestor(fname)
+                            or lspconfig_util.find_node_modules_ancestor(fname)
+                            or lspconfig_util.find_package_json_ancestor(fname)
+                            or vim.fn.getcwd()
+                    end,
+                },
                 basedpyright = {
                     settings = {
                         basedpyright = {
