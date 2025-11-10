@@ -258,6 +258,7 @@ return {
                     { '<leader>g', group = '󰊢 Git' },
                     { '<leader>h', group = '󰊢 Git Hunk', mode = { 'n', 'v' } },
                     { '<leader>l', group = '󰗀 Language Tools' }, -- Global language menu
+                    { '<leader>L', group = '󰿘 LSP' }, -- LSP commands
                     { '<leader>lf', group = ' Flutter' }, -- Flutter commands (globally accessible)
                     { '<leader>lp', group = '󰌠 Python' }, -- Python commands (globally accessible)
                     { '<leader>lr', group = '󱘗 Rust' }, -- Rust commands (globally accessible)

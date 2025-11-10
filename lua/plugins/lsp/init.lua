@@ -59,13 +59,14 @@ return {
                 callback = function(event)
                     local map = function(keys, func, desc, mode)
                         mode = mode or 'n'
-                        vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
+                        vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = desc })
                     end
 
                     map('grn', vim.lsp.buf.rename, 'Rename')
                     map('K', vim.lsp.buf.hover, 'Hover Documentation')
-                    map('gra', vim.lsp.buf.code_action, 'Code Action', { 'n', 'x' })
-                    map('<leader>.', vim.lsp.buf.code_action, 'Code Actions (VSCode-like)', { 'n', 'x' })
+                    map('gra', vim.lsp.buf.code_action, 'Code Actions', { 'n', 'x' })
+                    map('g.', vim.lsp.buf.code_action, 'Code Actions', { 'n', 'x' })
+                    map('<leader>.', vim.lsp.buf.code_action, 'Code Actions', { 'n', 'x' })
                     map('grr', require('telescope.builtin').lsp_references, 'References')
                     map('gri', require('telescope.builtin').lsp_implementations, 'Implementation')
                     map('grd', require('telescope.builtin').lsp_definitions, 'Definition')
@@ -113,6 +114,34 @@ return {
                         if vim.bo[event.buf].filetype == 'python' then
                             vim.lsp.inlay_hint.enable(true, { bufnr = event.buf })
                         end
+                    end
+
+                    -- LSP menu (<leader>L) - comprehensive LSP actions
+                    map('<leader>Lr', vim.lsp.buf.rename, 'Rename symbol')
+                    map('<leader>La', vim.lsp.buf.code_action, 'Code Actions', { 'n', 'x' })
+                    map('<leader>Lf', function()
+                        vim.lsp.buf.format({ async = true })
+                    end, 'Format document/selection', { 'n', 'x' })
+                    map('<leader>Ld', vim.diagnostic.open_float, 'Show line diagnostics')
+                    map('<leader>Li', function()
+                        local enabled = vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf })
+                        vim.lsp.inlay_hint.enable(not enabled, { bufnr = event.buf })
+                    end, 'Toggle inlay hints')
+                    map('<leader>LR', '<cmd>LspRestart<cr>', 'Restart LSP server')
+                    map('<leader>LI', '<cmd>LspInfo<cr>', 'LSP Info')
+                    map('<leader>Ls', require('telescope.builtin').lsp_document_symbols, 'Document symbols')
+                    map('<leader>LS', require('telescope.builtin').lsp_dynamic_workspace_symbols, 'Workspace symbols')
+                    
+                    -- Call hierarchy (if supported)
+                    if client and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_prepareCallHierarchy, event.buf) then
+                        map('<leader>Lc', vim.lsp.buf.incoming_calls, 'Incoming calls')
+                        map('<leader>LC', vim.lsp.buf.outgoing_calls, 'Outgoing calls')
+                    end
+                    
+                    -- Codelens (if supported)
+                    if client and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_codeLens, event.buf) then
+                        map('<leader>Ll', vim.lsp.codelens.run, 'Run codelens')
+                        map('<leader>Lx', vim.lsp.codelens.refresh, 'Refresh codelens')
                     end
                 end,
             })
