@@ -1,0 +1,132 @@
+-- ========================================================================
+-- FLASH.NVIM - Enhanced Motion Plugin (DISABLED)
+-- ========================================================================
+-- This file is disabled by default (.lua.disabled extension)
+-- Flash.nvim provides super-fast navigation with labeled jumps
+--
+-- TO ENABLE:
+--   1. Rename this file from "flash.lua.disabled" to "flash.lua"
+--   2. Restart Neovim or run :Lazy sync
+--
+-- NOTE: This overrides native Vim s/S commands. Learn native motions first!
+--   Native alternatives:
+--     - f/F/t/T with ; and , for character jumps
+--     - /pattern for search
+--     - w/b/e for word motions
+--
+-- Only enable this after you're comfortable with native Vim motions.
+-- It's a power-user tool, not a learning tool.
+-- ========================================================================
+
+return {
+  'folke/flash.nvim',
+  event = 'VeryLazy',
+  opts = {
+    -- Default configuration
+    labels = 'asdfghjklqwertyuiopzxcvbnm',
+    search = {
+      multi_window = true,
+      forward = true,
+      wrap = true,
+      mode = 'exact', -- exact|search|fuzzy
+    },
+    jump = {
+      jumplist = true,
+      pos = 'start', -- start|end|range
+      history = false,
+      register = false,
+      nohlsearch = false,
+      autojump = false,
+    },
+    label = {
+      uppercase = true,
+      after = true,
+      before = false,
+      style = 'overlay', -- overlay|inline|eol
+      reuse = 'lowercase',
+    },
+    highlight = {
+      backdrop = true,
+      matches = true,
+      priority = 5000,
+      groups = {
+        match = 'FlashMatch',
+        current = 'FlashCurrent',
+        backdrop = 'FlashBackdrop',
+        label = 'FlashLabel',
+      },
+    },
+    modes = {
+      search = {
+        enabled = true,
+      },
+      char = {
+        enabled = true,
+        jump_labels = true,
+      },
+    },
+    prompt = {
+      enabled = true,
+      prefix = { { '⚡', 'FlashPromptIcon' } },
+    },
+  },
+  keys = {
+    -- Flash search (replaces s)
+    {
+      's',
+      mode = { 'n', 'x', 'o' },
+      function()
+        require('flash').jump()
+      end,
+      desc = 'Flash',
+    },
+    -- Flash treesitter (replaces S)
+    {
+      'S',
+      mode = { 'n', 'x', 'o' },
+      function()
+        require('flash').treesitter()
+      end,
+      desc = 'Flash Treesitter',
+    },
+    -- Remote flash (operator-pending only)
+    {
+      'r',
+      mode = 'o',
+      function()
+        require('flash').remote()
+      end,
+      desc = 'Remote Flash',
+    },
+    -- Treesitter search (operator-pending/visual only)
+    {
+      'R',
+      mode = { 'o', 'x' },
+      function()
+        require('flash').treesitter_search()
+      end,
+      desc = 'Treesitter Search',
+    },
+    -- Toggle Flash search in command mode
+    {
+      '<c-s>',
+      mode = { 'c' },
+      function()
+        require('flash').toggle()
+      end,
+      desc = 'Toggle Flash Search',
+    },
+  },
+}
+
+-- Alternative keymaps if you want to keep s/S for Vim defaults:
+--[[
+  keys = {
+    -- Use gs/gS instead (no conflicts with Vim defaults)
+    { 'gs', mode = { 'n', 'x', 'o' }, function() require('flash').jump() end, desc = 'Flash' },
+    { 'gS', mode = { 'n', 'x', 'o' }, function() require('flash').treesitter() end, desc = 'Flash Treesitter' },
+    { 'r', mode = 'o', function() require('flash').remote() end, desc = 'Remote Flash' },
+    { 'R', mode = { 'o', 'x' }, function() require('flash').treesitter_search() end, desc = 'Treesitter Search' },
+    { '<c-s>', mode = { 'c' }, function() require('flash').toggle() end, desc = 'Toggle Flash Search' },
+  },
+]]
