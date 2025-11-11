@@ -1,3 +1,27 @@
+-- Override diagnostic virtual_text handler to filter out TODO-like diagnostics
+do
+    local todo_keywords = { 'TODO', 'FIXME', 'HACK', 'NOTE', 'BUG', 'FIXIT', 'ISSUE', 'WARNING', 'XXX', 'OPTIM', 'PERFORMANCE', 'OPTIMIZE', 'INFO' }
+    local function is_todo_diagnostic(diagnostic)
+        local msg = diagnostic.message or ''
+        for _, kw in ipairs(todo_keywords) do
+            if msg:find(kw) then return true end
+        end
+        return false
+    end
+    local orig_virtual_text = vim.diagnostic.handlers.virtual_text
+    vim.diagnostic.handlers.virtual_text = {
+        show = function(ns, bufnr, diagnostics, opts)
+            local filtered = {}
+            for _, d in ipairs(diagnostics) do
+                if not is_todo_diagnostic(d) then
+                    table.insert(filtered, d)
+                end
+            end
+            orig_virtual_text.show(ns, bufnr, filtered, opts)
+        end,
+        hide = orig_virtual_text.hide,
+    }
+end
 -- [[ Basic Autocommands ]]
 -- See `:help lua-guide-autocommands`
 
@@ -84,22 +108,22 @@ vim.api.nvim_create_autocmd('RecordingLeave', {
 -- Configure diagnostic signs with nicer icons
 -- Must be set early, before LSP attaches
 vim.diagnostic.config({
-    signs = {
-        text = {
-            [vim.diagnostic.severity.ERROR] = '󰅚 ',
-            [vim.diagnostic.severity.WARN] = '󰀪 ',
-            [vim.diagnostic.severity.HINT] = '󰌶 ',
-            [vim.diagnostic.severity.INFO] = '󰋽 ',
+        signs = {
+                text = {
+                        [vim.diagnostic.severity.ERROR] = '󰅚 ',
+                        [vim.diagnostic.severity.WARN] = '󰀪 ',
+                        [vim.diagnostic.severity.HINT] = '󰌶 ',
+                        [vim.diagnostic.severity.INFO] = '󰋽 ',
+                },
         },
-    },
-    virtual_text = {
-        spacing = 4,
-        source = 'if_many',
-        prefix = '●',
-    },
-    underline = true,
-    update_in_insert = false,
-    severity_sort = true,
+        virtual_text = {
+                spacing = 4,
+                source = 'if_many',
+                prefix = '●',
+        },
+        underline = true,
+        update_in_insert = false,
+        severity_sort = true,
 })
 
 -- Command to restart Python LSP (useful when switching projects/venvs)

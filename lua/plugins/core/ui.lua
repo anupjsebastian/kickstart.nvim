@@ -147,14 +147,6 @@ return {
         end,
     },
 
-    -- Highlight todo, notes, etc in comments
-    {
-        'folke/todo-comments.nvim',
-        event = 'VeryLazy', -- Deferred for faster startup
-        dependencies = { 'nvim-lua/plenary.nvim' },
-        opts = { signs = false },
-    },
-
     -- Mini.nvim collection
     {
         'echasnovski/mini.nvim',

@@ -161,8 +161,8 @@ return {
           },
           -- Settings passed to the Dart LSP
           settings = {
-            -- Show TODOs in the problems pane
-            showTodos = true,
+            -- Disable TODOs in LSP diagnostics (handled by todo-comments.nvim instead)
+            showTodos = false,
             -- Completion settings
             completeFunctionCalls = true,
             -- Enable/disable specific lints
