@@ -112,6 +112,7 @@ require('lazy').setup({
       require('mini.pairs').setup()
     end,
   },
+
 }, {
   ui = {
     icons = vim.g.have_nerd_font and {} or {
