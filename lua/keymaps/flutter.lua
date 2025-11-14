@@ -12,10 +12,10 @@ local toolcheck = require('utils.toolcheck')
 
 -- Initialize global variables
 vim.g.flutter_terminal_chan = nil -- Terminal job channel ID
-vim.g.flutter_terminal_buf = nil -- Terminal buffer number
-vim.g.flutter_terminal_tab = nil -- Terminal tab number
-vim.g.flutter_device_id = nil -- Selected device ID
-vim.g.flutter_auto_reload = true -- Auto-reload on save (enabled by default)
+vim.g.flutter_terminal_buf = nil  -- Terminal buffer number
+vim.g.flutter_terminal_tab = nil  -- Terminal tab number
+vim.g.flutter_device_id = nil     -- Selected device ID
+vim.g.flutter_auto_reload = true  -- Auto-reload on save (enabled by default)
 
 -- ========================================================================
 -- HELPER: Run one-shot Flutter commands with "Press ENTER to close" pattern
@@ -111,10 +111,10 @@ local function select_flutter_device(callback)
           if line and line ~= '' and not line:match('^%s*$') then
             -- Skip common informational messages that go to stderr
             if not line:match('Checking for wireless devices')
-               and not line:match('Connected device')
-               and not line:match('Flutter')
-               and not line:match('Dart')
-               and not line:match('Channel') then
+                and not line:match('Connected device')
+                and not line:match('Flutter')
+                and not line:match('Dart')
+                and not line:match('Channel') then
               table.insert(errors, line)
             end
           end
@@ -210,10 +210,31 @@ vim.keymap.set('n', '<leader>lfr', function()
     return
   end
 
-  -- Check if already running
+  -- Check if already running (verify the job is actually running)
   if vim.g.flutter_terminal_chan then
-    vim.notify('Flutter app already running. Quit first with <leader>lfq', vim.log.levels.WARN)
-    return
+    -- Check if the job/channel is still valid and running
+    local job_running = false
+    if vim.g.flutter_terminal_buf and vim.api.nvim_buf_is_valid(vim.g.flutter_terminal_buf) then
+      local ok, chan = pcall(vim.api.nvim_buf_get_var, vim.g.flutter_terminal_buf, 'terminal_job_id')
+      if ok and chan == vim.g.flutter_terminal_chan then
+        -- Verify the job is actually running (not stopped/finished)
+        local job_info = vim.fn.jobwait({ chan }, 0)
+        if job_info[1] == -1 then
+          -- Job is still running
+          job_running = true
+        end
+      end
+    end
+
+    if job_running then
+      vim.notify('Flutter app already running. Quit first with <leader>lfq', vim.log.levels.WARN)
+      return
+    else
+      -- Terminal/job is gone or stopped, clear stale state
+      vim.g.flutter_terminal_chan = nil
+      vim.g.flutter_terminal_buf = nil
+      vim.g.flutter_terminal_tab = nil
+    end
   end
 
   -- Select device if not set
@@ -269,6 +290,10 @@ vim.keymap.set('n', '<leader>lfq', function()
         local ok, job_chan = pcall(vim.api.nvim_buf_get_var, buf, 'terminal_job_id')
         if ok then
           vim.api.nvim_chan_send(job_chan, 'q')
+          -- Clear global state immediately
+          vim.g.flutter_terminal_chan = nil
+          vim.g.flutter_terminal_buf = nil
+          vim.g.flutter_terminal_tab = nil
           vim.notify('Sent quit command to terminal', vim.log.levels.INFO)
           return
         end
@@ -279,6 +304,10 @@ vim.keymap.set('n', '<leader>lfq', function()
   end
 
   vim.api.nvim_chan_send(chan, 'q')
+  -- Clear global state immediately after sending quit
+  vim.g.flutter_terminal_chan = nil
+  vim.g.flutter_terminal_buf = nil
+  vim.g.flutter_terminal_tab = nil
   vim.notify('🛑 Flutter app stopping...', vim.log.levels.INFO)
 end, { desc = 'Quit app' })
 
