@@ -23,6 +23,25 @@ vim.g.maplocalleader = ' '
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
+-- Enable relative line numbers by default
+vim.opt.relativenumber = true
+vim.opt.number = true
+
+-- Smart line numbers: relative in normal mode, absolute in insert mode
+vim.api.nvim_create_augroup('SmartLineNumbers', { clear = true })
+vim.api.nvim_create_autocmd('InsertEnter', {
+  group = 'SmartLineNumbers',
+  callback = function()
+    vim.wo.relativenumber = false
+  end,
+})
+vim.api.nvim_create_autocmd('InsertLeave', {
+  group = 'SmartLineNumbers',
+  callback = function()
+    vim.wo.relativenumber = true
+  end,
+})
+
 -- Bootstrap lazy.nvim (same as regular config)
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -157,6 +176,13 @@ end, { desc = 'Close floating window or clear highlight' })
 
 -- Exit terminal mode (match Neovim)
 keymap('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
+
+-- Override :terminal and :term commands to use VSCode's terminal in editor area
+-- Use command abbreviation to intercept the built-in commands
+vim.cmd([[
+  cnoreabbrev <expr> terminal getcmdtype() == ':' && getcmdline() == 'terminal' ? 'lua require("vscode").call("workbench.action.createTerminalEditor")' : 'terminal'
+  cnoreabbrev <expr> term getcmdtype() == ':' && getcmdline() == 'term' ? 'lua require("vscode").call("workbench.action.createTerminalEditor")' : 'term'
+]])
 
 -- Window navigation (match Neovim <C-hjkl>)
 keymap('n', '<C-h>', function() vscode.call('workbench.action.navigateLeft') end,
