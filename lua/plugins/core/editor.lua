@@ -47,9 +47,9 @@ return {
 
                     mappings = {
                         i = {
-                            -- Navigation (consistent with Neo-tree)
-                            ['<C-j>'] = require('telescope.actions').move_selection_next,
-                            ['<C-k>'] = require('telescope.actions').move_selection_previous,
+                            -- Navigation (standard Vim/Telescope behavior)
+                            ['<C-n>'] = require('telescope.actions').move_selection_next,
+                            ['<C-p>'] = require('telescope.actions').move_selection_previous,
 
                             -- Preview scrolling
                             ['<C-d>'] = require('telescope.actions').preview_scrolling_down,
@@ -65,9 +65,9 @@ return {
                             ['<C-c>'] = require('telescope.actions').close,
                             ['<Esc>'] = require('telescope.actions').close,
 
-                            -- Cycle history
-                            ['<C-n>'] = require('telescope.actions').cycle_history_next,
-                            ['<C-p>'] = require('telescope.actions').cycle_history_prev,
+                            -- Cycle history (use j/k for this)
+                            ['<C-j>'] = require('telescope.actions').cycle_history_next,
+                            ['<C-k>'] = require('telescope.actions').cycle_history_prev,
 
                             -- Selection
                             ['<Tab>'] = require('telescope.actions').toggle_selection + require('telescope.actions').move_selection_worse,
@@ -79,8 +79,8 @@ return {
                         },
                         n = {
                             -- Same mappings in normal mode
-                            ['<C-j>'] = require('telescope.actions').move_selection_next,
-                            ['<C-k>'] = require('telescope.actions').move_selection_previous,
+                            ['<C-n>'] = require('telescope.actions').move_selection_next,
+                            ['<C-p>'] = require('telescope.actions').move_selection_previous,
                             ['<C-d>'] = require('telescope.actions').preview_scrolling_down,
                             ['<C-u>'] = require('telescope.actions').preview_scrolling_up,
 
@@ -103,6 +103,10 @@ return {
                             ['k'] = require('telescope.actions').move_selection_previous,
                             ['gg'] = require('telescope.actions').move_to_top,
                             ['G'] = require('telescope.actions').move_to_bottom,
+
+                            -- Cycle history
+                            ['<C-j>'] = require('telescope.actions').cycle_history_next,
+                            ['<C-k>'] = require('telescope.actions').cycle_history_prev,
 
                             ['?'] = require('telescope.actions').which_key, -- Show help
                         },
