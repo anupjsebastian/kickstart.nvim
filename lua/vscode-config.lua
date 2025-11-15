@@ -23,6 +23,9 @@ vim.g.maplocalleader = ' '
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
+-- Use system clipboard
+vim.opt.clipboard = 'unnamedplus'
+
 -- Enable relative line numbers by default
 vim.opt.relativenumber = true
 vim.opt.number = true
