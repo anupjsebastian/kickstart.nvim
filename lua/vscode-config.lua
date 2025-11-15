@@ -42,6 +42,14 @@ vim.api.nvim_create_autocmd('InsertLeave', {
   end,
 })
 
+-- Highlight yanked text
+vim.api.nvim_create_autocmd('TextYankPost', {
+  group = vim.api.nvim_create_augroup('HighlightYank', { clear = true }),
+  callback = function()
+    vim.highlight.on_yank({ timeout = 200 })
+  end,
+})
+
 -- Bootstrap lazy.nvim (same as regular config)
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
