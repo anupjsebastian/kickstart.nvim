@@ -181,6 +181,7 @@ end, { desc = 'Open/Focus file explorer' })
 
 -- Close floating windows / clear search (match Neovim behavior)
 keymap('n', '<Esc>', function()
+  vim.cmd('nohlsearch')
   vscode.call('closeFindWidget')
   vscode.call('closeReferenceSearch')
   vscode.call('editor.action.hideHover')
