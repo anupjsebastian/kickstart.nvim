@@ -158,6 +158,26 @@ keymap('n', '\\', function()
   vscode.call('workbench.view.explorer') -- Opens explorer and focuses it
 end, { desc = 'Open/Focus file explorer' })
 
+-- Toggle fold using VSCode native fold commands (Cmd+Opt+[ / Cmd+Opt+])
+-- Try to use a toggle command if available; fall back to explicit fold/unfold
+keymap('n', 'za', function()
+  local ok, _ = pcall(function()
+    -- preferred: toggle if VSCode exposes it
+    vscode.call('editor.toggleFold')
+  end)
+  if not ok then
+    -- fallback: call fold (this will fold current region)
+    -- if already folded, try unfold
+    local fallback_ok = pcall(function()
+      vscode.call('editor.fold')
+    end)
+    if not fallback_ok then
+      -- final fallback: attempt unfold
+      pcall(function() vscode.call('editor.unfold') end)
+    end
+  end
+end, { desc = 'Toggle fold (VSCode native)' })
+
 -- Window navigation also works to go back to editor
 -- Ctrl-h focuses sidebar, Ctrl-l focuses editor (configured below)
 
