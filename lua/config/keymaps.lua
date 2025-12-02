@@ -302,7 +302,13 @@ vim.keymap.set('n', '<leader>tv', function()
         vim.diagnostic.config({ virtual_text = false })
         vim.notify('Inline diagnostic messages hidden', vim.log.levels.INFO)
     else
-        vim.diagnostic.config({ virtual_text = true })
+        vim.diagnostic.config({ 
+            virtual_text = {
+                spacing = 4,
+                source = 'if_many',
+                prefix = '●',
+            }
+        })
         vim.notify('Inline diagnostic messages shown', vim.log.levels.INFO)
     end
 end, { desc = 'Toggle Virtual text (inline messages)' })

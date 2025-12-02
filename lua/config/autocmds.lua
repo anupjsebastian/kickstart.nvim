@@ -116,11 +116,7 @@ vim.diagnostic.config({
                         [vim.diagnostic.severity.INFO] = '󰋽 ',
                 },
         },
-        virtual_text = {
-                spacing = 4,
-                source = 'if_many',
-                prefix = '●',
-        },
+        virtual_text = false, -- Disabled by default (toggle with <leader>tv)
         underline = true,
         update_in_insert = false,
         severity_sort = true,
