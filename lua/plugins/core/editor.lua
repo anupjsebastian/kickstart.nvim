@@ -268,6 +268,7 @@ return {
                     { '<leader>lr', group = '󱘗 Rust' }, -- Rust commands (globally accessible)
                     { '<leader>ls', group = ' Svelte' }, -- Svelte commands (globally accessible)
                     { '<leader>lh', group = ' HTML/CSS' }, -- HTML/CSS commands (globally accessible)
+                    { '<leader>m', group = '󰍵 Music' }, -- Music/live coding (Strudel)
                     { '<leader>s', group = '󰍉 Search' },
                     { '<leader>sb', desc = '󰘖 Builtin Vim commands' },
                     { '<leader>sK', desc = '󰌨 Which-key command palette' },
